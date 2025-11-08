@@ -10,8 +10,9 @@ ADD_SUBDIRECTORY(libs/cglm)
 
 ADD_EXECUTABLE(
     learnopengl
-    src/main.c
-    src/stb.c
+    source/main.c
+    source/window.c
+    source/stb.c
 )
 
 TARGET_COMPILE_OPTIONS(learnopengl PRIVATE
@@ -25,6 +26,7 @@ TARGET_COMPILE_OPTIONS(learnopengl PRIVATE
 TARGET_LINK_LIBRARIES(learnopengl PRIVATE
     glad
     glfw
+    cglm
 )
 
 TARGET_COMPILE_DEFINITIONS(learnopengl PRIVATE
@@ -33,6 +35,7 @@ TARGET_COMPILE_DEFINITIONS(learnopengl PRIVATE
 
 TARGET_INCLUDE_DIRECTORIES(learnopengl PRIVATE
     ${CMAKE_SOURCE_DIR}/libs/stb
+    ${CMAKE_SOURCE_DIR}/include
 )
 
 add_custom_target(run
