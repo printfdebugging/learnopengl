@@ -79,6 +79,7 @@ void window_poll_events(struct window* window)
 
 void window_clear_color(struct window* window)
 {
+    (void) window;
     glClear(GL_COLOR_BUFFER_BIT);
 }
 
