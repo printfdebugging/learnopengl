@@ -17,10 +17,19 @@ int main()
     glBindVertexArray(vao);
 
     /* clang-format off */
+    /*
+        remember that we draw everything with triangles,
+        so specifying just four vertices to draw a square would
+        be pointless.
+    */
     float vertices[] = {
+        -0.5f,  0.5f, 0.0f,
         -0.5f, -0.5f, 0.0f,
          0.5f, -0.5f, 0.0f,
-         0.0f,  0.5f, 0.0f,
+
+         0.5f, -0.5f, 0.0f,
+         0.5f,  0.5f, 0.0f,
+        -0.5f,  0.5f, 0.0f,
     };
     /* clang-format on */
 
@@ -29,12 +38,18 @@ int main()
     glBindBuffer(GL_ARRAY_BUFFER, vbo);
     glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
 
+    /*
+        NOTE: this has nothing to do with the number
+        of elements in the source, `glBufferData` is there for
+        that task. here we specify how each slot in the vao
+        accesses it's data from a buffer.
+    */
     glVertexAttribPointer(
         MESH_ATTRIBUTE_POSITION,  // position of data in vao
-        3,                        // number of elements
+        3,                        // number of components per generic element
         GL_FLOAT,                 // type of data
         GL_FALSE,                 // whether normalized or not
-        3 * sizeof(float),        // stride (offset between consecutive elements)
+        3 * sizeof(float),        // stride i.e. offset between consecutive generic elements
         (void*) 0                 // offset of the first element from the start
     );
 
@@ -47,7 +62,7 @@ int main()
         window_process_input(window);
         window_clear_color(window);
 
-        glDrawArrays(GL_TRIANGLES, 0, 3);
+        glDrawArrays(GL_TRIANGLES, 0, 6);
 
         window_swap_buffers(window);
     }
