@@ -23,10 +23,11 @@ int main()
         be pointless.
     */
     float vertices[] = {
-        -0.5f,  0.5f, 0.0f,
-        -0.5f, -0.5f, 0.0f,
-         0.5f, -0.5f, 0.0f,
-         0.5f,  0.5f, 0.0f,
+        // vertices          // colors
+        -0.5f,  0.5f, 0.0f,     1.0f, 0.0f, 0.0f,
+        -0.5f, -0.5f, 0.0f,     0.0f, 1.0f, 0.0f,
+         0.5f, -0.5f, 0.0f,     0.0f, 0.0f, 1.0f,
+         0.5f,  0.5f, 0.0f,     1.0f, 1.0f, 0.0f,
     };
 
     unsigned int indices[] = {
@@ -57,11 +58,21 @@ int main()
         3,                        // number of components per generic element
         GL_FLOAT,                 // type of data
         GL_FALSE,                 // whether normalized or not
-        3 * sizeof(float),        // stride i.e. offset between consecutive generic elements
+        6 * sizeof(float),        // stride i.e. offset between consecutive generic elements
         (void*) 0                 // offset of the first element from the start
     );
 
+    glVertexAttribPointer(
+        MESH_ATTRIBUTE_COLOR,  // color attribute
+        3,
+        GL_FLOAT,
+        GL_FALSE,
+        6 * sizeof(float),           // stride == after what length would i find the next entry of this attribute
+        (void*) (3 * sizeof(float))  // at what index does the first element start.
+    );
+
     glEnableVertexAttribArray(MESH_ATTRIBUTE_POSITION);
+    glEnableVertexAttribArray(MESH_ATTRIBUTE_COLOR);
     glBindBuffer(GL_ARRAY_BUFFER, 0);
 
     while (!window_closed(window))
