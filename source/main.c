@@ -25,12 +25,22 @@ int main()
         so specifying just four vertices to draw a square would
         be pointless.
     */
+    /*
+        here we are mapping the texture to the drawn triangles,
+        then how would i specify the texture coordinates outside
+        the texture coordinate range? => i see. so if i keep the
+        coordinates as (1, smth) or (smth, 1), then the texture
+        maps fully to the square, if i make it 0.5, then only
+        a quarter is mapped, but if i make it 2.0, suddenly
+        the texture is shrunk and then the question comes,
+        what to do with the rest of the space, repeat or clamp?
+    */
     float vertices[] = {
         // vertices          // colors
-        -0.5f,  0.5f, 0.0f,     1.0f, 0.0f, 0.0f,   0.0f, 1.0f,
-        -0.5f, -0.5f, 0.0f,     0.0f, 1.0f, 0.0f,   0.0f, 0.0f,
-         0.5f, -0.5f, 0.0f,     0.0f, 0.0f, 1.0f,   1.0f, 0.0f,
-         0.5f,  0.5f, 0.0f,     1.0f, 1.0f, 0.0f,   1.0f, 1.0f,
+        -0.5f,  0.5f, 0.0f,     1.0f, 0.0f, 0.0f,   -2.0f,  2.0f,
+        -0.5f, -0.5f, 0.0f,     0.0f, 1.0f, 0.0f,   -2.0f, -2.0f,
+         0.5f, -0.5f, 0.0f,     0.0f, 0.0f, 1.0f,    2.0f, -2.0f,
+         0.5f,  0.5f, 0.0f,     1.0f, 1.0f, 0.0f,    2.0f,  2.0f,
     };
 
     unsigned int indices[] = {
@@ -85,18 +95,18 @@ int main()
     glEnableVertexAttribArray(MESH_ATTRIBUTE_UV);
     glBindBuffer(GL_ARRAY_BUFFER, 0);
 
-    {
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-    }
-
     unsigned int TEXTURE0;
     {
         glGenTextures(1, &TEXTURE0);
         glActiveTexture(GL_TEXTURE0);            // -> make this texture active
         glBindTexture(GL_TEXTURE_2D, TEXTURE0);  // -> bind the texture to a texturing target
+
+        {
+            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+            // glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
+            // glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+        }
 
         int width, height, nchannels;
         stbi_set_flip_vertically_on_load(GL_TRUE);
@@ -116,25 +126,7 @@ int main()
         );
         glGenerateMipmap(GL_TEXTURE_2D);
         stbi_image_free(data);
-    }
 
-    unsigned int TEXTURE1;
-    {
-        glGenTextures(1, &TEXTURE1);
-        glActiveTexture(GL_TEXTURE1);
-        glBindTexture(GL_TEXTURE_2D, TEXTURE1);
-
-        int width, height, nchannels;
-        stbi_set_flip_vertically_on_load(GL_TRUE);
-        unsigned char* data = stbi_load("textures/awesomeface.png", &width, &height, &nchannels, 0);
-        if (!data) return EXIT_FAILURE;
-
-        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, data);
-        glGenerateMipmap(GL_TEXTURE_2D);
-        stbi_image_free(data);
-    }
-
-    {
         {
             int texture00_location = glGetUniformLocation(shader->program, "TEXTURE0");
             if (texture00_location == -1)
@@ -144,6 +136,33 @@ int main()
             }
             glUniform1i(texture00_location, 0);
         }
+    }
+
+    unsigned int TEXTURE1;
+    {
+        glGenTextures(1, &TEXTURE1);
+        glActiveTexture(GL_TEXTURE1);
+        glBindTexture(GL_TEXTURE_2D, TEXTURE1);
+
+        {
+            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+
+            // TODO: pick up from here. what are these for, continue with
+            // reading https://learnopengl.com/Getting-started/Textures
+
+            // glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
+            // glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+        }
+
+        int width, height, nchannels;
+        stbi_set_flip_vertically_on_load(GL_TRUE);
+        unsigned char* data = stbi_load("textures/awesomeface.png", &width, &height, &nchannels, 0);
+        if (!data) return EXIT_FAILURE;
+
+        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, data);
+        glGenerateMipmap(GL_TEXTURE_2D);
+        stbi_image_free(data);
 
         {
             int texture01_location = glGetUniformLocation(shader->program, "TEXTURE1");
