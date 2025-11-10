@@ -1,6 +1,9 @@
 #include "shader.h"
 #include "window.h"
+#include "logger.h"
+
 #include "glad/glad.h"
+#include "stb_image.h"
 
 #include <stdlib.h>
 
@@ -24,10 +27,10 @@ int main()
     */
     float vertices[] = {
         // vertices          // colors
-        -0.5f,  0.5f, 0.0f,     1.0f, 0.0f, 0.0f,
-        -0.5f, -0.5f, 0.0f,     0.0f, 1.0f, 0.0f,
-         0.5f, -0.5f, 0.0f,     0.0f, 0.0f, 1.0f,
-         0.5f,  0.5f, 0.0f,     1.0f, 1.0f, 0.0f,
+        -0.5f,  0.5f, 0.0f,     1.0f, 0.0f, 0.0f,   0.0f, 1.0f,
+        -0.5f, -0.5f, 0.0f,     0.0f, 1.0f, 0.0f,   0.0f, 0.0f,
+         0.5f, -0.5f, 0.0f,     0.0f, 0.0f, 1.0f,   1.0f, 0.0f,
+         0.5f,  0.5f, 0.0f,     1.0f, 1.0f, 0.0f,   1.0f, 1.0f,
     };
 
     unsigned int indices[] = {
@@ -58,22 +61,100 @@ int main()
         3,                        // number of components per generic element
         GL_FLOAT,                 // type of data
         GL_FALSE,                 // whether normalized or not
-        6 * sizeof(float),        // stride i.e. offset between consecutive generic elements
-        (void*) 0                 // offset of the first element from the start
-    );
+        8 * sizeof(float),        // stride i.e. offset between consecutive generic elements
+        (void*) 0);               // offset of the first element from the start
 
     glVertexAttribPointer(
         MESH_ATTRIBUTE_COLOR,  // color attribute
         3,
         GL_FLOAT,
         GL_FALSE,
-        6 * sizeof(float),           // stride == after what length would i find the next entry of this attribute
-        (void*) (3 * sizeof(float))  // at what index does the first element start.
-    );
+        8 * sizeof(float),             // stride == after what length would i find the next entry of this attribute
+        (void*) (3 * sizeof(float)));  // at what index does the first element start.
+
+    glVertexAttribPointer(
+        MESH_ATTRIBUTE_UV,
+        2,
+        GL_FLOAT,
+        GL_FALSE,
+        8 * sizeof(float),
+        (void*) (6 * sizeof(float)));
 
     glEnableVertexAttribArray(MESH_ATTRIBUTE_POSITION);
     glEnableVertexAttribArray(MESH_ATTRIBUTE_COLOR);
+    glEnableVertexAttribArray(MESH_ATTRIBUTE_UV);
     glBindBuffer(GL_ARRAY_BUFFER, 0);
+
+    {
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+    }
+
+    unsigned int TEXTURE0;
+    {
+        glGenTextures(1, &TEXTURE0);
+        glActiveTexture(GL_TEXTURE0);            // -> make this texture active
+        glBindTexture(GL_TEXTURE_2D, TEXTURE0);  // -> bind the texture to a texturing target
+
+        int width, height, nchannels;
+        stbi_set_flip_vertically_on_load(GL_TRUE);
+        unsigned char* data = stbi_load("textures/container.jpg", &width, &height, &nchannels, 0);
+        if (!data) return EXIT_FAILURE;
+
+        glTexImage2D(       // specify a 2D texture image
+            GL_TEXTURE_2D,  // target
+            0,              // level (related to mipmaps)
+            GL_RGB,         // internal format
+            width,
+            height,
+            0,       // border
+            GL_RGB,  // format
+            GL_UNSIGNED_BYTE,
+            data  // image data
+        );
+        glGenerateMipmap(GL_TEXTURE_2D);
+        stbi_image_free(data);
+    }
+
+    unsigned int TEXTURE1;
+    {
+        glGenTextures(1, &TEXTURE1);
+        glActiveTexture(GL_TEXTURE1);
+        glBindTexture(GL_TEXTURE_2D, TEXTURE1);
+
+        int width, height, nchannels;
+        stbi_set_flip_vertically_on_load(GL_TRUE);
+        unsigned char* data = stbi_load("textures/awesomeface.png", &width, &height, &nchannels, 0);
+        if (!data) return EXIT_FAILURE;
+
+        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, data);
+        glGenerateMipmap(GL_TEXTURE_2D);
+        stbi_image_free(data);
+    }
+
+    {
+        {
+            int texture00_location = glGetUniformLocation(shader->program, "TEXTURE0");
+            if (texture00_location == -1)
+            {
+                ERROR("no uniform named TEXTURE0 found in shader->program\n");
+                return EXIT_FAILURE;
+            }
+            glUniform1i(texture00_location, 0);
+        }
+
+        {
+            int texture01_location = glGetUniformLocation(shader->program, "TEXTURE1");
+            if (texture01_location == -1)
+            {
+                ERROR("no uniform named TEXTURE1 found in shader->program\n");
+                return EXIT_FAILURE;
+            }
+            glUniform1i(texture01_location, 1);
+        }
+    }
 
     while (!window_closed(window))
     {
