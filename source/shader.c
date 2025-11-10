@@ -8,8 +8,8 @@
 #include <stdbool.h>
 
 static const char* program_variables[] = {
-    [MESH_ATTRIBUTE_POSITION] = "_position",
-    [MESH_ATTRIBUTE_COLOR]    = "_color",
+    [MESH_ATTRIBUTE_POSITION] = "in_position",
+    [MESH_ATTRIBUTE_COLOR]    = "in_color",
 };
 
 static const char* read_shader_file(const char* filename)
