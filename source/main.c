@@ -26,10 +26,12 @@ int main()
         -0.5f,  0.5f, 0.0f,
         -0.5f, -0.5f, 0.0f,
          0.5f, -0.5f, 0.0f,
-
-         0.5f, -0.5f, 0.0f,
          0.5f,  0.5f, 0.0f,
-        -0.5f,  0.5f, 0.0f,
+    };
+
+    unsigned int indices[] = {
+        0, 1, 2,
+        0, 2, 3,
     };
     /* clang-format on */
 
@@ -37,6 +39,12 @@ int main()
     glGenBuffers(1, &vbo);
     glBindBuffer(GL_ARRAY_BUFFER, vbo);
     glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
+
+    // is this per vao or is it something global?
+    unsigned int ebo;
+    glGenBuffers(1, &ebo);
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ebo);
+    glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);
 
     /*
         NOTE: this has nothing to do with the number
@@ -62,7 +70,12 @@ int main()
         window_process_input(window);
         window_clear_color(window);
 
-        glDrawArrays(GL_TRIANGLES, 0, 6);
+        // too many open questions here, the last element is indices why then when
+        // i pass `indices` there, nothing is drawn. `GL_ELEMENT_ARRAY_BUFFER` might
+        // be internally be the default fallback for indices but i don't see that
+        // documented anywhere. maybe the specification would have answers or i should
+        // read the implementation and maybe attempt to have one of my own.
+        glDrawElements(GL_TRIANGLES, sizeof(indices), GL_UNSIGNED_INT, NULL);
 
         window_swap_buffers(window);
     }
