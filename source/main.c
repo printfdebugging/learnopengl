@@ -37,10 +37,10 @@ int main()
     */
     float vertices[] = {
         // vertices          // colors
-        -0.5f,  0.5f, 0.0f,     1.0f, 0.0f, 0.0f,   -2.0f,  2.0f,
-        -0.5f, -0.5f, 0.0f,     0.0f, 1.0f, 0.0f,   -2.0f, -2.0f,
-         0.5f, -0.5f, 0.0f,     0.0f, 0.0f, 1.0f,    2.0f, -2.0f,
-         0.5f,  0.5f, 0.0f,     1.0f, 1.0f, 0.0f,    2.0f,  2.0f,
+        -0.5f,  0.5f, 0.0f,     1.0f, 0.0f, 0.0f,   0.0f,  1.0f,
+        -0.5f, -0.5f, 0.0f,     0.0f, 1.0f, 0.0f,   0.0f,  0.0f,
+         0.5f, -0.5f, 0.0f,     0.0f, 0.0f, 1.0f,   1.0f,  0.0f,
+         0.5f,  0.5f, 0.0f,     1.0f, 1.0f, 0.0f,   1.0f,  1.0f,
     };
 
     unsigned int indices[] = {
@@ -104,8 +104,8 @@ int main()
         {
             glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
             glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
-            // glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
-            // glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
+            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
         }
 
         int width, height, nchannels;
@@ -142,17 +142,17 @@ int main()
     {
         glGenTextures(1, &TEXTURE1);
         glActiveTexture(GL_TEXTURE1);
-        glBindTexture(GL_TEXTURE_2D, TEXTURE1);
+        glBindTexture(GL_TEXTURE_2D, TEXTURE1);  // this is an important step
+                                                 // we switch between textures by calling this like for vao and shader program
 
         {
             glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
             glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
 
-            // TODO: pick up from here. what are these for, continue with
-            // reading https://learnopengl.com/Getting-started/Textures
-
-            // glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
-            // glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+            // jurst reading about mipmaps and these four options to specify
+            // how to switch between the mipmaps is not enough.
+            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
+            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
         }
 
         int width, height, nchannels;
@@ -175,10 +175,28 @@ int main()
         }
     }
 
+    int   mix_level_location = glGetUniformLocation(shader->program, "mix_level");
+    float value              = 0.2f;
+
+    if (mix_level_location == -1)
+    {
+        ERROR("mix_level_location not found\n");
+        return EXIT_FAILURE;
+    }
+
     while (!window_closed(window))
     {
         window_poll_events(window);
         window_process_input(window);
+
+        {
+            if (glfwGetKey(window->window, GLFW_KEY_UP) == GLFW_TRUE)
+                value += 0.01;
+            if (glfwGetKey(window->window, GLFW_KEY_DOWN) == GLFW_TRUE)
+                value -= 0.01;
+        }
+
+        glUniform1f(mix_level_location, value);
         window_clear_color(window);
 
         // too many open questions here, the last element is indices why then when
