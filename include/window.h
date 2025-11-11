@@ -13,9 +13,11 @@ struct window
     GLFWwindow*  window;
 };
 
-struct window* window_create(unsigned int width,
-                             unsigned int height,
-                             const char*  title);
+struct window* window_create(
+    unsigned int width,
+    unsigned int height,
+    const char*  title
+);
 
 void window_process_input(struct window* window);
 void window_poll_events(struct window* window);

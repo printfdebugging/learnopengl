@@ -1,7 +1,7 @@
 #ifndef SHADER_H
 #define SHADER_H
 
-enum mesh_attribute
+enum attr
 {
     MESH_ATTRIBUTE_POSITION = 0,
     MESH_ATTRIBUTE_COLOR    = 1,
@@ -14,7 +14,9 @@ struct shader
     unsigned int program;
 };
 
-struct shader* shader_create_from_file(const char* vertex_path,
-                                       const char* fragment_path);
+struct shader* shader_create_from_file(
+    const char* vertex_path,
+    const char* fragment_path
+);
 
 #endif

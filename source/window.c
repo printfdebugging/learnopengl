@@ -96,6 +96,7 @@ void window_destroy(struct window* window)
 
 bool window_closed(struct window* window)
 {
-    if (!window->window) return GL_TRUE;
+    if (!window->window)
+        return GL_TRUE;
     return glfwWindowShouldClose(window->window);
 }

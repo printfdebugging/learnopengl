@@ -48,11 +48,14 @@ static const char* read_shader_file(const char* filename)
     return buffer;
 }
 
-static bool shader_compiled_successfully(unsigned int shader, const char* filepath)
+static bool shader_compiled_successfully(unsigned int shader,
+                                         const char*  filepath)
 {
     int success;
     glGetShaderiv(shader, GL_COMPILE_STATUS, &success);
-    if (success) return true;
+
+    if (success)
+        return true;
 
     int info_log_length;
     glGetShaderiv(shader, GL_INFO_LOG_LENGTH, &info_log_length);
@@ -67,7 +70,9 @@ static bool shader_program_linked_successfully(unsigned int program)
 {
     int success;
     glGetProgramiv(program, GL_LINK_STATUS, &success);
-    if (success) return true;
+
+    if (success)
+        return true;
 
     int info_log_length;
     glGetProgramiv(program, GL_INFO_LOG_LENGTH, &info_log_length);
@@ -80,7 +85,7 @@ static bool shader_program_linked_successfully(unsigned int program)
 
 static void shader_bind_variable_names(unsigned int shader_program)
 {
-    for (enum mesh_attribute i = MESH_ATTRIBUTE_POSITION; i < MESH_ATTRIBUTE_COUNT; ++i)
+    for (enum attr i = MESH_ATTRIBUTE_POSITION; i < MESH_ATTRIBUTE_COUNT; ++i)
         glBindAttribLocation(shader_program, i, program_variables[i]);
 }
 
@@ -89,25 +94,33 @@ struct shader* shader_create_from_file(const char* vertex_path,
 {
     /* read and compile vertex shader */
     const char* vertex_source = read_shader_file(vertex_path);
-    if (!vertex_source) return NULL;
+
+    if (!vertex_source)
+        return NULL;
 
     unsigned int vertex_shader = glCreateShader(GL_VERTEX_SHADER);
     glShaderSource(vertex_shader, 1, &vertex_source, NULL);
     glCompileShader(vertex_shader);
 
     free((void*) vertex_source);
-    if (!shader_compiled_successfully(vertex_shader, vertex_path)) return NULL;
+
+    if (!shader_compiled_successfully(vertex_shader, vertex_path))
+        return NULL;
 
     /* read and compile fragment shader */
     const char* fragment_source = read_shader_file(fragment_path);
-    if (!fragment_source) return NULL;
+
+    if (!fragment_source)
+        return NULL;
 
     unsigned int fragment_shader = glCreateShader(GL_FRAGMENT_SHADER);
     glShaderSource(fragment_shader, 1, &fragment_source, NULL);
     glCompileShader(fragment_shader);
 
     free((void*) fragment_source);
-    if (!shader_compiled_successfully(fragment_shader, fragment_path)) return NULL;
+
+    if (!shader_compiled_successfully(fragment_shader, fragment_path))
+        return NULL;
 
     /* create shader program */
     unsigned int shader_program = glCreateProgram();
@@ -120,7 +133,10 @@ struct shader* shader_create_from_file(const char* vertex_path,
 
     glDeleteShader(vertex_shader);
     glDeleteShader(fragment_shader);
-    if (!shader_program_linked_successfully(shader_program)) return NULL;
+
+    if (!shader_program_linked_successfully(shader_program))
+        return NULL;
+
     glUseProgram(shader_program);
 
     struct shader* shader = malloc(sizeof(struct shader));

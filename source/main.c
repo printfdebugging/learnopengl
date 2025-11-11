@@ -10,10 +10,17 @@
 int main()
 {
     struct window* window = window_create(800, 600, "OpenGL");
-    if (!window) return EXIT_FAILURE;
 
-    struct shader* shader = shader_create_from_file("shaders/shader.vert", "shaders/shader.frag");
-    if (!shader) return EXIT_FAILURE;
+    if (!window)
+        return EXIT_FAILURE;
+
+    struct shader* shader = shader_create_from_file(
+        "shaders/shader.vert",
+        "shaders/shader.frag"
+    );
+
+    if (!shader)
+        return EXIT_FAILURE;
 
     unsigned int vao;
     glGenVertexArrays(1, &vao);
@@ -35,6 +42,7 @@ int main()
         the texture is shrunk and then the question comes,
         what to do with the rest of the space, repeat or clamp?
     */
+
     float vertices[] = {
         // vertices          // colors
         -0.5f,  0.5f, 0.0f,     1.0f, 0.0f, 0.0f,   0.0f,  1.0f,
@@ -58,7 +66,12 @@ int main()
     unsigned int ebo;
     glGenBuffers(1, &ebo);
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ebo);
-    glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);
+    glBufferData(
+        GL_ELEMENT_ARRAY_BUFFER,
+        sizeof(indices),
+        indices,
+        GL_STATIC_DRAW
+    );
 
     /*
         NOTE: this has nothing to do with the number
@@ -72,15 +85,17 @@ int main()
         GL_FLOAT,                 // type of data
         GL_FALSE,                 // whether normalized or not
         8 * sizeof(float),        // stride i.e. offset between consecutive generic elements
-        (void*) 0);               // offset of the first element from the start
+        (void*) 0                 // offset of the first element from the start
+    );
 
     glVertexAttribPointer(
         MESH_ATTRIBUTE_COLOR,  // color attribute
         3,
         GL_FLOAT,
         GL_FALSE,
-        8 * sizeof(float),             // stride == after what length would i find the next entry of this attribute
-        (void*) (3 * sizeof(float)));  // at what index does the first element start.
+        8 * sizeof(float),           // stride == after what length would i find the next entry of this attribute
+        (void*) (3 * sizeof(float))  // at what index does the first element start.
+    );
 
     glVertexAttribPointer(
         MESH_ATTRIBUTE_UV,
@@ -88,7 +103,8 @@ int main()
         GL_FLOAT,
         GL_FALSE,
         8 * sizeof(float),
-        (void*) (6 * sizeof(float)));
+        (void*) (6 * sizeof(float))
+    );
 
     glEnableVertexAttribArray(MESH_ATTRIBUTE_POSITION);
     glEnableVertexAttribArray(MESH_ATTRIBUTE_COLOR);
@@ -102,16 +118,43 @@ int main()
         glBindTexture(GL_TEXTURE_2D, TEXTURE0);  // -> bind the texture to a texturing target
 
         {
-            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
-            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
-            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+            glTexParameteri(
+                GL_TEXTURE_2D,
+                GL_TEXTURE_WRAP_S,
+                GL_CLAMP_TO_EDGE
+            );
+
+            glTexParameteri(
+                GL_TEXTURE_2D,
+                GL_TEXTURE_WRAP_T,
+                GL_CLAMP_TO_EDGE
+            );
+
+            glTexParameteri(
+                GL_TEXTURE_2D,
+                GL_TEXTURE_MIN_FILTER,
+                GL_LINEAR_MIPMAP_LINEAR
+            );
+
+            glTexParameteri(
+                GL_TEXTURE_2D,
+                GL_TEXTURE_MAG_FILTER,
+                GL_LINEAR
+            );
         }
 
         int width, height, nchannels;
         stbi_set_flip_vertically_on_load(GL_TRUE);
-        unsigned char* data = stbi_load("textures/container.jpg", &width, &height, &nchannels, 0);
-        if (!data) return EXIT_FAILURE;
+        unsigned char* data = stbi_load(
+            "textures/container.jpg",
+            &width,
+            &height,
+            &nchannels,
+            0
+        );
+
+        if (!data)
+            return EXIT_FAILURE;
 
         glTexImage2D(       // specify a 2D texture image
             GL_TEXTURE_2D,  // target
@@ -128,7 +171,11 @@ int main()
         stbi_image_free(data);
 
         {
-            int texture00_location = glGetUniformLocation(shader->program, "TEXTURE0");
+            int texture00_location = glGetUniformLocation(
+                shader->program,
+                "TEXTURE0"
+            );
+
             if (texture00_location == -1)
             {
                 ERROR("no uniform named TEXTURE0 found in shader->program\n");
@@ -151,21 +198,45 @@ int main()
 
             // jurst reading about mipmaps and these four options to specify
             // how to switch between the mipmaps is not enough.
-            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
+            glTexParameteri(
+                GL_TEXTURE_2D,
+                GL_TEXTURE_MIN_FILTER,
+                GL_LINEAR_MIPMAP_LINEAR
+            );
             glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
         }
 
         int width, height, nchannels;
         stbi_set_flip_vertically_on_load(GL_TRUE);
-        unsigned char* data = stbi_load("textures/awesomeface.png", &width, &height, &nchannels, 0);
-        if (!data) return EXIT_FAILURE;
+        unsigned char* data = stbi_load(
+            "textures/awesomeface.png",
+            &width,
+            &height,
+            &nchannels,
+            0
+        );
+        if (!data)
+            return EXIT_FAILURE;
 
-        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, data);
+        glTexImage2D(
+            GL_TEXTURE_2D,
+            0,
+            GL_RGB,
+            width,
+            height,
+            0,
+            GL_RGBA,
+            GL_UNSIGNED_BYTE,
+            data
+        );
         glGenerateMipmap(GL_TEXTURE_2D);
         stbi_image_free(data);
 
         {
-            int texture01_location = glGetUniformLocation(shader->program, "TEXTURE1");
+            int texture01_location = glGetUniformLocation(
+                shader->program,
+                "TEXTURE1"
+            );
             if (texture01_location == -1)
             {
                 ERROR("no uniform named TEXTURE1 found in shader->program\n");
@@ -175,8 +246,11 @@ int main()
         }
     }
 
-    int   mix_level_location = glGetUniformLocation(shader->program, "mix_level");
-    float value              = 0.2f;
+    int mix_level_location = glGetUniformLocation(
+        shader->program,
+        "mix_level"
+    );
+    float value = 0.2f;
 
     if (mix_level_location == -1)
     {
