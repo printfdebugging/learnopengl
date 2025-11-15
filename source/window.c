@@ -67,7 +67,7 @@ struct window* window_create(unsigned int width,
 
 void window_process_input(struct window* window)
 {
-    if (glfwGetKey(window->window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
+    if (glfwGetKey(window->window, GLFW_KEY_CAPS_LOCK) == GLFW_PRESS)
         glfwSetWindowShouldClose(window->window, GLFW_TRUE);
 }
 
