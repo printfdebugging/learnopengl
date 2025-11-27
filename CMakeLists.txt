@@ -1,12 +1,36 @@
 cmake_minimum_required(VERSION 4.0)
 project(executable)
+include(FetchContent)
 
 set(C_STANDARD 11)
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
-ADD_SUBDIRECTORY(libs/glad)
-ADD_SUBDIRECTORY(libs/glfw)
-ADD_SUBDIRECTORY(libs/cglm)
+FetchContent_Declare(glfw
+    GIT_REPOSITORY https://github.com/glfw/glfw.git    
+    GIT_TAG origin/master
+)
+
+FetchContent_Declare(cglm
+    GIT_REPOSITORY https://github.com/recp/cglm.git
+    GIT_TAG origin/master
+)
+
+FetchContent_Declare(glad
+    GIT_REPOSITORY https://github.com/nitrix/glad.git
+    GIT_TAG origin/master
+)
+
+FetchContent_Declare(stb
+    GIT_REPOSITORY https://github.com/nothings/stb.git
+    GIT_TAG origin/master
+)
+
+FetchContent_MakeAvailable(
+    glfw
+    cglm
+    glad
+    stb
+)
 
 ADD_EXECUTABLE(
     executable
@@ -35,7 +59,7 @@ TARGET_COMPILE_DEFINITIONS(executable PRIVATE
 )
 
 TARGET_INCLUDE_DIRECTORIES(executable PRIVATE
-    ${CMAKE_SOURCE_DIR}/libs/stb
+    ${FETCHCONTENT_BASE_DIR}/stb-src
     ${CMAKE_SOURCE_DIR}/include
 )
 
