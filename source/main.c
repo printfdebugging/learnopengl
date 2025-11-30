@@ -234,22 +234,11 @@ int main()
             return EXIT_FAILURE;
     }
 
-    int mix_level_location = glGetUniformLocation(
-        shader->program,
-        "mix_level"
-    );
-    float value = 0.2f;
-
-    if (mix_level_location == -1)
-    {
-        ERROR("mix_level_location not found\n");
-        return EXIT_FAILURE;
-    }
-
     while (!window_closed(window))
     {
         window_poll_events(window);
         window_process_input(window);
+        window_clear_color(window);
 
         {
             vec4 tv = { 0.5f, -0.5f, 0.0f };
@@ -257,35 +246,30 @@ int main()
             vec3 sv = { 0.5f, 0.5f, 0.5f };
             mat4 tm = GLM_MAT4_IDENTITY_INIT;
 
-            /*
-             * NOTE: this sequence should be read in reverse
-             *       i.e. even though the functions are called
-             *       in translate -> rotate -> scale order, they
-             *       are applied to the vector in the reverse
-             *       order.
-             */
             glm_translate(tm, tv);
             glm_rotate(tm, (float) glfwGetTime(), rv);
             glm_scale(tm, sv);
             if (!shader_set_uniform_mat4fv(shader, "transform", (float*) tm))
                 return EXIT_FAILURE;
         }
+        glDrawElements(GL_TRIANGLES, sizeof(indices), GL_UNSIGNED_INT, NULL);
 
         {
-            if (glfwGetKey(window->window, GLFW_KEY_UP) == GLFW_TRUE)
-                value += 0.01;
-            if (glfwGetKey(window->window, GLFW_KEY_DOWN) == GLFW_TRUE)
-                value -= 0.01;
+            vec4 tv = { -0.5f, 0.5f, 0.0f };
+            vec3 rv = { 0.0f, 0.0f, 1.0f };
+            vec3 sv = {
+                sin(glfwGetTime()),
+                sin(glfwGetTime()),
+                sin(glfwGetTime()),
+            };
+            mat4 tm = GLM_MAT4_IDENTITY_INIT;
+
+            glm_translate(tm, tv);
+            /* glm_rotate(tm, (float) glfwGetTime(), rv); */
+            /* glm_scale(tm, sv); */
+            if (!shader_set_uniform_mat4fv(shader, "transform", (float*) tm))
+                return EXIT_FAILURE;
         }
-
-        glUniform1f(mix_level_location, value);
-        window_clear_color(window);
-
-        // too many open questions here, the last element is indices why then when
-        // i pass `indices` there, nothing is drawn. `GL_ELEMENT_ARRAY_BUFFER` might
-        // be internally be the default fallback for indices but i don't see that
-        // documented anywhere. maybe the specification would have answers or i should
-        // read the implementation and maybe attempt to have one of my own.
         glDrawElements(GL_TRIANGLES, sizeof(indices), GL_UNSIGNED_INT, NULL);
 
         window_swap_buffers(window);
