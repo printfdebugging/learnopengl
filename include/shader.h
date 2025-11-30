@@ -1,6 +1,8 @@
 #ifndef SHADER_H
 #define SHADER_H
 
+#include <stdbool.h>
+
 enum attr
 {
     MESH_ATTRIBUTE_POSITION = 0,
@@ -15,8 +17,20 @@ struct shader
 };
 
 struct shader* shader_create_from_file(
-    const char* vertex_path,
-    const char* fragment_path
+    const char* vpath,
+    const char* fpath
+);
+
+bool shader_set_uniform1i(
+    const struct shader* shader,
+    const char*          name,
+    int                  value
+);
+
+bool shader_set_uniform_mat4fv(
+    const struct shader* shader,
+    const char*          name,
+    float*               value
 );
 
 #endif

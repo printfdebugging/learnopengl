@@ -3,6 +3,7 @@
 #include "logger.h"
 
 #include "glad/glad.h"
+#include "cglm/cglm.h"
 #include "stb_image.h"
 
 #include <stdlib.h>
@@ -32,6 +33,14 @@ int main()
         so specifying just four vertices to draw a square would
         be pointless.
     */
+
+    /*
+     * also remember that opengl operates in 3d
+     * space, so using vec2 won't do, we need
+     * to use vec3 with a dummy z coordinate for
+     * 2d.
+     */
+
     /*
         here we are mapping the texture to the drawn triangles,
         then how would i specify the texture coordinates outside
@@ -170,19 +179,8 @@ int main()
         glGenerateMipmap(GL_TEXTURE_2D);
         stbi_image_free(data);
 
-        {
-            int texture00_location = glGetUniformLocation(
-                shader->program,
-                "TEXTURE0"
-            );
-
-            if (texture00_location == -1)
-            {
-                ERROR("no uniform named TEXTURE0 found in shader->program\n");
-                return EXIT_FAILURE;
-            }
-            glUniform1i(texture00_location, 0);
-        }
+        if (!shader_set_uniform1i(shader, "TEXTURE0", 0))
+            return EXIT_FAILURE;
     }
 
     unsigned int TEXTURE1;
@@ -232,18 +230,8 @@ int main()
         glGenerateMipmap(GL_TEXTURE_2D);
         stbi_image_free(data);
 
-        {
-            int texture01_location = glGetUniformLocation(
-                shader->program,
-                "TEXTURE1"
-            );
-            if (texture01_location == -1)
-            {
-                ERROR("no uniform named TEXTURE1 found in shader->program\n");
-                return EXIT_FAILURE;
-            }
-            glUniform1i(texture01_location, 1);
-        }
+        if (!shader_set_uniform1i(shader, "TEXTURE1", 1))
+            return EXIT_FAILURE;
     }
 
     int mix_level_location = glGetUniformLocation(
@@ -262,6 +250,26 @@ int main()
     {
         window_poll_events(window);
         window_process_input(window);
+
+        {
+            vec4 tv = { 0.5f, -0.5f, 0.0f };
+            vec3 rv = { 0.0f, 0.0f, 1.0f };
+            vec3 sv = { 0.5f, 0.5f, 0.5f };
+            mat4 tm = GLM_MAT4_IDENTITY_INIT;
+
+            /*
+             * NOTE: this sequence should be read in reverse
+             *       i.e. even though the functions are called
+             *       in translate -> rotate -> scale order, they
+             *       are applied to the vector in the reverse
+             *       order.
+             */
+            glm_translate(tm, tv);
+            glm_rotate(tm, (float) glfwGetTime(), rv);
+            glm_scale(tm, sv);
+            if (!shader_set_uniform_mat4fv(shader, "transform", (float*) tm))
+                return EXIT_FAILURE;
+        }
 
         {
             if (glfwGetKey(window->window, GLFW_KEY_UP) == GLFW_TRUE)

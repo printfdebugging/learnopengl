@@ -35,6 +35,7 @@ FetchContent_MakeAvailable(
 ADD_EXECUTABLE(
     executable
     source/main.c
+    source/logger.c
     source/window.c
     source/shader.c
     source/stb.c

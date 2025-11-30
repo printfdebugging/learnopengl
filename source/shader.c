@@ -149,3 +149,39 @@ struct shader* shader_create_from_file(const char* vertex_path,
     shader->program = shader_program;
     return shader;
 }
+
+bool shader_set_uniform1i(const struct shader* shader,
+                          const char*          name,
+                          int                  value)
+{
+    int location = glGetUniformLocation(shader->program, name);
+    if (location == -1)
+    {
+        ERROR("no uniform named '%s' found in shader->program\n", name);
+        return false;
+    }
+
+    glUniform1i(location, value);
+    return true;
+}
+
+bool shader_set_uniform_mat4fv(const struct shader* shader,
+                               const char*          name,
+                               float*               value)
+{
+    int location = glGetUniformLocation(shader->program, name);
+    if (location == -1)
+    {
+        ERROR("no uniform named '%s' found in shader->program\n", name);
+        return false;
+    }
+
+    glUniformMatrix4fv(
+        location,
+        1,
+        GL_FALSE,
+        value
+    );
+
+    return true;
+}
