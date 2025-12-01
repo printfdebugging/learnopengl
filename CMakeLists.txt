@@ -4,6 +4,7 @@ include(FetchContent)
 
 set(C_STANDARD 11)
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
+set(CPACK_GENERATOR "TGZ")
 
 FetchContent_Declare(glfw
     GIT_REPOSITORY https://github.com/glfw/glfw.git    
@@ -64,9 +65,15 @@ TARGET_INCLUDE_DIRECTORIES(executable PRIVATE
     ${CMAKE_SOURCE_DIR}/include
 )
 
-add_custom_target(run
+ADD_CUSTOM_TARGET(run
     COMMAND executable
     WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
     DEPENDS executable
     COMMENT "Running executable from root directory"
 )
+
+ADD_CUSTOM_TARGET(assets
+    COMMAND ${CMAKE_COMMAND} -P ${CMAKE_SOURCE_DIR}/cmake/assets.cmake
+)
+
+ADD_DEPENDENCIES(executable assets)

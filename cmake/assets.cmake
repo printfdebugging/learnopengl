@@ -1,0 +1,4 @@
+file(
+    COPY ${CMAKE_SOURCE_DIR}/assets
+    DESTINATION ${CMAKE_CURRENT_BINARY_DIR}
+)
