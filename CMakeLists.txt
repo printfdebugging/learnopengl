@@ -1,32 +1,36 @@
-cmake_minimum_required(VERSION 4.0)
-project(executable)
-include(FetchContent)
+CMAKE_MINIMUM_REQUIRED(VERSION 4.0)
+PROJECT(executable)
 
-set(C_STANDARD 11)
-set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
-set(CPACK_GENERATOR "TGZ")
+INCLUDE(FetchContent)
 
-FetchContent_Declare(glfw
-    GIT_REPOSITORY https://github.com/glfw/glfw.git    
+SET(C_STANDARD 11)
+SET(CMAKE_EXPORT_COMPILE_COMMANDS ON)
+SET(CPACK_GENERATOR "TGZ")
+SET(CMAKE_INSTALL_RPATH "$ORIGIN/../lib")
+SET(CMAKE_BUILD_WITH_INSTALL_RPATH OFF)
+SET(CMAKE_INSTALL_RPATH_USE_LINK_PATH ON)
+
+FETCHCONTENT_DECLARE(glfw
+    GIT_REPOSITORY https://github.com/glfw/glfw.git
     GIT_TAG origin/master
 )
 
-FetchContent_Declare(cglm
+FETCHCONTENT_DECLARE(cglm
     GIT_REPOSITORY https://github.com/recp/cglm.git
     GIT_TAG origin/master
 )
 
-FetchContent_Declare(glad
+FETCHCONTENT_DECLARE(glad
     GIT_REPOSITORY https://github.com/nitrix/glad.git
     GIT_TAG origin/master
 )
 
-FetchContent_Declare(stb
+FETCHCONTENT_DECLARE(stb
     GIT_REPOSITORY https://github.com/nothings/stb.git
     GIT_TAG origin/master
 )
 
-FetchContent_MakeAvailable(
+FETCHCONTENT_MAKEAVAILABLE(
     glfw
     cglm
     glad
@@ -34,7 +38,7 @@ FetchContent_MakeAvailable(
 )
 
 ADD_EXECUTABLE(
-    executable
+    ${PROJECT_NAME}
     source/main.c
     source/logger.c
     source/window.c
@@ -42,7 +46,7 @@ ADD_EXECUTABLE(
     source/stb.c
 )
 
-TARGET_COMPILE_OPTIONS(executable PRIVATE
+TARGET_COMPILE_OPTIONS(${PROJECT_NAME} PRIVATE
     -std=c11
     -g
     -Wall
@@ -50,24 +54,41 @@ TARGET_COMPILE_OPTIONS(executable PRIVATE
     -static
 )
 
-TARGET_LINK_LIBRARIES(executable PRIVATE
+TARGET_LINK_LIBRARIES(${PROJECT_NAME} PRIVATE
     glad
     glfw
     cglm
 )
 
-TARGET_COMPILE_DEFINITIONS(executable PRIVATE
+TARGET_COMPILE_DEFINITIONS(${PROJECT_NAME} PRIVATE
     GLFW_INCLUDE_NONE
+    ASSET_DIR="$<BUILD_INTERFACE:${CMAKE_SOURCE_DIR}/assets/>$<INSTALL_INTERFACE:${CMAKE_INSTALL_FULL_DATAROOTDIR}/${PROJECT_NAME}/assets/>"
 )
 
-TARGET_INCLUDE_DIRECTORIES(executable PRIVATE
+target_compile_definitions(${PROJECT_NAME} PRIVATE
+)
+
+TARGET_INCLUDE_DIRECTORIES(${PROJECT_NAME} PRIVATE
     ${FETCHCONTENT_BASE_DIR}/stb-src
     ${CMAKE_SOURCE_DIR}/include
 )
 
 ADD_CUSTOM_TARGET(run
-    COMMAND executable
+    COMMAND ${PROJECT_NAME} 
     WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
-    DEPENDS executable
-    COMMENT "Running executable from root directory"
+    DEPENDS ${PROJECT_NAME} 
+    COMMENT "Running ${PROJECT_NAME} from root directory"
+)
+
+INSTALL(
+    TARGETS ${PROJECT_NAME}
+    EXPORT  ${PROJECT_NAME}
+    LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
+    ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
+    RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
+)
+
+INSTALL(
+    DIRECTORY "${CMAKE_SOURCE_DIR}/assets"
+    DESTINATION "${CMAKE_INSTALL_DATAROOTDIR}/${PROJECT_NAME}"
 )

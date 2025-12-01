@@ -16,8 +16,8 @@ int main()
         return EXIT_FAILURE;
 
     struct shader* shader = shader_create_from_file(
-        "assets/shaders/shader.vert",
-        "assets/shaders/shader.frag"
+        ASSET_DIR "shaders/shader.vert",
+        ASSET_DIR "shaders/shader.frag"
     );
 
     if (!shader)
@@ -155,7 +155,7 @@ int main()
         int width, height, nchannels;
         stbi_set_flip_vertically_on_load(GL_TRUE);
         unsigned char* data = stbi_load(
-            "assets/textures/container.jpg",
+            ASSET_DIR "textures/container.jpg",
             &width,
             &height,
             &nchannels,
@@ -207,7 +207,7 @@ int main()
         int width, height, nchannels;
         stbi_set_flip_vertically_on_load(GL_TRUE);
         unsigned char* data = stbi_load(
-            "assets/textures/awesomeface.png",
+            ASSET_DIR "textures/awesomeface.png",
             &width,
             &height,
             &nchannels,
