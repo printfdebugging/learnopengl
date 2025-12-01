@@ -71,9 +71,3 @@ ADD_CUSTOM_TARGET(run
     DEPENDS executable
     COMMENT "Running executable from root directory"
 )
-
-ADD_CUSTOM_TARGET(assets
-    COMMAND ${CMAKE_COMMAND} -P ${CMAKE_SOURCE_DIR}/cmake/assets.cmake
-)
-
-ADD_DEPENDENCIES(executable assets)
