@@ -261,38 +261,55 @@ int main()
             return EXIT_FAILURE;
     }
 
+    vec3 positions[] = {
+        { 0.0f,  0.0f,  0.0f   },
+        { 2.0f,  5.0f,  -15.0f },
+        { -1.5f, -2.2f, -2.5f  },
+        { -3.8f, -2.0f, -12.3f },
+        { 2.4f,  -0.4f, -3.5f  },
+        { -1.7f, 3.0f,  -7.5f  },
+        { 1.3f,  -2.0f, -2.5f  },
+        { 1.5f,  2.0f,  -2.5f  },
+        { 1.5f,  0.2f,  -1.5f  },
+        { -1.3f, 1.0f,  -1.5f  }
+    };
+
     while (!window_closed(window))
     {
         window_poll_events(window);
         window_process_input(window);
         window_clear_color(window);
 
+        for (unsigned int i = 0; i < 10; ++i)
         {
-            mat4 model = GLM_MAT4_IDENTITY_INIT;
-            glm_translate(model, (vec3) { 0.0, 0.0, 0.0 });
-            glm_rotate(model, glfwGetTime() * glm_rad(-55.0f), (vec3) { 0.5f, 0.5f, 0.0f });
-            // glm_scale(model, (vec3) { 0.5f, 0.5f, 0.5f });
-            if (!shader_set_uniform_mat4fv(shader, "model", (float*) model))
-                return EXIT_FAILURE;
-        }
+            {
+                mat4 model = GLM_MAT4_IDENTITY_INIT;
+                glm_translate(model, positions[i]);
+                if (i % 3 == 0)
+                    glm_rotate(model, glfwGetTime() * glm_rad(55.0f), (vec3) { 0.5f, 0.5f, 0.0f });
+                glm_scale(model, (vec3) { 1.0f, 1.0f, 1.0f });
+                if (!shader_set_uniform_mat4fv(shader, "model", (float*) model))
+                    return EXIT_FAILURE;
+            }
 
-        {
-            // NOTE: view is basically the inverse of camera's model matrix
-            // so it can have translations, rotations (and scale??)
-            mat4 view = GLM_MAT4_IDENTITY_INIT;
-            glm_translate(view, (vec3) { 0.0f, 0.0f, -3.0f });
-            if (!shader_set_uniform_mat4fv(shader, "view", (float*) view))
-                return EXIT_FAILURE;
-        }
+            {
+                // NOTE: view is basically the inverse of camera's model matrix
+                // so it can have translations, rotations (and scale??)
+                mat4 view = GLM_MAT4_IDENTITY_INIT;
+                glm_translate(view, (vec3) { 0.0f, 0.0f, -3.0f });
+                if (!shader_set_uniform_mat4fv(shader, "view", (float*) view))
+                    return EXIT_FAILURE;
+            }
 
-        {
-            mat4 projection = GLM_MAT4_ZERO_INIT;
-            glm_perspective(glm_rad(45.0f), (float) 800 / 600, 0.1f, 100.0f, projection);
-            if (!shader_set_uniform_mat4fv(shader, "projection", (float*) projection))
-                return EXIT_FAILURE;
-        }
+            {
+                mat4 projection = GLM_MAT4_ZERO_INIT;
+                glm_perspective(glm_rad(45.0f), (float) 800 / 600, 0.1f, 100.0f, projection);
+                if (!shader_set_uniform_mat4fv(shader, "projection", (float*) projection))
+                    return EXIT_FAILURE;
+            }
 
-        glDrawArrays(GL_TRIANGLES, 0, 36);
+            glDrawArrays(GL_TRIANGLES, 0, 36);
+        }
 
         window_swap_buffers(window);
     }
