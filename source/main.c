@@ -231,6 +231,29 @@ int main()
         window_process_input(window);
         window_clear_color(window);
 
+        {
+            mat4 model = GLM_MAT4_IDENTITY_INIT;
+            glm_translate(model, (vec3) { 0.0, 0.0, 0.0 });
+            glm_rotate(model, glm_rad(-55.0f), (vec3) { 1.0f, 0.0f, 0.0f });
+            glm_scale(model, (vec3) { 0.5f, 0.5f, 0.5f });
+            if (!shader_set_uniform_mat4fv(shader, "model", (float*) model))
+                return EXIT_FAILURE;
+        }
+        {
+            // NOTE: view is basically the inverse of camera's model matrix
+            // so it can have translations, rotations (and scale??)
+            mat4 view = GLM_MAT4_IDENTITY_INIT;
+            glm_translate(view, (vec3) { 0.0f, 0.0f, -3.0f });
+            if (!shader_set_uniform_mat4fv(shader, "view", (float*) view))
+                return EXIT_FAILURE;
+        }
+        {
+            mat4 projection = GLM_MAT4_ZERO_INIT;
+            glm_perspective(glm_rad(45.0f), (float) 800 / 600, 0.1f, 100.0f, projection);
+            if (!shader_set_uniform_mat4fv(shader, "projection", (float*) projection))
+                return EXIT_FAILURE;
+        }
+
         glDrawElements(GL_TRIANGLES, sizeof(indices), GL_UNSIGNED_INT, NULL);
 
         window_swap_buffers(window);
