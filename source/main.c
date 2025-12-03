@@ -53,11 +53,11 @@ int main()
     */
 
     float vertices[] = {
-        // vertices          // colors
-        -0.5f,  0.5f, 0.0f,     1.0f, 0.0f, 0.0f,   0.0f,  1.0f,
-        -0.5f, -0.5f, 0.0f,     0.0f, 1.0f, 0.0f,   0.0f,  0.0f,
-         0.5f, -0.5f, 0.0f,     0.0f, 0.0f, 1.0f,   1.0f,  0.0f,
-         0.5f,  0.5f, 0.0f,     1.0f, 1.0f, 0.0f,   1.0f,  1.0f,
+        // vertices          
+        -0.5f,  0.5f, 0.0f,   0.0f,  1.0f,
+        -0.5f, -0.5f, 0.0f,   0.0f,  0.0f,
+         0.5f, -0.5f, 0.0f,   1.0f,  0.0f,
+         0.5f,  0.5f, 0.0f,   1.0f,  1.0f,
     };
 
     unsigned int indices[] = {
@@ -93,17 +93,8 @@ int main()
         3,                        // number of components per generic element
         GL_FLOAT,                 // type of data
         GL_FALSE,                 // whether normalized or not
-        8 * sizeof(float),        // stride i.e. offset between consecutive generic elements
+        5 * sizeof(float),        // stride i.e. offset between consecutive generic elements
         (void*) 0                 // offset of the first element from the start
-    );
-
-    glVertexAttribPointer(
-        MESH_ATTRIBUTE_COLOR,  // color attribute
-        3,
-        GL_FLOAT,
-        GL_FALSE,
-        8 * sizeof(float),           // stride == after what length would i find the next entry of this attribute
-        (void*) (3 * sizeof(float))  // at what index does the first element start.
     );
 
     glVertexAttribPointer(
@@ -111,8 +102,8 @@ int main()
         2,
         GL_FLOAT,
         GL_FALSE,
-        8 * sizeof(float),
-        (void*) (6 * sizeof(float))
+        5 * sizeof(float),
+        (void*) (3 * sizeof(float))
     );
 
     glEnableVertexAttribArray(MESH_ATTRIBUTE_POSITION);
@@ -240,36 +231,6 @@ int main()
         window_process_input(window);
         window_clear_color(window);
 
-        {
-            vec4 tv = { 0.5f, -0.5f, 0.0f };
-            vec3 rv = { 0.0f, 0.0f, 1.0f };
-            vec3 sv = { 0.5f, 0.5f, 0.5f };
-            mat4 tm = GLM_MAT4_IDENTITY_INIT;
-
-            glm_translate(tm, tv);
-            glm_rotate(tm, (float) glfwGetTime(), rv);
-            glm_scale(tm, sv);
-            if (!shader_set_uniform_mat4fv(shader, "transform", (float*) tm))
-                return EXIT_FAILURE;
-        }
-        glDrawElements(GL_TRIANGLES, sizeof(indices), GL_UNSIGNED_INT, NULL);
-
-        {
-            vec4 tv = { -0.5f, 0.5f, 0.0f };
-            vec3 rv = { 0.0f, 0.0f, 1.0f };
-            vec3 sv = {
-                sin(glfwGetTime()),
-                sin(glfwGetTime()),
-                sin(glfwGetTime()),
-            };
-            mat4 tm = GLM_MAT4_IDENTITY_INIT;
-
-            glm_translate(tm, tv);
-            /* glm_rotate(tm, (float) glfwGetTime(), rv); */
-            /* glm_scale(tm, sv); */
-            if (!shader_set_uniform_mat4fv(shader, "transform", (float*) tm))
-                return EXIT_FAILURE;
-        }
         glDrawElements(GL_TRIANGLES, sizeof(indices), GL_UNSIGNED_INT, NULL);
 
         window_swap_buffers(window);

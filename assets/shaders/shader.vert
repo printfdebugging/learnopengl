@@ -9,14 +9,10 @@ in vec4 in_position;
 in vec3 in_color;
 in vec2 in_uv;
 
-out vec4 color;
 out vec2 uv;
-
-uniform mat4 transform;
 
 void main()
 {
-    gl_Position = transform * vec4(in_position.xyz, 1.0);
-    color       = vec4(in_color.xyz, 1.0);
+    gl_Position = vec4(in_position.xyz, 1.0);
     uv          = in_uv;
 }
