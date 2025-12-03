@@ -53,11 +53,47 @@ int main()
     */
 
     float vertices[] = {
-        // vertices          
-        -0.5f,  0.5f, 0.0f,   0.0f,  1.0f,
-        -0.5f, -0.5f, 0.0f,   0.0f,  0.0f,
-         0.5f, -0.5f, 0.0f,   1.0f,  0.0f,
-         0.5f,  0.5f, 0.0f,   1.0f,  1.0f,
+        -0.5f, -0.5f, -0.5f,  0.0f, 0.0f,
+        0.5f, -0.5f, -0.5f,  1.0f, 0.0f,
+        0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
+        0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
+        -0.5f,  0.5f, -0.5f,  0.0f, 1.0f,
+        -0.5f, -0.5f, -0.5f,  0.0f, 0.0f,
+
+        -0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
+        0.5f, -0.5f,  0.5f,  1.0f, 0.0f,
+        0.5f,  0.5f,  0.5f,  1.0f, 1.0f,
+        0.5f,  0.5f,  0.5f,  1.0f, 1.0f,
+        -0.5f,  0.5f,  0.5f,  0.0f, 1.0f,
+        -0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
+
+        -0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
+        -0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
+        -0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
+        -0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
+        -0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
+        -0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
+
+        0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
+        0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
+        0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
+        0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
+        0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
+        0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
+
+        -0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
+        0.5f, -0.5f, -0.5f,  1.0f, 1.0f,
+        0.5f, -0.5f,  0.5f,  1.0f, 0.0f,
+        0.5f, -0.5f,  0.5f,  1.0f, 0.0f,
+        -0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
+        -0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
+
+        -0.5f,  0.5f, -0.5f,  0.0f, 1.0f,
+        0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
+        0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
+        0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
+        -0.5f,  0.5f,  0.5f,  0.0f, 0.0f,
+        -0.5f,  0.5f, -0.5f,  0.0f, 1.0f
     };
 
     unsigned int indices[] = {
@@ -234,11 +270,12 @@ int main()
         {
             mat4 model = GLM_MAT4_IDENTITY_INIT;
             glm_translate(model, (vec3) { 0.0, 0.0, 0.0 });
-            glm_rotate(model, glm_rad(-55.0f), (vec3) { 1.0f, 0.0f, 0.0f });
-            glm_scale(model, (vec3) { 0.5f, 0.5f, 0.5f });
+            glm_rotate(model, glfwGetTime() * glm_rad(-55.0f), (vec3) { 0.5f, 0.5f, 0.0f });
+            // glm_scale(model, (vec3) { 0.5f, 0.5f, 0.5f });
             if (!shader_set_uniform_mat4fv(shader, "model", (float*) model))
                 return EXIT_FAILURE;
         }
+
         {
             // NOTE: view is basically the inverse of camera's model matrix
             // so it can have translations, rotations (and scale??)
@@ -247,6 +284,7 @@ int main()
             if (!shader_set_uniform_mat4fv(shader, "view", (float*) view))
                 return EXIT_FAILURE;
         }
+
         {
             mat4 projection = GLM_MAT4_ZERO_INIT;
             glm_perspective(glm_rad(45.0f), (float) 800 / 600, 0.1f, 100.0f, projection);
@@ -254,7 +292,7 @@ int main()
                 return EXIT_FAILURE;
         }
 
-        glDrawElements(GL_TRIANGLES, sizeof(indices), GL_UNSIGNED_INT, NULL);
+        glDrawArrays(GL_TRIANGLES, 0, 36);
 
         window_swap_buffers(window);
     }

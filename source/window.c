@@ -48,6 +48,7 @@ struct window* window_create(unsigned int width,
     }
 
     glfwSetFramebufferSizeCallback(window, framebuffer_resize_callback);
+    glEnable(GL_DEPTH_TEST);
     glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
 
     struct window* win = malloc(sizeof(struct window));
@@ -80,7 +81,7 @@ void window_poll_events(struct window* window)
 void window_clear_color(struct window* window)
 {
     (void) window;
-    glClear(GL_COLOR_BUFFER_BIT);
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 }
 
 void window_swap_buffers(struct window* window)
