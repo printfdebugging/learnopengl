@@ -4,6 +4,7 @@
 #include "logger.h"
 
 #include <stdlib.h>
+#include <string.h>
 
 static void framebuffer_resize_callback(GLFWwindow* window,
                                         int         width,
@@ -15,7 +16,8 @@ static void framebuffer_resize_callback(GLFWwindow* window,
 
 struct window* window_create(unsigned int width,
                              unsigned int height,
-                             const char*  title)
+                             const char*  title,
+                             vec4         color)
 {
     if (!glfwInit())
     {
@@ -49,7 +51,6 @@ struct window* window_create(unsigned int width,
 
     glfwSetFramebufferSizeCallback(window, framebuffer_resize_callback);
     glEnable(GL_DEPTH_TEST);
-    glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
 
     struct window* win = malloc(sizeof(struct window));
     if (!win)
@@ -62,8 +63,15 @@ struct window* window_create(unsigned int width,
     win->width  = width;
     win->height = height;
     win->title  = title;
+    memcpy(win->color, color, sizeof(float) * 4);
     win->window = window;
     return win;
+}
+
+void window_set_clear_color(struct window* window,
+                            vec4           color)
+{
+    memcpy(window->color, color, sizeof(float) * 4);
 }
 
 void window_process_input(struct window* window)
@@ -81,6 +89,12 @@ void window_poll_events(struct window* window)
 void window_clear_color(struct window* window)
 {
     (void) window;
+    glClearColor(
+        window->color[0],
+        window->color[1],
+        window->color[2],
+        window->color[3]
+    );
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 }
 

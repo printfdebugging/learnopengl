@@ -10,7 +10,12 @@
 
 int main()
 {
-    struct window* window = window_create(800, 600, "OpenGL");
+    struct window* window = window_create(
+        800,
+        600,
+        "OpenGL",
+        (vec4) { 0.2f, 0.3f, 0.3f, 1.0f }
+    );
 
     if (!window)
         return EXIT_FAILURE;

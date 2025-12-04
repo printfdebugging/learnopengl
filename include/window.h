@@ -2,6 +2,7 @@
 #define WINDOW_H
 
 #include "GLFW/glfw3.h"
+#include "cglm/cglm.h"
 
 #include <stdbool.h>
 
@@ -11,12 +12,19 @@ struct window
     unsigned int height;
     const char*  title;
     GLFWwindow*  window;
+    vec4         color;
 };
 
 struct window* window_create(
     unsigned int width,
     unsigned int height,
-    const char*  title
+    const char*  title,
+    vec4         color
+);
+
+void window_set_clear_color(
+    struct window* window,
+    vec4           color
 );
 
 void window_process_input(struct window* window);
