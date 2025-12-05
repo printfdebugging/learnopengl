@@ -3,40 +3,20 @@ PROJECT(executable)
 
 INCLUDE(FetchContent)
 
-SET(C_STANDARD 11)
-SET(CMAKE_EXPORT_COMPILE_COMMANDS ON)
-SET(CMAKE_INSTALL_RPATH "$ORIGIN/../lib")
-SET(CMAKE_BUILD_WITH_INSTALL_RPATH OFF)
-SET(CMAKE_INSTALL_RPATH_USE_LINK_PATH ON)
+set(C_STANDARD 11)
+set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
+set(CMAKE_INSTALL_RPATH "$ORIGIN/../lib")
+set(CMAKE_BUILD_WITH_INSTALL_RPATH OFF)
+set(CMAKE_INSTALL_RPATH_USE_LINK_PATH ON)
 
-FETCHCONTENT_DECLARE(glfw
-    GIT_REPOSITORY https://github.com/glfw/glfw.git
-    GIT_TAG origin/master
-)
+add_subdirectory(libs/glfw)
+add_subdirectory(libs/glad)
+# add_subdirectory(libs/stb)
+add_subdirectory(libs/cglm)
 
-FETCHCONTENT_DECLARE(cglm
-    GIT_REPOSITORY https://github.com/recp/cglm.git
-    GIT_TAG origin/master
-)
 
-FETCHCONTENT_DECLARE(glad
-    GIT_REPOSITORY https://github.com/nitrix/glad.git
-    GIT_TAG origin/master
-)
 
-FETCHCONTENT_DECLARE(stb
-    GIT_REPOSITORY https://github.com/nothings/stb.git
-    GIT_TAG origin/master
-)
-
-FETCHCONTENT_MAKEAVAILABLE(
-    glfw
-    cglm
-    glad
-    stb
-)
-
-ADD_EXECUTABLE(
+add_executable(
     ${PROJECT_NAME}
     source/main.c
     source/logger.c
@@ -45,7 +25,7 @@ ADD_EXECUTABLE(
     source/stb.c
 )
 
-TARGET_COMPILE_OPTIONS(${PROJECT_NAME} PRIVATE
+target_compile_options(${PROJECT_NAME} PRIVATE
     -std=c11
     -g
     -Wall
@@ -53,30 +33,30 @@ TARGET_COMPILE_OPTIONS(${PROJECT_NAME} PRIVATE
     -static
 )
 
-TARGET_LINK_LIBRARIES(${PROJECT_NAME} PRIVATE
+target_link_libraries(${PROJECT_NAME} PRIVATE
     glad
     glfw
     cglm
 )
 
-TARGET_COMPILE_DEFINITIONS(${PROJECT_NAME} PRIVATE
+target_compile_definitions(${PROJECT_NAME} PRIVATE
     GLFW_INCLUDE_NONE
     ASSET_DIR="$<BUILD_INTERFACE:${CMAKE_SOURCE_DIR}/assets/>$<INSTALL_INTERFACE:${CMAKE_INSTALL_FULL_DATAROOTDIR}/${PROJECT_NAME}/assets/>"
 )
 
-TARGET_INCLUDE_DIRECTORIES(${PROJECT_NAME} PRIVATE
-    ${FETCHCONTENT_BASE_DIR}/stb-src
+target_include_directories(${PROJECT_NAME} PRIVATE
+    ${CMAKE_SOURCE_DIR}/libs/stb
     ${CMAKE_SOURCE_DIR}/include
 )
 
-ADD_CUSTOM_TARGET(run
+add_custom_target(run
     COMMAND ${PROJECT_NAME} 
     WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
     DEPENDS ${PROJECT_NAME} 
     COMMENT "Running ${PROJECT_NAME} from root directory"
 )
 
-INSTALL(
+install(
     TARGETS ${PROJECT_NAME}
     EXPORT  ${PROJECT_NAME}
     LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
@@ -84,7 +64,7 @@ INSTALL(
     RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
 )
 
-INSTALL(
+install(
     DIRECTORY "${CMAKE_SOURCE_DIR}/assets"
     DESTINATION "${CMAKE_INSTALL_DATAROOTDIR}/${PROJECT_NAME}"
 )
