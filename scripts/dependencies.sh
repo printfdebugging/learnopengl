@@ -9,7 +9,8 @@ if [ -f "/etc/os-release" ]; then
 				clang64/mingw-w64-clang-x86_64-cmake \
 				clang64/mingw-w64-clang-x86_64-ninja \
 				clang64/mingw-w64-clang-x86_64-clang \
-				clang64/mingw-w64-clang-x86_64-clang-tools-extra
+				clang64/mingw-w64-clang-x86_64-clang-tools-extra \
+				clang64/mingw-w64-clang-x86_64-nsis
 		}
 		;;
 	'arch')
