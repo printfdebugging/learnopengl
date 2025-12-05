@@ -9,13 +9,6 @@ set(CMAKE_INSTALL_RPATH "$ORIGIN/../lib")
 set(CMAKE_BUILD_WITH_INSTALL_RPATH OFF)
 set(CMAKE_INSTALL_RPATH_USE_LINK_PATH ON)
 
-add_subdirectory(libs/glfw)
-add_subdirectory(libs/glad)
-# add_subdirectory(libs/stb)
-add_subdirectory(libs/cglm)
-
-
-
 add_executable(
     ${PROJECT_NAME}
     source/main.c
@@ -33,9 +26,24 @@ target_compile_options(${PROJECT_NAME} PRIVATE
     -static
 )
 
+add_subdirectory(libs/glad)
+add_subdirectory(libs/cglm)
+
+if (EMSCRIPTEN)
+    # use emscripten-glfw instead of glfw
+    add_subdirectory(libs/emscripten-glfw)
+    target_link_libraries(${PROJECT_NAME} PRIVATE glfw3)
+
+    # generate html
+    set(CMAKE_EXECUTABLE_SUFFIX ".html")
+else()
+    add_subdirectory(libs/glfw)
+    target_link_libraries(${PROJECT_NAME} PRIVATE glfw)
+endif()
+
+
 target_link_libraries(${PROJECT_NAME} PRIVATE
     glad
-    glfw
     cglm
 )
 

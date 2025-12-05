@@ -16,14 +16,7 @@ int main()
     if (!window)
         return EXIT_FAILURE;
 
-    while (!window_closed(window))
-    {
-        window_poll_events(window);
-        window_process_input(window);
-        window_clear_color(window);
-
-        window_swap_buffers(window);
-    }
+    printf("hello, world\n");
 
     window_destroy(window);
     return 0;
