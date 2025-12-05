@@ -1,7 +1,5 @@
-CMAKE_MINIMUM_REQUIRED(VERSION 4.0)
-PROJECT(executable)
-
-INCLUDE(FetchContent)
+cmake_minimum_required(VERSION 4.0)
+project(executable)
 
 set(C_STANDARD 11)
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
