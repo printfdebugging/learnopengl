@@ -1,3 +1,5 @@
+cmake_minimum_required(VERSION 4.0)
+
 add_custom_target(CopyAssets
 	COMMAND ${CMAKE_COMMAND} -E copy_directory 
         "${CMAKE_SOURCE_DIR}/assets" 

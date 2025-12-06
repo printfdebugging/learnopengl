@@ -1,3 +1,5 @@
+cmake_minimum_required(VERSION 4.0)
+
 set(C_STANDARD 11)
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 set(CMAKE_INSTALL_RPATH "$ORIGIN/../lib")

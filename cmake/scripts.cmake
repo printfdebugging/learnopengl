@@ -1,3 +1,5 @@
+cmake_minimum_required(VERSION 4.0)
+
 # NOTE: this is specially helpful when building with
 #       emscripten as then we get proper completion
 #       and error messages for emscripten bits.

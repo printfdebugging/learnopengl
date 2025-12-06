@@ -1,3 +1,5 @@
+cmake_minimum_required(VERSION 4.0)
+
 # TODO: load all the assets in just one preload call.
 # TODO: move this to assets
 set(AssetFiles

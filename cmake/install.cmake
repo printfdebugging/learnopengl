@@ -1,3 +1,5 @@
+cmake_minimum_required(VERSION 4.0)
+
 install(
     TARGETS ${PROJECT_NAME}
     EXPORT  ${PROJECT_NAME}
