@@ -1,6 +1,8 @@
 /.cache
 /.vscode
+/.clangd
 /build
+/CMakeUserPresets.json
 
 /tags
 /compile_commands.json

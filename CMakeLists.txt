@@ -1,11 +1,9 @@
+# TODO: this is just me trying things out,
+# this isn't the best solution of-course.
+
 cmake_minimum_required(VERSION 4.0)
 project(executable)
-
-set(C_STANDARD 11)
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
-set(CMAKE_INSTALL_RPATH "$ORIGIN/../lib")
-set(CMAKE_BUILD_WITH_INSTALL_RPATH OFF)
-set(CMAKE_INSTALL_RPATH_USE_LINK_PATH ON)
 
 add_executable(
     ${PROJECT_NAME}
@@ -16,61 +14,10 @@ add_executable(
     source/stb.c
 )
 
-target_compile_options(${PROJECT_NAME} PRIVATE
-    -std=c11
-    -g
-    -Wall
-    -Wextra
-    -static
-)
+include("${CMAKE_SOURCE_DIR}/cmake/config.cmake")
+include("${CMAKE_SOURCE_DIR}/cmake/scripts.cmake")
+include("${CMAKE_SOURCE_DIR}/cmake/externals.cmake")
 
-add_subdirectory(libs/glad)
-add_subdirectory(libs/cglm)
-
-if (EMSCRIPTEN)
-    # use emscripten-glfw instead of glfw
-    add_subdirectory(libs/emscripten-glfw)
-    target_link_libraries(${PROJECT_NAME} PRIVATE glfw3)
-
-    # generate html
-    set(CMAKE_EXECUTABLE_SUFFIX ".html")
-else()
-    add_subdirectory(libs/glfw)
-    target_link_libraries(${PROJECT_NAME} PRIVATE glfw)
-endif()
-
-
-target_link_libraries(${PROJECT_NAME} PRIVATE
-    glad
-    cglm
-)
-
-target_compile_definitions(${PROJECT_NAME} PRIVATE
-    GLFW_INCLUDE_NONE
-    ASSET_DIR="$<BUILD_INTERFACE:${CMAKE_SOURCE_DIR}/assets/>$<INSTALL_INTERFACE:${CMAKE_INSTALL_FULL_DATAROOTDIR}/${PROJECT_NAME}/assets/>"
-)
-
-target_include_directories(${PROJECT_NAME} PRIVATE
-    ${CMAKE_SOURCE_DIR}/libs/stb
-    ${CMAKE_SOURCE_DIR}/include
-)
-
-add_custom_target(run
-    COMMAND ${PROJECT_NAME} 
-    WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
-    DEPENDS ${PROJECT_NAME} 
-    COMMENT "Running ${PROJECT_NAME} from root directory"
-)
-
-install(
-    TARGETS ${PROJECT_NAME}
-    EXPORT  ${PROJECT_NAME}
-    LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
-    ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
-    RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
-)
-
-install(
-    DIRECTORY "${CMAKE_SOURCE_DIR}/assets"
-    DESTINATION "${CMAKE_INSTALL_DATAROOTDIR}/${PROJECT_NAME}"
-)
+include("${CMAKE_SOURCE_DIR}/cmake/custom.cmake")
+include("${CMAKE_SOURCE_DIR}/cmake/assets.cmake")
+include("${CMAKE_SOURCE_DIR}/cmake/install.cmake")

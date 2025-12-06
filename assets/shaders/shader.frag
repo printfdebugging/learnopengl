@@ -1,23 +1,10 @@
-#version 330 core
+#version 300 es
 
-/*
-    variables leaving the graphics pipeline
-    are annotated with _out at the end.
-*/
-out vec4 color_out;
+precision mediump float;
 
-in vec2 uv;
-
-// one cool thing about uniform variables is that you don't have to add them
-// to the vertex shader first, they can directly be used in the fragment shader.
-uniform sampler2D TEXTURE0;
-uniform sampler2D TEXTURE1;
+out vec4 triangleColor;
 
 void main()
 {
-    color_out = mix(
-        texture(TEXTURE0, uv),
-        texture(TEXTURE1, uv),
-        0.2
-    );
+    triangleColor = vec4(1.0, 0.0, 0.0, 1.0);
 }
