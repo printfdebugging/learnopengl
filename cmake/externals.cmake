@@ -13,28 +13,28 @@ set(AssetFiles
 
 
 # all this should be in externals.cmake
-add_subdirectory(libs/glad)
-add_subdirectory(libs/cglm)
+add_subdirectory("${CMAKE_SOURCE_DIR}/libs/glad")
+add_subdirectory("${CMAKE_SOURCE_DIR}/libs/cglm")
 
 if (EMSCRIPTEN)
     # use emscripten-glfw instead of glfw
-    add_subdirectory(libs/emscripten-glfw)
+    add_subdirectory("${CMAKE_SOURCE_DIR}/libs/emscripten-glfw")
     target_link_libraries(${PROJECT_NAME} PRIVATE glfw3)
-
-    set(linkerFlags "-sMAX_WEBGL_VERSION=2")
-    set(linkerFlags "${linkerFlags} -sNO_DISABLE_EXCEPTION_CATCHING")
-    set(linkerFlags "${linkerFlags} -s ASSERTIONS=1")
-    set(linkerFlags "${linkerFlags} -s WASM=1")
-    set(linkerFlags "${linkerFlags} -s SAFE_HEAP=1")
-
-    set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} ${linkerFlags}")
 
 
     # generate html
     # TODO part of this should go to config.cmake part should go to assets.cmake
-    set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} --preload-file ${CMAKE_BINARY_DIR}/assets/shaders/shader.vert --preload-file ${CMAKE_BINARY_DIR}/assets/shaders/shader.frag")
+    set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} \
+        -sMAX_WEBGL_VERSION=2 \
+        -sNO_DISABLE_EXCEPTION_CATCHING \
+        -s ASSERTIONS=1 \
+        -s WASM=1 \
+        -s SAFE_HEAP=1 \
+        --preload-file ${CMAKE_BINARY_DIR}/assets/shaders/shader.vert \
+        --preload-file ${CMAKE_BINARY_DIR}/assets/shaders/shader.frag \
+    ")
 else()
-    add_subdirectory(libs/glfw)
+    add_subdirectory("${CMAKE_SOURCE_DIR}/libs/glfw")
     target_link_libraries(${PROJECT_NAME} PRIVATE glfw)
 endif()
 
