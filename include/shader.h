@@ -3,7 +3,7 @@
 
 #include <stdbool.h>
 
-enum attr
+enum Attr
 {
     MESH_ATTRIBUTE_POSITION = 0,
     MESH_ATTRIBUTE_COLOR    = 1,
@@ -11,24 +11,24 @@ enum attr
     MESH_ATTRIBUTE_COUNT,
 };
 
-struct shader
+struct Shader
 {
     unsigned int program;
 };
 
-struct shader* shader_create_from_file(
+struct Shader* shCreateFromFile(
     const char* vpath,
     const char* fpath
 );
 
-bool shader_set_uniform1i(
-    const struct shader* shader,
+bool shUniform1i(
+    const struct Shader* shader,
     const char*          name,
     int                  value
 );
 
-bool shader_set_uniform_mat4fv(
-    const struct shader* shader,
+bool shUniformMatrix4fv(
+    const struct Shader* shader,
     const char*          name,
     float*               value
 );

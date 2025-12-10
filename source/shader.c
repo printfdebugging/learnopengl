@@ -13,7 +13,7 @@ static const char* program_variables[] = {
     [MESH_ATTRIBUTE_UV]       = "in_uv",
 };
 
-static const char* read_shader_file(const char* filename)
+static const char* readShaderFile(const char* filename)
 {
     FILE* file = fopen(filename, "rb");
     if (!file)
@@ -48,8 +48,8 @@ static const char* read_shader_file(const char* filename)
     return buffer;
 }
 
-static bool shader_compiled_successfully(unsigned int shader,
-                                         const char*  filepath)
+static bool shCompiledSuccessfully(unsigned int shader,
+                                   const char*  filepath)
 {
     int success;
     glGetShaderiv(shader, GL_COMPILE_STATUS, &success);
@@ -57,16 +57,16 @@ static bool shader_compiled_successfully(unsigned int shader,
     if (success)
         return true;
 
-    int info_log_length;
-    glGetShaderiv(shader, GL_INFO_LOG_LENGTH, &info_log_length);
+    int infoLogLen;
+    glGetShaderiv(shader, GL_INFO_LOG_LENGTH, &infoLogLen);
 
-    char info_log[info_log_length];
-    glGetShaderInfoLog(shader, info_log_length, NULL, info_log);
-    ERROR("failed to compile shader: %s: %s\n", filepath, info_log);
+    char infoLog[infoLogLen];
+    glGetShaderInfoLog(shader, infoLogLen, NULL, infoLog);
+    ERROR("failed to compile shader: %s: %s\n", filepath, infoLog);
     return false;
 }
 
-static bool shader_program_linked_successfully(unsigned int program)
+static bool shLinkedSuccessfully(unsigned int program)
 {
     int success;
     glGetProgramiv(program, GL_LINK_STATUS, &success);
@@ -74,85 +74,85 @@ static bool shader_program_linked_successfully(unsigned int program)
     if (success)
         return true;
 
-    int info_log_length;
-    glGetProgramiv(program, GL_INFO_LOG_LENGTH, &info_log_length);
+    int infoLogLen;
+    glGetProgramiv(program, GL_INFO_LOG_LENGTH, &infoLogLen);
 
-    char info_log[info_log_length];
-    glGetProgramInfoLog(program, info_log_length, NULL, info_log);
-    ERROR("failed to link shader program: %s\n", info_log);
+    char infoLog[infoLogLen];
+    glGetProgramInfoLog(program, infoLogLen, NULL, infoLog);
+    ERROR("failed to link shader program: %s\n", infoLog);
     return false;
 }
 
-static void shader_bind_variable_names(unsigned int shader_program)
+static void shBindVariableNames(unsigned int shader_program)
 {
-    for (enum attr i = MESH_ATTRIBUTE_POSITION; i < MESH_ATTRIBUTE_COUNT; ++i)
+    for (enum Attr i = MESH_ATTRIBUTE_POSITION; i < MESH_ATTRIBUTE_COUNT; ++i)
         glBindAttribLocation(shader_program, i, program_variables[i]);
 }
 
-struct shader* shader_create_from_file(const char* vertex_path,
-                                       const char* fragment_path)
+struct Shader* shCreateFromFile(const char* vpath,
+                                const char* fpath)
 {
     /* read and compile vertex shader */
-    const char* vertex_source = read_shader_file(vertex_path);
+    const char* vsource = readShaderFile(vpath);
 
-    if (!vertex_source)
+    if (!vsource)
         return NULL;
 
-    unsigned int vertex_shader = glCreateShader(GL_VERTEX_SHADER);
-    glShaderSource(vertex_shader, 1, &vertex_source, NULL);
-    glCompileShader(vertex_shader);
+    unsigned int vshader = glCreateShader(GL_VERTEX_SHADER);
+    glShaderSource(vshader, 1, &vsource, NULL);
+    glCompileShader(vshader);
 
-    free((void*) vertex_source);
+    free((void*) vsource);
 
-    if (!shader_compiled_successfully(vertex_shader, vertex_path))
+    if (!shCompiledSuccessfully(vshader, vpath))
         return NULL;
 
     /* read and compile fragment shader */
-    const char* fragment_source = read_shader_file(fragment_path);
+    const char* fsource = readShaderFile(fpath);
 
-    if (!fragment_source)
+    if (!fsource)
         return NULL;
 
-    unsigned int fragment_shader = glCreateShader(GL_FRAGMENT_SHADER);
-    glShaderSource(fragment_shader, 1, &fragment_source, NULL);
-    glCompileShader(fragment_shader);
+    unsigned int fshader = glCreateShader(GL_FRAGMENT_SHADER);
+    glShaderSource(fshader, 1, &fsource, NULL);
+    glCompileShader(fshader);
 
-    free((void*) fragment_source);
+    free((void*) fsource);
 
-    if (!shader_compiled_successfully(fragment_shader, fragment_path))
+    if (!shCompiledSuccessfully(fshader, fpath))
         return NULL;
 
     /* create shader program */
-    unsigned int shader_program = glCreateProgram();
-    glAttachShader(shader_program, vertex_shader);
-    glAttachShader(shader_program, fragment_shader);
+    unsigned int sprogram = glCreateProgram();
+    glAttachShader(sprogram, vshader);
+    glAttachShader(sprogram, fshader);
 
     /* bind attribute locations and link */
-    shader_bind_variable_names(shader_program);
-    glLinkProgram(shader_program);
+    shBindVariableNames(sprogram);
+    glLinkProgram(sprogram);
 
-    glDeleteShader(vertex_shader);
-    glDeleteShader(fragment_shader);
+    glDeleteShader(vshader);
+    glDeleteShader(fshader);
 
-    if (!shader_program_linked_successfully(shader_program))
+    if (!shLinkedSuccessfully(sprogram))
         return NULL;
 
-    glUseProgram(shader_program);
+    glUseProgram(sprogram);
 
-    struct shader* shader = malloc(sizeof(struct shader));
+    struct Shader* shader = malloc(sizeof(struct Shader));
     if (!shader)
     {
         ERROR("failed to allocate shader\n");
         return NULL;
     }
 
-    shader->program = shader_program;
+    shader->program = sprogram;
     return shader;
 }
 
-bool shader_set_uniform1i(const struct shader* shader,
-                          const char*          name,
-                          int                  value)
+bool shUniform1i(const struct Shader* shader,
+                 const char*          name,
+                 int                  value)
 {
     int location = glGetUniformLocation(shader->program, name);
     if (location == -1)
@@ -165,9 +165,9 @@ bool shader_set_uniform1i(const struct shader* shader,
     return true;
 }
 
-bool shader_set_uniform_mat4fv(const struct shader* shader,
-                               const char*          name,
-                               float*               value)
+bool shUniformMatrix4fv(const struct Shader* shader,
+                        const char*          name,
+                        float*               value)
 {
     int location = glGetUniformLocation(shader->program, name);
     if (location == -1)

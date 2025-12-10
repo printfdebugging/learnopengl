@@ -6,18 +6,18 @@
 #include <stdlib.h>
 #include <string.h>
 
-static void framebuffer_resize_callback(GLFWwindow* window,
-                                        int         width,
-                                        int         height)
+static void winFrameBufResizeCallback(GLFWwindow* window,
+                                      int         width,
+                                      int         height)
 {
     (void) window;
     glViewport(0, 0, width, height);
 }
 
-struct window* window_create(unsigned int width,
-                             unsigned int height,
-                             const char*  title,
-                             vec4         color)
+struct Window* winCreate(unsigned int width,
+                         unsigned int height,
+                         const char*  title,
+                         vec4         color)
 {
     if (!glfwInit())
     {
@@ -49,10 +49,10 @@ struct window* window_create(unsigned int width,
         return NULL;
     }
 
-    glfwSetFramebufferSizeCallback(window, framebuffer_resize_callback);
+    glfwSetFramebufferSizeCallback(window, winFrameBufResizeCallback);
     glEnable(GL_DEPTH_TEST);
 
-    struct window* win = malloc(sizeof(struct window));
+    struct Window* win = malloc(sizeof(struct Window));
     if (!win)
     {
         ERROR("failed to initialize glad\n");
@@ -68,25 +68,25 @@ struct window* window_create(unsigned int width,
     return win;
 }
 
-void window_set_clear_color(struct window* window,
-                            vec4           color)
+void winSetClearColor(struct Window* window,
+                      vec4           color)
 {
     memcpy(window->color, color, sizeof(float) * 4);
 }
 
-void window_process_input(struct window* window)
+void winProcessEvents(struct Window* window)
 {
     if (glfwGetKey(window->window, GLFW_KEY_CAPS_LOCK) == GLFW_PRESS)
         glfwSetWindowShouldClose(window->window, GLFW_TRUE);
 }
 
-void window_poll_events(struct window* window)
+void winPollEvents(struct Window* window)
 {
     (void) window;
     glfwPollEvents();
 }
 
-void window_clear_color(struct window* window)
+void winClearColor(struct Window* window)
 {
     (void) window;
     glClearColor(
@@ -98,18 +98,18 @@ void window_clear_color(struct window* window)
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 }
 
-void window_swap_buffers(struct window* window)
+void winSwapBuffers(struct Window* window)
 {
     glfwSwapBuffers(window->window);
 }
 
-void window_destroy(struct window* window)
+void winDestroy(struct Window* window)
 {
     glfwDestroyWindow(window->window);
     glfwTerminate();
 }
 
-bool window_closed(struct window* window)
+bool winClosed(struct Window* window)
 {
     if (!window->window)
         return GL_TRUE;

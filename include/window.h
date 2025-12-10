@@ -6,7 +6,7 @@
 
 #include <stdbool.h>
 
-struct window
+struct Window
 {
     unsigned int width;
     unsigned int height;
@@ -15,23 +15,23 @@ struct window
     vec4         color;
 };
 
-struct window* window_create(
+struct Window* winCreate(
     unsigned int width,
     unsigned int height,
     const char*  title,
     vec4         color
 );
 
-void window_set_clear_color(
-    struct window* window,
+void winSetClearColor(
+    struct Window* window,
     vec4           color
 );
 
-void window_process_input(struct window* window);
-void window_poll_events(struct window* window);
-void window_clear_color(struct window* window);
-void window_swap_buffers(struct window* window);
-void window_destroy(struct window* window);
-bool window_closed(struct window* window);
+void winProcessEvents(struct Window* window);
+void winPollEvents(struct Window* window);
+void winClearColor(struct Window* window);
+void winSwapBuffers(struct Window* window);
+void winDestroy(struct Window* window);
+bool winClosed(struct Window* window);
 
 #endif

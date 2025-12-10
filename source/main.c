@@ -11,23 +11,23 @@
 
 unsigned int   vao;
 unsigned int   vbo;
-struct shader* shader;
-struct window* window;
+struct Shader* shader;
+struct Window* window;
 
 void frame()
 {
-    window_poll_events(window);
-    window_process_input(window);
-    window_clear_color(window);
+    winPollEvents(window);
+    winProcessEvents(window);
+    winClearColor(window);
 
     glDrawArrays(GL_TRIANGLES, 0, 3);
 
-    window_swap_buffers(window);
+    winSwapBuffers(window);
 }
 
 int main()
 {
-    window = window_create(
+    window = winCreate(
         800,
         600,
         "OpenGL",
@@ -63,7 +63,7 @@ int main()
 
     glEnableVertexAttribArray(0);
 
-    shader = shader_create_from_file(
+    shader = shCreateFromFile(
         ASSET_DIR "shaders/shader.vert",
         ASSET_DIR "shaders/shader.frag"
     );
@@ -72,12 +72,12 @@ int main()
     printf("emscripten: v%d.%d.%d\n", __EMSCRIPTEN_major__, __EMSCRIPTEN_minor__, __EMSCRIPTEN_tiny__);
     emscripten_set_main_loop(frame, 0, false);
 #else
-    while (!window_closed(window))
+    while (!winClosed(window))
     {
         frame();
     }
 #endif
 
-    window_destroy(window);
+    winDestroy(window);
     return 0;
 }
