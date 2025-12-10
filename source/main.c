@@ -27,13 +27,7 @@ void frame()
 
 int main()
 {
-    window = winCreate(
-        800,
-        600,
-        "OpenGL",
-        (vec4) { 0.2f, 0.3f, 0.3f, 1.0f }
-    );
-
+    window = winCreate(800, 600, "OpenGL", (vec4) { 0.2f, 0.3f, 0.3f, 1.0f });
     if (!window)
         return EXIT_FAILURE;
 
@@ -69,7 +63,12 @@ int main()
     );
 
 #ifdef EMSCRIPTEN
-    printf("emscripten: v%d.%d.%d\n", __EMSCRIPTEN_major__, __EMSCRIPTEN_minor__, __EMSCRIPTEN_tiny__);
+    printf(
+        "emscripten: v%d.%d.%d\n",
+        __EMSCRIPTEN_major__,
+        __EMSCRIPTEN_minor__,
+        __EMSCRIPTEN_tiny__
+    );
     emscripten_set_main_loop(frame, 0, false);
 #else
     while (!winClosed(window))
