@@ -17,7 +17,7 @@ struct Window* window;
 void frame()
 {
     winPollEvents(window);
-    winProcessEvents(window);
+    winProcessInput(window);
     winClearColor(window);
 
     glDrawArrays(GL_TRIANGLES, 0, 3);

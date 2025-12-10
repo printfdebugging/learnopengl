@@ -74,7 +74,7 @@ void winSetClearColor(struct Window* window,
     memcpy(window->color, color, sizeof(float) * 4);
 }
 
-void winProcessEvents(struct Window* window)
+void winProcessInput(struct Window* window)
 {
     if (glfwGetKey(window->window, GLFW_KEY_CAPS_LOCK) == GLFW_PRESS)
         glfwSetWindowShouldClose(window->window, GLFW_TRUE);

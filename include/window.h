@@ -27,7 +27,7 @@ void winSetClearColor(
     vec4           color
 );
 
-void winProcessEvents(struct Window* window);
+void winProcessInput(struct Window* window);
 void winPollEvents(struct Window* window);
 void winClearColor(struct Window* window);
 void winSwapBuffers(struct Window* window);
