@@ -10,7 +10,6 @@ add_custom_target(CopyAssets
 add_dependencies(${PROJECT_NAME} CopyAssets)
 
 
-# TODO move this to assets
 if (EMSCRIPTEN)
     target_compile_definitions(${PROJECT_NAME} PRIVATE
         GLFW_INCLUDE_NONE
@@ -22,5 +21,3 @@ else()
         ASSET_DIR="$<BUILD_INTERFACE:${CMAKE_SOURCE_DIR}/assets/>$<INSTALL_INTERFACE:${CMAKE_INSTALL_FULL_DATAROOTDIR}/${PROJECT_NAME}/assets/>"
     )
 endif()
-
-

@@ -11,4 +11,8 @@ if (EMSCRIPTEN)
     list(JOIN CLANGD_FLAGS_TO_ADD ", " CLANGD_FLAGS_TO_ADD)
     set(CLANGD_TEMPLATE ${CMAKE_SOURCE_DIR}/scripts/clangd.in)
     configure_file(${CLANGD_TEMPLATE} "${CMAKE_SOURCE_DIR}/.clangd")
+else()
+    # TODO: delete the .clangd file or else it will have the
+    # build flags from the last run. just replace the placeholder with
+    # -g or some cflags for warnings and errors.
 endif()
