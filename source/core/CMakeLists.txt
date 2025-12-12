@@ -1,0 +1,22 @@
+cmake_minimum_required(VERSION 4.0)
+
+set(CMAKE_C_STANDARD 11)
+set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
+
+add_library(core STATIC # SHARED
+    logger.c
+    window.c
+)
+
+target_include_directories(core
+    PUBLIC ../../include/core
+)
+
+target_link_libraries(core
+    glad
+    glfw
+)
+
+target_compile_options(core PUBLIC
+    "${PROJECT_CMAKE_C_FLAGS}"
+)

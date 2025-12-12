@@ -1,47 +1,47 @@
 cmake_minimum_required(VERSION 4.0)
-set(CMAKE_C_STANDARD 11)
-set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
-set(CMAKE_INSTALL_RPATH "$ORIGIN/../lib")
-set(CMAKE_BUILD_WITH_INSTALL_RPATH OFF)
-set(CMAKE_INSTALL_RPATH_USE_LINK_PATH ON)
-
-project(
-    executable
+project(LearnOpenGL
     VERSION         "0.0.1.1"
-    DESCRIPTION     "Cross Platform LearnOpengl Implementaion"
+    DESCRIPTION     "Cross Platform LearnOpenGL Implementaion"
     HOMEPAGE_URL    "https://codeberg.org/printfdebugging/learnopengl"
     LANGUAGES       "C"
 )
 
+set(CMAKE_C_STANDARD 23)
+set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
+set(CMAKE_THREAD_LIBS_INIT "-lpthread")
+set(CMAKE_HAVE_THREADS_LIBRARY 1)
+set(CMAKE_USE_WIN32_THREADS_INIT 0)
+set(CMAKE_USE_PTHREADS_INIT 1)
+set(THREADS_PREFER_PTHREAD_FLAG ON)
 
-# TODO: add WIN32/MACOSX flags here so that the stdout
-# dialogs don't show up when the application runs
-add_executable(
-    ${PROJECT_NAME}
-    source/main.c
-    source/logger.c
-    source/window.c
-    source/shader.c
-    source/stb.c
-)
+set(PROJECT_CMAKE_C_FLAGS "\
+    -Wall \
+    -Wpedantic \
+    -Werror \
+    -Wshadow \
+    -Wextra \
+    -Wconversion \
+    -Wunused \
+    -fsanitize=address \
+    -fsanitize=leak \
+    -fsanitize=undefined \
+    -fsanitize=bounds-strict \
+    -fsanitize=unreachable \
+    -fsanitize=signed-integer-overflow \
+")
 
-# TODO: is this the best solution? probably not. include the original
-# cmake files here, separate them into nice sections, separated by 
-#comments
+# external libraries
+add_subdirectory(libs/glad)
+add_subdirectory(libs/cglm)
 
+# TODO: use generator expression here
 if (EMSCRIPTEN)
-    set(CMAKE_EXECUTABLE_SUFFIX ".html")
+    add_subdirectory(libs/emscripten-glfw)
+    add_library(glfw ALIAS glfw3)
+else()
+    add_subdirectory(libs/glfw)
+    # no add library here as libs/glfw exports glfw
 endif()
-
-# TODO: separate this -g flag for debug and release builds
-target_compile_options(${PROJECT_NAME} PRIVATE
-    -std=c11
-    -g
-    -Wall
-    -Wextra
-    -static
-)
-
 
 # NOTE: this is specially helpful when building with
 #       emscripten as then we get proper completion
@@ -49,99 +49,22 @@ target_compile_options(${PROJECT_NAME} PRIVATE
 # GH:   https:// github.com/clangd/clangd/issues/1621
 
 if (EMSCRIPTEN)
-    execute_process(COMMAND ${CMAKE_C_COMPILER} --cflags OUTPUT_VARIABLE CLANGD_FLAGS_TO_ADD)
-    separate_arguments(CLANGD_FLAGS_TO_ADD UNIX_COMMAND "${CLANGD_FLAGS_TO_ADD}")
-    list(JOIN CLANGD_FLAGS_TO_ADD ", " CLANGD_FLAGS_TO_ADD)
-    set(CLANGD_TEMPLATE ${CMAKE_SOURCE_DIR}/scripts/clangd.in)
-    configure_file(${CLANGD_TEMPLATE} "${CMAKE_SOURCE_DIR}/.clangd")
-else()
-    # TODO: delete the .clangd file or else it will have the
-    # build flags from the last run. just replace the placeholder with
-    # -g or some cflags for warnings and errors.
-endif()
-
-
-# TODO: load all the assets in just one preload call.
-# TODO: move this to assets
-set(AssetFiles
-    assets/shaders/shader.vert
-    assets/shaders/shader.frag
-    assets/textures/awesomeface.png
-    assets/textures/container.jpg
-    assets/textures/wall.jpg
-    assets/logo.png
-)
-
-
-# all this should be in externals.cmake
-add_subdirectory("${CMAKE_SOURCE_DIR}/libs/glad")
-add_subdirectory("${CMAKE_SOURCE_DIR}/libs/cglm")
-
-if (EMSCRIPTEN)
-    # use emscripten-glfw instead of glfw
-    add_subdirectory("${CMAKE_SOURCE_DIR}/libs/emscripten-glfw")
-    target_link_libraries(${PROJECT_NAME} PRIVATE glfw3)
-
-    # generate html
-    # TODO part of this should go to config.cmake part should go to assets.cmake
-    set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} \
-        -sMAX_WEBGL_VERSION=2 \
-        -sNO_DISABLE_EXCEPTION_CATCHING \
-        -s ASSERTIONS=1 \
-        -s WASM=1 \
-        -s SAFE_HEAP=1 \
-        --preload-file ${CMAKE_SOURCE_DIR}/assets/shaders/shader.vert \
-        --preload-file ${CMAKE_SOURCE_DIR}/assets/shaders/shader.frag \
-    ")
-else()
-    add_subdirectory("${CMAKE_SOURCE_DIR}/libs/glfw")
-    target_link_libraries(${PROJECT_NAME} PRIVATE glfw)
-endif()
-
-
-target_link_libraries(${PROJECT_NAME} PRIVATE
-    glad
-    cglm
-)
-
-
-target_include_directories(${PROJECT_NAME} PRIVATE
-    ${CMAKE_SOURCE_DIR}/libs/stb
-    ${CMAKE_SOURCE_DIR}/include
-)
-
-
-if (EMSCRIPTEN)
-    target_compile_definitions(${PROJECT_NAME} PRIVATE
-        GLFW_INCLUDE_NONE
-        ASSET_DIR="assets/"
+    execute_process(
+        COMMAND ${CMAKE_C_COMPILER} --cflags 
+        OUTPUT_VARIABLE CLANGD_FLAGS_TO_ADD
     )
 else()
-    target_compile_definitions(${PROJECT_NAME} PRIVATE
-        GLFW_INCLUDE_NONE
-        ASSET_DIR="$<BUILD_INTERFACE:${CMAKE_SOURCE_DIR}/assets/>$<INSTALL_INTERFACE:${CMAKE_INSTALL_FULL_DATAROOTDIR}/${PROJECT_NAME}/assets/>"
-    )
+    set(CLANGD_FLAGS_TO_ADD "${CMAKE_C_FLAGS}")
 endif()
 
+separate_arguments(CLANGD_FLAGS_TO_ADD UNIX_COMMAND "${CLANGD_FLAGS_TO_ADD}")
+list(JOIN CLANGD_FLAGS_TO_ADD ", " CLANGD_FLAGS_TO_ADD)
+set(CLANGD_TEMPLATE ${CMAKE_SOURCE_DIR}/scripts/clangd.in)
+configure_file(${CLANGD_TEMPLATE} "${CMAKE_SOURCE_DIR}/.clangd")
 
-# TODO: look into if these are valid for the emscripten build
-# or are these just for the regular build
-install(
-    TARGETS ${PROJECT_NAME}
-    EXPORT  ${PROJECT_NAME}
-    LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
-    ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
-    RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
-)
+# internal libs/modules/units
+add_subdirectory(source/core)
+add_subdirectory(source/loader)
 
-install(
-    DIRECTORY "${CMAKE_SOURCE_DIR}/assets"
-    DESTINATION "${CMAKE_INSTALL_DATAROOTDIR}/${PROJECT_NAME}"
-)
-
-add_custom_target(run
-    COMMAND ${PROJECT_NAME} 
-    WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
-    DEPENDS ${PROJECT_NAME} 
-    COMMENT "Running ${PROJECT_NAME} from root directory"
-)
+# executables
+add_subdirectory(source/tutorials/hello-triangle)
