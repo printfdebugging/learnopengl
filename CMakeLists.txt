@@ -90,8 +90,8 @@ if (EMSCRIPTEN)
         -s ASSERTIONS=1 \
         -s WASM=1 \
         -s SAFE_HEAP=1 \
-        --preload-file ${CMAKE_BINARY_DIR}/assets/shaders/shader.vert \
-        --preload-file ${CMAKE_BINARY_DIR}/assets/shaders/shader.frag \
+        --preload-file ${CMAKE_SOURCE_DIR}/assets/shaders/shader.vert \
+        --preload-file ${CMAKE_SOURCE_DIR}/assets/shaders/shader.frag \
     ")
 else()
     add_subdirectory("${CMAKE_SOURCE_DIR}/libs/glfw")
@@ -145,12 +145,3 @@ add_custom_target(run
     DEPENDS ${PROJECT_NAME} 
     COMMENT "Running ${PROJECT_NAME} from root directory"
 )
-
-add_custom_target(CopyAssets
-	COMMAND ${CMAKE_COMMAND} -E copy_directory 
-        "${CMAKE_SOURCE_DIR}/assets" 
-        "${CMAKE_BINARY_DIR}/assets"
-    COMMENT "Copying Assets"
-)
-
-add_dependencies(${PROJECT_NAME} CopyAssets)
