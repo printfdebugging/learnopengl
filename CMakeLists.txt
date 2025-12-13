@@ -11,8 +11,6 @@ project(LearnOpenGL
 # external libraries
 add_subdirectory(libs/glad)
 target_compile_options(glad PRIVATE -fPIC)
-target_compile_definitions(glad PRIVATE GLAD_API_CALL_EXPORT)
-target_compile_definitions(glad INTERFACE GLAD_API_CALL_EXPORT GLAD_API_CALL_EXPORT_BUILD)
 
 add_subdirectory(libs/cglm)
 add_subdirectory(cmake/stb)

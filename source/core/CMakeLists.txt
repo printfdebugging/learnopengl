@@ -21,6 +21,9 @@ target_compile_options(core PUBLIC
 target_compile_definitions(core
     PRIVATE   CORE_EXPORT
     INTERFACE CORE_IMPORT
+
+    PRIVATE   GLAD_API_CALL_EXPORT
+    PRIVATE   GLAD_API_CALL_EXPORT_BUILD
     INTERFACE GLAD_API_CALL_EXPORT
 )
 

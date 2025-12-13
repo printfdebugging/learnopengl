@@ -24,6 +24,10 @@ target_compile_options(loader PUBLIC
 target_compile_definitions(loader
     PRIVATE   LOADER_EXPORT
     INTERFACE LOADER_IMPORT
+
+    PRIVATE   GLAD_API_CALL_EXPORT
+    PRIVATE   GLAD_API_CALL_EXPORT_BUILD
+    INTERFACE GLAD_API_CALL_EXPORT
 )
 
 install(
