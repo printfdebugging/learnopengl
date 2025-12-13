@@ -6,26 +6,13 @@ project(LearnOpenGL
     LANGUAGES       "C"
 )
 
-set(CMAKE_C_STANDARD 23)
-set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
-set(CMAKE_THREAD_LIBS_INIT "-lpthread")
-set(CMAKE_HAVE_THREADS_LIBRARY 1)
-set(CMAKE_USE_WIN32_THREADS_INIT 0)
-set(CMAKE_USE_PTHREADS_INIT 1)
-set(THREADS_PREFER_PTHREAD_FLAG ON)
-set(BUILD_SHARED_LIBS OFF)
-set(CGLM_STATIC ON)
-
-set(PROJECT_CMAKE_C_FLAGS
-    -fPIC
-    -Wpedantic
-    -Werror
-    -Wall
-    -Wextra
-)
+include(cmake/common.cmake)
 
 # external libraries
 add_subdirectory(libs/glad)
+# TODO: @nitrix to add it to glad
+target_compile_options(glad PRIVATE -fPIC)
+
 add_subdirectory(libs/cglm)
 add_subdirectory(cmake/stb)
 
