@@ -3,8 +3,8 @@
 #include "core/window.h"
 
 #ifdef EMSCRIPTEN
-#include <emscripten/version.h>
-#include <emscripten/emscripten.h>
+    #include <emscripten/version.h>
+    #include <emscripten/emscripten.h>
 #endif
 
 #include <stdlib.h>
