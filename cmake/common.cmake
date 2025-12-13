@@ -1,3 +1,5 @@
+cmake_minimum_required(VERSION 4.0)
+
 set(CMAKE_C_STANDARD 23)
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 set(CMAKE_THREAD_LIBS_INIT "-lpthread")
@@ -8,7 +10,7 @@ set(THREADS_PREFER_PTHREAD_FLAG ON)
 set(BUILD_SHARED_LIBS OFF)
 set(CGLM_STATIC ON)
 
-set(PROJECT_CMAKE_C_FLAGS
+set(COMPILER_FLAGS
     -fPIC
     -Wpedantic
     -Werror

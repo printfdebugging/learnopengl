@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 4.0)
+include("${CMAKE_SOURCE_DIR}/cmake/common.cmake")
 
-set(CMAKE_C_STANDARD 11)
-set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
+project(hello-triangle)
 
 add_Executable(hello-triangle
     source/main.c
@@ -17,7 +17,7 @@ target_link_libraries(hello-triangle
 )
 
 target_compile_options(hello-triangle PUBLIC
-    ${PROJECT_CMAKE_C_FLAGS}
+    ${COMPILER_FLAGS}
 )
 
 # TODO: use generator expression instead of conditional

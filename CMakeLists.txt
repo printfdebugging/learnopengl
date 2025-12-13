@@ -1,12 +1,12 @@
 cmake_minimum_required(VERSION 4.0)
+include("${CMAKE_SOURCE_DIR}/cmake/common.cmake")
+
 project(LearnOpenGL
     VERSION         "0.0.1.1"
     DESCRIPTION     "Cross Platform LearnOpenGL Implementaion"
     HOMEPAGE_URL    "https://codeberg.org/printfdebugging/learnopengl"
     LANGUAGES       "C"
 )
-
-include(cmake/common.cmake)
 
 # external libraries
 add_subdirectory(libs/glad)
@@ -36,7 +36,7 @@ if (EMSCRIPTEN)
         OUTPUT_VARIABLE CLANGD_FLAGS_TO_ADD
     )
 else()
-    set(CLANGD_FLAGS_TO_ADD "${CMAKE_C_FLAGS}")
+    set(CLANGD_FLAGS_TO_ADD "${COMPILER_FLAGS}")
 endif()
 
 separate_arguments(CLANGD_FLAGS_TO_ADD UNIX_COMMAND "${CLANGD_FLAGS_TO_ADD}")

@@ -1,7 +1,5 @@
 cmake_minimum_required(VERSION 4.0)
-
-set(CMAKE_C_STANDARD 23)
-set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
+include("${CMAKE_SOURCE_DIR}/cmake/common.cmake")
 
 add_library(core SHARED
     source/logger.c
@@ -17,5 +15,5 @@ target_link_libraries(core
 )
 
 target_compile_options(core PUBLIC
-    ${PROJECT_CMAKE_C_FLAGS}
+    ${COMPILER_FLAGS}
 )
