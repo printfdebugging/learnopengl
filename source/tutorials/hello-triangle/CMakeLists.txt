@@ -13,6 +13,7 @@ target_include_directories(${APPLICATION}
 target_link_libraries(${APPLICATION}
     core
     loader
+    glad
 )
 
 target_compile_options(${APPLICATION} PUBLIC
