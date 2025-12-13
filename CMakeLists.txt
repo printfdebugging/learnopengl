@@ -13,9 +13,12 @@ set(CMAKE_HAVE_THREADS_LIBRARY 1)
 set(CMAKE_USE_WIN32_THREADS_INIT 0)
 set(CMAKE_USE_PTHREADS_INIT 1)
 set(THREADS_PREFER_PTHREAD_FLAG ON)
+set(BUILD_SHARED_LIBS OFF)
+set(CGLM_STATIC ON)
 
 set(PROJECT_CMAKE_C_FLAGS "\
     -Wall \
+    -fPIC \
     -Wpedantic \
     -Werror \
     -Wshadow \
@@ -33,6 +36,7 @@ set(PROJECT_CMAKE_C_FLAGS "\
 # external libraries
 add_subdirectory(libs/glad)
 add_subdirectory(libs/cglm)
+add_subdirectory(cmake/stb)
 
 # TODO: use generator expression here
 if (EMSCRIPTEN)

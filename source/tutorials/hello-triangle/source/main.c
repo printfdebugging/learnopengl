@@ -1,6 +1,6 @@
-#include <loader/shader.h>
-#include <glad/glad.h>
-#include <window.h>
+#include "loader/shader.h"
+#include "glad/glad.h"
+#include "core/window.h"
 
 #ifdef EMSCRIPTEN
 #include <emscripten/version.h>

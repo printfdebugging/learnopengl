@@ -1,7 +1,7 @@
-#include <glad/glad.h>
-#include <logger.h>
+#include "glad/glad.h"
+#include "core/logger.h"
 
-#include "shader.h"
+#include "loader/shader.h"
 
 #include <stdio.h>
 #include <stdlib.h>
