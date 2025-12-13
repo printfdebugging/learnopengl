@@ -19,6 +19,6 @@ target_link_libraries(loader
 )
 
 target_compile_options(loader PUBLIC
-    "${PROJECT_CMAKE_C_FLAGS}"
+    ${PROJECT_CMAKE_C_FLAGS}
 )
 

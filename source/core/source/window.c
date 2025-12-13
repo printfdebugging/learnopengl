@@ -33,7 +33,14 @@ struct Window* winCreate(unsigned int width,
     glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GLFW_TRUE);
 #endif
 
-    GLFWwindow* window = glfwCreateWindow(width, height, title, NULL, NULL);
+    GLFWwindow* window = glfwCreateWindow(
+        (int) width,
+        (int) height,
+        title,
+        NULL,
+        NULL
+    );
+
     if (!window)
     {
         ERROR("failed to create glfw winodw\n");

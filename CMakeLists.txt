@@ -16,22 +16,22 @@ set(THREADS_PREFER_PTHREAD_FLAG ON)
 set(BUILD_SHARED_LIBS OFF)
 set(CGLM_STATIC ON)
 
-set(PROJECT_CMAKE_C_FLAGS "\
-    -Wall \
-    -fPIC \
-    -Wpedantic \
-    -Werror \
-    -Wshadow \
-    -Wextra \
-    -Wconversion \
-    -Wunused \
-    -fsanitize=address \
-    -fsanitize=leak \
-    -fsanitize=undefined \
-    -fsanitize=bounds-strict \
-    -fsanitize=unreachable \
-    -fsanitize=signed-integer-overflow \
-")
+set(PROJECT_CMAKE_C_FLAGS
+    -Wall
+    -fPIC
+    -Wpedantic
+    -Werror
+    -Wshadow
+    -Wextra
+    -Wconversion
+    -Wunused
+    -fsanitize=address
+    -fsanitize=leak
+    -fsanitize=undefined
+    -fsanitize=bounds-strict
+    -fsanitize=unreachable
+    -fsanitize=signed-integer-overflow
+)
 
 # external libraries
 add_subdirectory(libs/glad)

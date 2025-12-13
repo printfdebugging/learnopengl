@@ -16,5 +16,5 @@ target_link_libraries(core
 )
 
 target_compile_options(core PUBLIC
-    "${PROJECT_CMAKE_C_FLAGS}"
+    ${PROJECT_CMAKE_C_FLAGS}
 )
