@@ -3,6 +3,7 @@
 
 #include "GLFW/glfw3.h"
 #include "cglm/cglm.h"
+#include "core/defines.h"
 
 #include <stdbool.h>
 
@@ -15,23 +16,23 @@ struct Window
     vec4         color;
 };
 
-struct Window* winCreate(
+API_CALL struct Window* winCreate(
     unsigned int width,
     unsigned int height,
     const char*  title,
     vec4         color
 );
 
-void winSetClearColor(
+API_CALL void winSetClearColor(
     struct Window* window,
     vec4           color
 );
 
-void winProcessInput(struct Window* window);
-void winPollEvents(struct Window* window);
-void winClearColor(struct Window* window);
-void winSwapBuffers(struct Window* window);
-void winDestroy(struct Window* window);
-bool winClosed(struct Window* window);
+API_CALL void winProcessInput(struct Window* window);
+API_CALL void winPollEvents(struct Window* window);
+API_CALL void winClearColor(struct Window* window);
+API_CALL void winSwapBuffers(struct Window* window);
+API_CALL void winDestroy(struct Window* window);
+API_CALL bool winClosed(struct Window* window);
 
 #endif

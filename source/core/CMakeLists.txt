@@ -17,3 +17,9 @@ target_link_libraries(core
 target_compile_options(core PUBLIC
     ${COMPILER_FLAGS}
 )
+
+target_compile_definitions(core
+    PRIVATE   CORE_EXPORT
+    INTERFACE CORE_IMPORT
+    INTERFACE GLAD_API_CALL_EXPORT
+)

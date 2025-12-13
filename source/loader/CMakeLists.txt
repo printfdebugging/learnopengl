@@ -20,3 +20,8 @@ target_compile_options(loader PUBLIC
     ${COMPILER_FLAGS}
 )
 
+
+target_compile_definitions(loader
+    PRIVATE   LOADER_EXPORT
+    INTERFACE LOADER_IMPORT
+)
