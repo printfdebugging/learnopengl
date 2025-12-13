@@ -14,7 +14,7 @@ static void winFrameBufResizeCallback(GLFWwindow* window,
     glViewport(0, 0, width, height);
 }
 
-API_CALL struct Window* winCreate(unsigned int width,
+CORE_API struct Window* winCreate(unsigned int width,
                                   unsigned int height,
                                   const char*  title,
                                   vec4         color)
@@ -75,25 +75,25 @@ API_CALL struct Window* winCreate(unsigned int width,
     return win;
 }
 
-API_CALL void winSetClearColor(struct Window* window,
+CORE_API void winSetClearColor(struct Window* window,
                                vec4           color)
 {
     memcpy(window->color, color, sizeof(float) * 4);
 }
 
-API_CALL void winProcessInput(struct Window* window)
+CORE_API void winProcessInput(struct Window* window)
 {
     if (glfwGetKey(window->window, GLFW_KEY_CAPS_LOCK) == GLFW_PRESS)
         glfwSetWindowShouldClose(window->window, GLFW_TRUE);
 }
 
-API_CALL void winPollEvents(struct Window* window)
+CORE_API void winPollEvents(struct Window* window)
 {
     (void) window;
     glfwPollEvents();
 }
 
-API_CALL void winClearColor(struct Window* window)
+CORE_API void winClearColor(struct Window* window)
 {
     (void) window;
     glClearColor(
@@ -105,18 +105,18 @@ API_CALL void winClearColor(struct Window* window)
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 }
 
-API_CALL void winSwapBuffers(struct Window* window)
+CORE_API void winSwapBuffers(struct Window* window)
 {
     glfwSwapBuffers(window->window);
 }
 
-API_CALL void winDestroy(struct Window* window)
+CORE_API void winDestroy(struct Window* window)
 {
     glfwDestroyWindow(window->window);
     glfwTerminate();
 }
 
-API_CALL bool winClosed(struct Window* window)
+CORE_API bool winClosed(struct Window* window)
 {
     if (!window->window)
         return GL_TRUE;

@@ -16,23 +16,23 @@ struct Window
     vec4         color;
 };
 
-API_CALL struct Window* winCreate(
+CORE_API struct Window* winCreate(
     unsigned int width,
     unsigned int height,
     const char*  title,
     vec4         color
 );
 
-API_CALL void winSetClearColor(
+CORE_API void winSetClearColor(
     struct Window* window,
     vec4           color
 );
 
-API_CALL void winProcessInput(struct Window* window);
-API_CALL void winPollEvents(struct Window* window);
-API_CALL void winClearColor(struct Window* window);
-API_CALL void winSwapBuffers(struct Window* window);
-API_CALL void winDestroy(struct Window* window);
-API_CALL bool winClosed(struct Window* window);
+CORE_API void winProcessInput(struct Window* window);
+CORE_API void winPollEvents(struct Window* window);
+CORE_API void winClearColor(struct Window* window);
+CORE_API void winSwapBuffers(struct Window* window);
+CORE_API void winDestroy(struct Window* window);
+CORE_API bool winClosed(struct Window* window);
 
 #endif

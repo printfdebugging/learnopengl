@@ -1,19 +1,27 @@
 #ifndef LOADER_DEFINES_H
 #define LOADER_DEFINES_H
 
+#ifndef LOADER_PLATFORM_WIN32
+    #if defined(_WIN32) || defined(__WIN32__) || defined(WIN32) || defined(__MINGW32__)
+        #define LOADER_PLATFORM_WIN32 1
+    #else
+        #define LOADER_PLATFORM_WIN32 0
+    #endif
+#endif
+
 #ifdef LOADER_EXPORT
     #ifdef WIN32
-        #define API_CALL __declspec(dllexport)
+        #define LOADER_API __declspec(dllexport)
     #else
-        #define API_CALL __attribute__((visibility("default")))
+        #define LOADER_API __attribute__((visibility("default")))
     #endif
 #endif
 
 #ifdef LOADER_IMPORT
     #ifdef WIN32
-        #define API_CALL __declspec(dllimport)
+        #define LOADER_API __declspec(dllimport)
     #else
-        #define API_CALL
+        #define LOADER_API
     #endif
 #endif
 

@@ -2,7 +2,7 @@
 #define SHADER_H
 
 #include <stdbool.h>
-#include "core/defines.h"
+#include "loader/defines.h"
 
 enum Attr
 {
@@ -17,18 +17,18 @@ struct Shader
     unsigned int program;
 };
 
-API_CALL struct Shader* shCreateFromFile(
+LOADER_API struct Shader* shCreateFromFile(
     const char* vpath,
     const char* fpath
 );
 
-API_CALL bool shUniform1i(
+LOADER_API bool shUniform1i(
     const struct Shader* shader,
     const char*          name,
     int                  value
 );
 
-API_CALL bool shUniformMatrix4fv(
+LOADER_API bool shUniformMatrix4fv(
     const struct Shader* shader,
     const char*          name,
     float*               value
