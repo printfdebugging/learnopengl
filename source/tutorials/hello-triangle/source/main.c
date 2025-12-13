@@ -1,5 +1,5 @@
 #include "loader/shader.h"
-#include "glad/glad.h"
+#include "glad/gl.h"
 #include "core/window.h"
 
 #ifdef EMSCRIPTEN
