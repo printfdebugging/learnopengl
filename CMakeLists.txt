@@ -33,11 +33,12 @@ endif()
 
 if (EMSCRIPTEN)
     execute_process(
-        COMMAND ${CMAKE_C_COMPILER} --cflags 
+        COMMAND ${CMAKE_C_COMPILER} --cflags
         OUTPUT_VARIABLE CLANGD_FLAGS_TO_ADD
     )
 else()
-    set(CLANGD_FLAGS_TO_ADD "${COMPILER_FLAGS}")
+    # just add an empty string, compile_commands.json is sufficient
+    set(CLANGD_FLAGS_TO_ADD "")
 endif()
 
 separate_arguments(CLANGD_FLAGS_TO_ADD UNIX_COMMAND "${CLANGD_FLAGS_TO_ADD}")
