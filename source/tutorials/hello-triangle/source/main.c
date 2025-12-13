@@ -14,6 +14,8 @@ unsigned int   vbo;
 struct Shader* shader;
 struct Window* window;
 
+// TODO: create winRegisterDrawFrameCallback ... and register it there
+// create a typedef for the function signature
 void frame()
 {
     winPollEvents(window);
@@ -62,6 +64,8 @@ int main()
         ASSET_DIR "shaders/shader.frag"
     );
 
+    // TODO: create a winStartMainLoop() function which abstracts away
+    // these platform specific loops
 #ifdef EMSCRIPTEN
     printf(
         "emscripten: v%d.%d.%d\n",
