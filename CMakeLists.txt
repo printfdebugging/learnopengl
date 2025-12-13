@@ -50,5 +50,5 @@ configure_file(${CLANGD_TEMPLATE} "${CMAKE_SOURCE_DIR}/.clangd")
 add_subdirectory(source/core)
 add_subdirectory(source/loader)
 
-# executables
+# applications
 add_subdirectory(source/tutorials/hello-triangle)
