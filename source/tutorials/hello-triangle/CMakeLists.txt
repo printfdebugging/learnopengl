@@ -17,7 +17,7 @@ target_link_libraries(hello-triangle
 )
 
 target_compile_options(hello-triangle PUBLIC
-    "${PROJECT_CMAKE_C_FLAGS}"
+    ${PROJECT_CMAKE_C_FLAGS}
 )
 
 # TODO: use generator expression instead of conditional

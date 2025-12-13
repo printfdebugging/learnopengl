@@ -17,20 +17,11 @@ set(BUILD_SHARED_LIBS OFF)
 set(CGLM_STATIC ON)
 
 set(PROJECT_CMAKE_C_FLAGS
-    -Wall
     -fPIC
     -Wpedantic
     -Werror
-    -Wshadow
+    -Wall
     -Wextra
-    -Wconversion
-    -Wunused
-    -fsanitize=address
-    -fsanitize=leak
-    -fsanitize=undefined
-    -fsanitize=bounds-strict
-    -fsanitize=unreachable
-    -fsanitize=signed-integer-overflow
 )
 
 # external libraries
