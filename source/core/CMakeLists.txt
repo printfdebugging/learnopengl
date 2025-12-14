@@ -18,14 +18,15 @@ target_compile_options(core PUBLIC
     ${COMPILER_FLAGS}
 )
 
-# # TODO: re-enable when it's SHARED
-# target_compile_definitions(core
-#     PRIVATE   CORE_EXPORT
-#     INTERFACE CORE_IMPORT
-#     # PRIVATE   GLAD_API_CALL_EXPORT
-#     # PRIVATE   GLAD_API_CALL_EXPORT_BUILD
-#     # INTERFACE GLAD_API_CALL_EXPORT
-# )
+target_compile_definitions(core
+    PRIVATE CORE_STATIC
+    # PRIVATE   CORE_EXPORT
+    # INTERFACE CORE_IMPORT
+    # PRIVATE   GLAD_API_CALL_EXPORT
+    # PRIVATE   GLAD_API_CALL_EXPORT_BUILD
+    # INTERFACE GLAD_API_CALL_EXPORT
+)
+
 
 install(
     DIRECTORY include/core

@@ -18,11 +18,11 @@ target_compile_options(loader PUBLIC
     ${COMPILER_FLAGS}
 )
 
-# # TODO: re-enable when it's SHARED
-# target_compile_definitions(loader
-#     PRIVATE   LOADER_EXPORT
-#     INTERFACE LOADER_IMPORT
-# )
+target_compile_definitions(loader
+    PRIVATE LOADER_STATIC
+    # PRIVATE   LOADER_EXPORT
+    # INTERFACE LOADER_IMPORT
+)
 
 install(
     DIRECTORY include/loader
