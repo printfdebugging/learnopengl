@@ -13,7 +13,6 @@ target_include_directories(${APPLICATION}
 target_link_libraries(${APPLICATION}
     core
     loader
-    glad
 )
 
 target_compile_options(${APPLICATION} PUBLIC
@@ -25,19 +24,11 @@ if (EMSCRIPTEN)
     target_compile_definitions(${APPLICATION} PRIVATE
         GLFW_INCLUDE_NONE
         ASSET_DIR="assets/"
-
-        PRIVATE   GLAD_API_CALL_EXPORT
-        PRIVATE   GLAD_API_CALL_EXPORT_BUILD
-        INTERFACE GLAD_API_CALL_EXPORT
     )
 else()
     target_compile_definitions(${APPLICATION} PRIVATE
         GLFW_INCLUDE_NONE
         ASSET_DIR="$<BUILD_INTERFACE:${CMAKE_CURRENT_LIST_DIR}/assets/>$<INSTALL_INTERFACE:${CMAKE_INSTALL_FULL_DATAROOTDIR}/${PROJECT_NAME}/${APPLICATION}/assets/>"
-
-        PRIVATE   GLAD_API_CALL_EXPORT
-        PRIVATE   GLAD_API_CALL_EXPORT_BUILD
-        INTERFACE GLAD_API_CALL_EXPORT
     )
 endif()
 

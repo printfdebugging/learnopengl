@@ -9,9 +9,9 @@ add_library(core SHARED
 target_include_directories(core PUBLIC include)
 
 target_link_libraries(core
-    glad
-    glfw
-    cglm
+    PUBLIC glad
+    PUBLIC glfw
+    PUBLIC cglm
 )
 
 target_compile_options(core PUBLIC
