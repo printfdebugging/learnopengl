@@ -3,6 +3,7 @@
 /.clangd
 /build
 /install
+/graphviz
 /CMakeUserPresets.json
 
 /tags

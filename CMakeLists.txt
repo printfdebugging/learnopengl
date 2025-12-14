@@ -50,3 +50,6 @@ add_subdirectory(source/loader)
 
 # applications
 add_subdirectory(source/tutorials/hello-triangle)
+
+# documentation and graphs
+add_subdirectory(cmake/graphviz)
