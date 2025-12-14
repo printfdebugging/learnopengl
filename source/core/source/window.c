@@ -25,13 +25,11 @@ CORE_API struct Window* winCreate(unsigned int width,
         return NULL;
     }
 
-    /*
-     * INFO: `GLFW_CONTEXT_VERSION_MINOR` is ignored by emscripten-glfw
-     *    due to Emscripten internals, so no need to set it here.
-     *    The linker flag `-sMAX_WEBGL_VERSION=2` takes care of it. 
-     */
-#ifndef EMSCRIPTEN
-    glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
+#if EMSCRIPTEN // set WEBGL=2
+    glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 2);
+    glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 0);
+#else
+    glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
     glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
 #endif
 
