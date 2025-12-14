@@ -25,8 +25,16 @@ CORE_API struct Window* winCreate(unsigned int width,
         return NULL;
     }
 
-    glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
+    /*
+     * INFO: `GLFW_CONTEXT_VERSION_MINOR` is ignored by emscripten-glfw
+     *    due to Emscripten internals, so no need to set it here.
+     *    The linker flag `-sMAX_WEBGL_VERSION=2` takes care of it. 
+     */
+#ifndef EMSCRIPTEN
     glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
+    glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
+#endif
+
     glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
     glfwWindowHint(GLFW_TRANSPARENT_FRAMEBUFFER, GLFW_TRUE);
 #ifdef __APPLE__
