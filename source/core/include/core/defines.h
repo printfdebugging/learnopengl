@@ -15,9 +15,7 @@
     #else
         #define CORE_API __attribute__((visibility("default")))
     #endif
-#endif
-
-#ifdef CORE_IMPORT
+#else // CORE_IMPORT
     #ifdef WIN32
         #define CORE_API __declspec(dllimport)
     #else

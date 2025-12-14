@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 4.0)
 include("${CMAKE_SOURCE_DIR}/cmake/common.cmake")
 
-add_library(loader SHARED
+add_library(loader # SHARED
     source/shader.c
 )
 
@@ -18,11 +18,11 @@ target_compile_options(loader PUBLIC
     ${COMPILER_FLAGS}
 )
 
-
-target_compile_definitions(loader
-    PRIVATE   LOADER_EXPORT
-    INTERFACE LOADER_IMPORT
-)
+# # TODO: re-enable when it's SHARED
+# target_compile_definitions(loader
+#     PRIVATE   LOADER_EXPORT
+#     INTERFACE LOADER_IMPORT
+# )
 
 install(
     DIRECTORY include/loader

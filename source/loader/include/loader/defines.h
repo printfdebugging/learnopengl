@@ -15,9 +15,7 @@
     #else
         #define LOADER_API __attribute__((visibility("default")))
     #endif
-#endif
-
-#ifdef LOADER_IMPORT
+#else  // LOADER_IMPORT
     #ifdef WIN32
         #define LOADER_API __declspec(dllimport)
     #else
