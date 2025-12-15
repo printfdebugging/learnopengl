@@ -60,8 +60,8 @@ int main()
     glEnableVertexAttribArray(0);
 
     shader = shCreateFromFile(
-        ASSET_DIR "shaders/shader.vert",
-        ASSET_DIR "shaders/shader.frag"
+        ASSETS_DIR "shaders/shader.vert",
+        ASSETS_DIR "shaders/shader.frag"
     );
 
     // TODO: create a winStartMainLoop() function which abstracts away
