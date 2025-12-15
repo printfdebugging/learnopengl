@@ -29,15 +29,15 @@ target_compile_definitions(${APPLICATION} PRIVATE
 )
 
 if (EMSCRIPTEN)
-    set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} \
-        -sMAX_WEBGL_VERSION=2 \
-        -sNO_DISABLE_EXCEPTION_CATCHING \
-        -sASSERTIONS=1 \
-        -sWASM=1 \
-        -sSAFE_HEAP=1 \
-        --embed-file ${CMAKE_CURRENT_LIST_DIR}/assets@${APPLICATION_ASSETS_DIR} \
-        --embed-file ${PROJECT_SOURCE_DIR}/assets@${PROJECT_ASSETS_DIR} \
-    ")
+    target_link_options(${APPLICATION} PRIVATE
+        -sMAX_WEBGL_VERSION=2
+        -sNO_DISABLE_EXCEPTION_CATCHING
+        -sASSERTIONS=1
+        -sWASM=1
+        -sSAFE_HEAP=1
+        "SHELL:--embed-file ${PROJECT_SOURCE_DIR}/assets@${PROJECT_ASSETS_DIR}"
+        "SHELL:--embed-file ${CMAKE_CURRENT_LIST_DIR}/assets@${APPLICATION_ASSETS_DIR}"
+    )
 endif()
 
 install(
