@@ -35,8 +35,8 @@ if (EMSCRIPTEN)
         -sASSERTIONS=1
         -sWASM=1
         -sSAFE_HEAP=1
-        "SHELL:--embed-file ${PROJECT_SOURCE_DIR}/assets@${PROJECT_ASSETS_DIR}"
-        "SHELL:--embed-file ${CMAKE_CURRENT_LIST_DIR}/assets@${APPLICATION_ASSETS_DIR}"
+        --embed-file=${PROJECT_SOURCE_DIR}/assets@${PROJECT_ASSETS_DIR}
+        --embed-file=${CMAKE_CURRENT_LIST_DIR}/assets@${APPLICATION_ASSETS_DIR}
     )
 endif()
 
