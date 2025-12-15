@@ -32,3 +32,4 @@ add_subdirectory(source/tutorials/hello-triangle)
 # misc
 add_subdirectory(cmake/graphviz)        # dependency graphs
 add_subdirectory(cmake/clangd)          # .clangd
+add_subdirectory(cmake/assets)          # assets
