@@ -32,7 +32,9 @@ if (EMSCRIPTEN)
     set_target_properties(${APPLICATION} PROPERTIES OUTPUT_NAME "index")
     set_target_properties(${APPLICATION} PROPERTIES SUFFIX ".html")
 
-    set(GENERATED_INDEX_HTML_FILE "published/public/graphics/${APPLICATION}/index.html")
+    if (USE_GENERATED_INDEX_HTML AND GENERATED_GRAPHICS_DIR_PATH)
+        set(GENERATED_INDEX_HTML_FILE "${GENERATED_GRAPHICS_DIR_PATH}/${APPLICATION}/index.html")
+    endif()
     set(TEMPLATE_INDEX_HTML_FILE "${PROJECT_SOURCE_DIR}/scripts/index.html")
 
     target_link_options(${APPLICATION} PRIVATE
