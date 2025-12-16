@@ -32,6 +32,9 @@ if (EMSCRIPTEN)
     set_target_properties(${APPLICATION} PROPERTIES OUTPUT_NAME "index")
     set_target_properties(${APPLICATION} PROPERTIES SUFFIX ".html")
 
+    set(GENERATED_INDEX_HTML_FILE "published/public/graphics/${APPLICATION}/index.html")
+    set(TEMPLATE_INDEX_HTML_FILE "${PROJECT_SOURCE_DIR}/scripts/index.html")
+
     target_link_options(${APPLICATION} PRIVATE
         -sMAX_WEBGL_VERSION=2
         -sNO_DISABLE_EXCEPTION_CATCHING
@@ -40,6 +43,7 @@ if (EMSCRIPTEN)
         -sSAFE_HEAP=1
         --embed-file=${PROJECT_SOURCE_DIR}/assets@${PROJECT_ASSETS_DIR}
         --embed-file=${CMAKE_CURRENT_LIST_DIR}/assets@${APPLICATION_ASSETS_DIR}
+        $<IF:$<BOOL:${USE_GENERATED_INDEX_HTML}>,--shell-file=${GENERATED_INDEX_HTML_FILE},--shell-file=${TEMPLATE_INDEX_HTML_FILE}>
     )
 
     install(
