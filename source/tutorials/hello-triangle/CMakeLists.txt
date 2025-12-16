@@ -63,10 +63,3 @@ else()
         DESTINATION "${CMAKE_INSTALL_DATAROOTDIR}/${PROJECT_NAME}/${APPLICATION}"
     )
 endif()
-
-add_custom_target(run
-    COMMAND ${APPLICATION}
-    WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
-    DEPENDS ${APPLICATION}
-    COMMENT "Running ${APPLICATION} from root directory"
-)
