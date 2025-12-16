@@ -24,15 +24,17 @@ target_compile_definitions(loader
     # INTERFACE LOADER_IMPORT
 )
 
-install(
-    DIRECTORY include/loader
-    DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}
-)
+if (NOT EMSCRIPTEN)
+    install(
+        DIRECTORY include/loader
+        DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}
+    )
 
-install(
-    TARGETS loader
-    EXPORT  loader
-    LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
-    ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
-    RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
-)
+    install(
+        TARGETS loader
+        EXPORT  loader
+        LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
+        ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
+        RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
+    )
+endif()
