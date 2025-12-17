@@ -1,5 +1,6 @@
 cmake_minimum_required(VERSION 4.0)
 include("${CMAKE_SOURCE_DIR}/cmake/common.cmake")
+include(GNUInstallDirs)
 set(APPLICATION "hello-triangle")
 
 add_executable(${APPLICATION}
@@ -71,12 +72,16 @@ else()
 endif()
 
 if (WIN32)
+    # copy the DLLs to the build directory POST_BUILD
     add_custom_command(
         TARGET ${APPLICATION} POST_BUILD
         COMMAND ${CMAKE_COMMAND} -E copy_if_different $<TARGET_RUNTIME_DLLS:${APPLICATION}> ${CMAKE_CURRENT_BINARY_DIR}
         COMMENT "Copy DLLs to the ${APPLICATION} directory"
+        COMMAND_EXPAND_LISTS
     )
 
+    # copy the DLLs to the binary installation directory
+    # and also to the LIB directory for completion
     install(FILES $<TARGET_RUNTIME_DLLS:${APPLICATION}> TYPE BIN)
     install(FILES $<TARGET_RUNTIME_DLLS:${APPLICATION}> TYPE LIB)
 endif()
