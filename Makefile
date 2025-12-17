@@ -9,7 +9,8 @@ run:
 	./build/source/tutorials/hello-triangle/hello-triangle
 
 run-wasm:
-	emcmake cmake -DUSE_GENERATED_INDEX_HTML=TRUE -B build
+	cd /home/printfdebugging/repos/website && ./scripts/generate-graphics.sh
+	emcmake cmake -B build
 	cmake --build build -j 32
 	python -m http.server -d ./build/source/tutorials/hello-triangle
 
