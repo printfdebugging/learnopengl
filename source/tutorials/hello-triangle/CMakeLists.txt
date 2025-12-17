@@ -74,11 +74,9 @@ if (WIN32)
     add_custom_command(
         TARGET ${APPLICATION} POST_BUILD
         COMMAND ${CMAKE_COMMAND} -E copy_if_different $<TARGET_RUNTIME_DLLS:${APPLICATION}> ${CMAKE_CURRENT_BINARY_DIR}
+        COMMENT "Copy DLLs to the ${APPLICATION} directory"
     )
 
-    install(
-        TARGETS ${APPLICATION}
-        RUNTIME_DEPENDENCIES
-        DESTINATION ${CMAKE_INSTALL_BINDIR}
-    )
+    install(FILES $<TARGET_RUNTIME_DLLS:${APPLICATION}> TYPE BIN)
+    install(FILES $<TARGET_RUNTIME_DLLS:${APPLICATION}> TYPE LIB)
 endif()
