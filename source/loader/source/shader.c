@@ -1,4 +1,4 @@
-#include "glad/gl.h"
+#include "glad/glad.h"
 #include "core/logger.h"
 
 #include "loader/shader.h"

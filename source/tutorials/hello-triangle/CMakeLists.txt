@@ -69,3 +69,11 @@ else()
         DESTINATION "${CMAKE_INSTALL_DATAROOTDIR}/${PROJECT_NAME}/${APPLICATION}"
     )
 endif()
+
+if (WIN32)
+    install(
+        TARGETS ${APPLICATION}
+        RUNTIME_DEPENDENCIES
+        DESTINATION ${CMAKE_INSTALL_BINDIR}
+    )
+endif()

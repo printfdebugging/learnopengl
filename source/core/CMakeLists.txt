@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 4.0)
 include("${CMAKE_SOURCE_DIR}/cmake/common.cmake")
 
-add_library(core # SHARED
+add_library(core
     source/logger.c
     source/window.c
 )
@@ -18,16 +18,17 @@ target_compile_options(core PUBLIC
     ${COMPILER_FLAGS}
 )
 
-target_compile_definitions(core
-    # PRIVATE CORE_STATIC
-    PRIVATE   CORE_EXPORT
-    INTERFACE CORE_IMPORT
-    PRIVATE   GLAD_GLAPI_EXPORT
-    INTERFACE GLAD_GLAPI_EXPORT
-
-)
-
-if(NOT EMSCRIPTEN)
+if(EMSCRIPTEN)
+    target_compile_definitions(core
+        PRIVATE CORE_STATIC
+    )
+else()
+    target_compile_definitions(core
+        PRIVATE   CORE_EXPORT
+        INTERFACE CORE_IMPORT
+        PRIVATE   GLAD_GLAPI_EXPORT
+        INTERFACE GLAD_GLAPI_EXPORT
+    )
     install(
         DIRECTORY include/core
         DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}

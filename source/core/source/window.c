@@ -1,4 +1,4 @@
-#include "glad/gl.h"
+#include "glad/glad.h"
 
 #include "core/window.h"
 #include "core/logger.h"
@@ -55,7 +55,7 @@ CORE_API struct Window* winCreate(unsigned int width,
     }
 
     glfwMakeContextCurrent(window);
-    if (!gladLoadGL((GLADloadfunc) glfwGetProcAddress))
+    if (!gladLoadGLLoader((GLADloadproc) glfwGetProcAddress))
     {
         ERROR("failed to initialize glad\n");
         glfwTerminate();

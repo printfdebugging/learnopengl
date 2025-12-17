@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 4.0)
 include("${CMAKE_SOURCE_DIR}/cmake/common.cmake")
 
-add_library(loader # SHARED
+add_library(loader
     source/shader.c
 )
 
@@ -18,13 +18,16 @@ target_compile_options(loader PUBLIC
     ${COMPILER_FLAGS}
 )
 
-target_compile_definitions(loader
-    PRIVATE LOADER_STATIC
-    # PRIVATE   LOADER_EXPORT
-    # INTERFACE LOADER_IMPORT
-)
+if (EMSCRIPTEN)
+    target_compile_definitions(loader
+        PRIVATE LOADER_STATIC
+    )
+else()
+    target_compile_definitions(loader
+        PRIVATE   LOADER_EXPORT
+        INTERFACE LOADER_IMPORT
+    )
 
-if (NOT EMSCRIPTEN)
     install(
         DIRECTORY include/loader
         DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}
