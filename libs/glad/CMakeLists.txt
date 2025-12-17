@@ -1,4 +1,5 @@
 cmake_minimum_required(VERSION 4.0)
+include(GNUInstallDirs)
 project(glad)
 
 add_library(glad
