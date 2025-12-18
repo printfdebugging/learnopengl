@@ -17,15 +17,6 @@ suggests, provids the loading functionality. `core` and `loader` are
 built as libraries used by executable modules in the `tutorials`
 module.
 
-> [!NOTE]
-> The libraries are built as static libraries for now. It's because
-> I don't know how to link shared objects to build wasm binaries yet
-> (soon). Also building static libraries on windows makes the
-> executable standalone as the C runtime is also embedded into the
-> executable. This is not the case when building and linking dlls, I
-> get 'ms-win-crt-x.dll' not found errors & I don't want to spend time
-> on this problem now (but quite soon).
-
 ```
  assets
  cmake
