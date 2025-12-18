@@ -14,7 +14,7 @@ if (EMSCRIPTEN)
     set(GLFW_LIBRARY_TYPE STATIC)
 else()
     set(BUILD_SHARED_LIBS ON)
-    set(CGLM_SHARED ON)
+    set(CGLM_SHARED OFF) # for SIMD optimizations
     set(GLFW_LIBRARY_TYPE SHARED)
 endif()
 
