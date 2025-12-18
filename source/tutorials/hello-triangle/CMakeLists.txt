@@ -1,5 +1,4 @@
 cmake_minimum_required(VERSION 4.0)
-include("${CMAKE_SOURCE_DIR}/cmake/common.cmake")
 include(GNUInstallDirs)
 set(APPLICATION "hello-triangle")
 

@@ -1,5 +1,4 @@
 cmake_minimum_required(VERSION 4.0)
-include("${CMAKE_SOURCE_DIR}/cmake/common.cmake")
 
 project(LearnOpenGL
     VERSION         "0.0.1.1"
@@ -7,6 +6,10 @@ project(LearnOpenGL
     HOMEPAGE_URL    "https://codeberg.org/printfdebugging/learnopengl"
     LANGUAGES       "C"
 )
+
+# NOTE: include config after project command as that is when the
+#       compiler specific symbols are guaranteed to exist.
+include("${CMAKE_SOURCE_DIR}/cmake/config.cmake")
 
 # external libraries
 add_subdirectory(libs/glad)
