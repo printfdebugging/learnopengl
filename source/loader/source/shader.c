@@ -89,8 +89,8 @@ static void shBindVariableNames(unsigned int shader_program)
         glBindAttribLocation(shader_program, i, program_variables[i]);
 }
 
-LOADER_API struct Shader* shCreateFromFile(const char* vpath,
-                                           const char* fpath)
+struct Shader* shCreateFromFile(const char* vpath,
+                                const char* fpath)
 {
     /* read and compile vertex shader */
     const char* vsource = readShaderFile(vpath);
@@ -150,9 +150,9 @@ LOADER_API struct Shader* shCreateFromFile(const char* vpath,
     return shader;
 }
 
-LOADER_API bool shUniform1i(const struct Shader* shader,
-                            const char*          name,
-                            int                  value)
+bool shUniform1i(const struct Shader* shader,
+                 const char*          name,
+                 int                  value)
 {
     int location = glGetUniformLocation(shader->program, name);
     if (location == -1)
@@ -165,9 +165,9 @@ LOADER_API bool shUniform1i(const struct Shader* shader,
     return true;
 }
 
-LOADER_API bool shUniformMatrix4fv(const struct Shader* shader,
-                                   const char*          name,
-                                   float*               value)
+bool shUniformMatrix4fv(const struct Shader* shader,
+                        const char*          name,
+                        float*               value)
 {
     int location = glGetUniformLocation(shader->program, name);
     if (location == -1)

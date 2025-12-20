@@ -14,10 +14,10 @@ static void winFrameBufResizeCallback(GLFWwindow* window,
     glViewport(0, 0, width, height);
 }
 
-CORE_API struct Window* winCreate(unsigned int width,
-                                  unsigned int height,
-                                  const char*  title,
-                                  vec4         color)
+struct Window* winCreate(unsigned int width,
+                         unsigned int height,
+                         const char*  title,
+                         vec4         color)
 {
     if (!glfwInit())
     {
@@ -25,7 +25,7 @@ CORE_API struct Window* winCreate(unsigned int width,
         return NULL;
     }
 
-#if EMSCRIPTEN // set WEBGL=2
+#if EMSCRIPTEN  // set WEBGL=2
     glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 2);
     glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 0);
 #else
@@ -81,25 +81,25 @@ CORE_API struct Window* winCreate(unsigned int width,
     return win;
 }
 
-CORE_API void winSetClearColor(struct Window* window,
-                               vec4           color)
+void winSetClearColor(struct Window* window,
+                      vec4           color)
 {
     memcpy(window->color, color, sizeof(float) * 4);
 }
 
-CORE_API void winProcessInput(struct Window* window)
+void winProcessInput(struct Window* window)
 {
     if (glfwGetKey(window->window, GLFW_KEY_CAPS_LOCK) == GLFW_PRESS)
         glfwSetWindowShouldClose(window->window, GLFW_TRUE);
 }
 
-CORE_API void winPollEvents(struct Window* window)
+void winPollEvents(struct Window* window)
 {
     (void) window;
     glfwPollEvents();
 }
 
-CORE_API void winClearColor(struct Window* window)
+void winClearColor(struct Window* window)
 {
     (void) window;
     glClearColor(
@@ -111,18 +111,18 @@ CORE_API void winClearColor(struct Window* window)
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 }
 
-CORE_API void winSwapBuffers(struct Window* window)
+void winSwapBuffers(struct Window* window)
 {
     glfwSwapBuffers(window->window);
 }
 
-CORE_API void winDestroy(struct Window* window)
+void winDestroy(struct Window* window)
 {
     glfwDestroyWindow(window->window);
     glfwTerminate();
 }
 
-CORE_API bool winClosed(struct Window* window)
+bool winClosed(struct Window* window)
 {
     if (!window->window)
         return GL_TRUE;
