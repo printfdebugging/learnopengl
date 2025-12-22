@@ -68,6 +68,9 @@ int main()
         (void*) (3 * sizeof(float))
     );
 
+    glEnableVertexAttribArray(MESH_ATTRIBUTE_POSITION);
+    glEnableVertexAttribArray(MESH_ATTRIBUTE_COLOR);
+
     data.shader = shCreateFromFile(
         ASSETS_DIR "shaders/shader.vert",
         ASSETS_DIR "shaders/shader.frag"
