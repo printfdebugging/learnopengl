@@ -6,9 +6,11 @@
 
 // use __VA_OPT__ from C23 (learn how to use it and va_args in general)
 // TODO: https://godbolt.org/z/6vafTnhEM
-#define ERROR(message, ...)                                \
-    fprintf(stderr, "%s:%i: error: ", __FILE__, __LINE__); \
-    fprintf(stderr, message __VA_OPT__(, __VA_ARGS__))
+#define ERROR(message, ...)                                    \
+    {                                                          \
+        fprintf(stderr, "%s:%i: error: ", __FILE__, __LINE__); \
+        fprintf(stderr, message __VA_OPT__(, __VA_ARGS__));    \
+    }
 
 #define DECLARE_PRINT_MATRIX(n) \
     void print_mat##n(mat##n mat)
