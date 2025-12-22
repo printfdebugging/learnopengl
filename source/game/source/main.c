@@ -6,7 +6,7 @@
 
 #include <stdlib.h>
 
-struct AppData
+struct GameData
 {
     struct Window*  window;
     struct Shader*  shader;
@@ -15,7 +15,7 @@ struct AppData
 
 void drawFrameCallback(void* data)
 {
-    struct AppData* appData = (struct AppData*) data;
+    struct GameData* appData = (struct GameData*) data;
 
     winPollEvents(appData->window);
     winProcessInput(appData->window);
@@ -31,7 +31,7 @@ void drawFrameCallback(void* data)
 
 int main()
 {
-    struct AppData data;
+    struct GameData data;
 
     data.window = winCreate(966, 602, "OpenGL", (vec4) { 0.156f, 0.172f, 0.203f, 1.0f });
     if (!data.window)

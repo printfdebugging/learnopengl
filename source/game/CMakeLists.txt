@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 4.0)
 include(GNUInstallDirs)
-set(APPLICATION "textures")
+set(APPLICATION "game")
 
 add_executable(${APPLICATION}
     source/main.c

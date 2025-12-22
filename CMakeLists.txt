@@ -30,9 +30,7 @@ add_subdirectory(source/core)
 add_subdirectory(source/loader)
 
 # applications
-add_subdirectory(source/tutorials/triangle)
-add_subdirectory(source/tutorials/shaders)
-add_subdirectory(source/tutorials/textures)
+add_subdirectory(source/game)
 
 # misc
 add_subdirectory(cmake/graphviz)        # dependency graphs
