@@ -32,6 +32,7 @@ add_subdirectory(source/loader)
 # applications
 add_subdirectory(source/tutorials/hello-triangle)
 add_subdirectory(source/tutorials/hello-shaders)
+add_subdirectory(source/tutorials/textures)
 
 # misc
 add_subdirectory(cmake/graphviz)        # dependency graphs
