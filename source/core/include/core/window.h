@@ -7,6 +7,8 @@
 
 #include <stdbool.h>
 
+typedef void (*FrameRenderCallbackFn) (void * data);
+
 struct Window
 {
     unsigned int width;
@@ -14,6 +16,8 @@ struct Window
     const char*  title;
     GLFWwindow*  window;
     vec4         color;
+
+    FrameRenderCallbackFn drawFrameCallback;
 };
 
 CORE_API struct Window* winCreate(
@@ -34,5 +38,13 @@ CORE_API void winClearColor(struct Window* window);
 CORE_API void winSwapBuffers(struct Window* window);
 CORE_API void winDestroy(struct Window* window);
 CORE_API bool winClosed(struct Window* window);
+CORE_API void winFireMainLoop(struct Window* window, void* data);
+CORE_API void winPostFrameChecks(struct Window* window);
+
+CORE_API void winRegisterDrawFrameCallback(
+    struct Window*        window,
+    FrameRenderCallbackFn frameCallback
+);
+
 
 #endif

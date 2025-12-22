@@ -2,35 +2,34 @@
 #include "glad/glad.h"
 #include "core/window.h"
 
-#ifdef EMSCRIPTEN
-    #include <emscripten/version.h>
-    #include <emscripten/emscripten.h>
-#endif
-
 #include <stdlib.h>
 
-unsigned int   vao;
-unsigned int   vbo;
-struct Shader* shader;
-struct Window* window;
-
-// TODO: create winRegisterDrawFrameCallback ... and register it there
-// create a typedef for the function signature
-void frame()
+struct AppData
 {
-    winPollEvents(window);
-    winProcessInput(window);
-    winClearColor(window);
+    struct Window* window;
+    struct Shader* shader;
+};
 
+void drawFrameCallback(void* data)
+{
+    struct AppData* appData = (struct AppData*) data;
+
+    winPollEvents(appData->window);
+    winProcessInput(appData->window);
+
+    winClearColor(appData->window);
     glDrawArrays(GL_TRIANGLES, 0, 3);
+    winSwapBuffers(appData->window);
 
-    winSwapBuffers(window);
+    winPostFrameChecks(appData->window);
 }
 
 int main()
 {
-    window = winCreate(966, 602, "OpenGL", (vec4) { 0.2f, 0.3f, 0.3f, 1.0f });
-    if (!window)
+    struct AppData data;
+
+    data.window = winCreate(966, 602, "OpenGL", (vec4) { 0.2f, 0.3f, 0.3f, 1.0f });
+    if (!data.window)
         return EXIT_FAILURE;
 
     /* clang-format off */
@@ -41,6 +40,8 @@ int main()
     };
     /* clang-format on */
 
+    unsigned int vao;
+    unsigned int vbo;
     glGenVertexArrays(1, &vao);
     glBindVertexArray(vao);
 
@@ -59,28 +60,15 @@ int main()
 
     glEnableVertexAttribArray(0);
 
-    shader = shCreateFromFile(
+    data.shader = shCreateFromFile(
         ASSETS_DIR "shaders/shader.vert",
         ASSETS_DIR "shaders/shader.frag"
     );
 
-    // TODO: create a winStartMainLoop() function which abstracts away
-    // these platform specific loops
-#ifdef EMSCRIPTEN
-    printf(
-        "emscripten: v%d.%d.%d\n",
-        __EMSCRIPTEN_major__,
-        __EMSCRIPTEN_minor__,
-        __EMSCRIPTEN_tiny__
-    );
-    emscripten_set_main_loop(frame, 0, false);
-#else
-    while (!winClosed(window))
-    {
-        frame();
-    }
-#endif
+    winRegisterDrawFrameCallback(data.window, drawFrameCallback);
+    winFireMainLoop(data.window, (void*) &data);
 
-    winDestroy(window);
+    winDestroy(data.window);
+
     return 0;
 }

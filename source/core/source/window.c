@@ -5,6 +5,10 @@
 
 #include <stdlib.h>
 #include <string.h>
+#ifdef EMSCRIPTEN
+    #include <emscripten/emscripten.h>
+    #include "GLFW/emscripten_glfw3.h"
+#endif
 
 static void winFrameBufResizeCallback(GLFWwindow* window,
                                       int         width,
@@ -14,6 +18,10 @@ static void winFrameBufResizeCallback(GLFWwindow* window,
     glViewport(0, 0, width, height);
 }
 
+/*
+ * NOTE: `emscripten_glfw_set_next_window_canvas_selector` is required
+ *       if creating more than one windows. it's a TODO.
+ */
 struct Window* winCreate(unsigned int width,
                          unsigned int height,
                          const char*  title,
@@ -77,7 +85,8 @@ struct Window* winCreate(unsigned int width,
     win->height = height;
     win->title  = title;
     memcpy(win->color, color, sizeof(float) * 4);
-    win->window = window;
+    win->window            = window;
+    win->drawFrameCallback = NULL;
     return win;
 }
 
@@ -127,4 +136,42 @@ bool winClosed(struct Window* window)
     if (!window->window)
         return GL_TRUE;
     return glfwWindowShouldClose(window->window);
+}
+
+void winFireMainLoop(struct Window* window,
+                     void*          data)
+{
+#ifdef EMSCRIPTEN
+    printf(
+        "emscripten: v%d.%d.%d\n",
+        __EMSCRIPTEN_major__,
+        __EMSCRIPTEN_minor__,
+        __EMSCRIPTEN_tiny__
+    );
+    emscripten_set_main_loop_arg(window->drawFrameCallback, data, 0, false);
+#else
+    while (!winClosed(window))
+    {
+        if (window->drawFrameCallback)
+            window->drawFrameCallback(data);
+    }
+#endif
+}
+
+void winPostFrameChecks(struct Window* window)
+{
+#ifdef EMSCRIPTEN
+    if (winClosed(window))
+        emscripten_cancel_main_loop();
+#else
+    (void) window;
+#endif
+}
+
+void winRegisterDrawFrameCallback(struct Window*        window,
+                                  FrameRenderCallbackFn frameCallback)
+{
+    if (window->drawFrameCallback != NULL)
+        ERROR("frameCallback already set")
+    window->drawFrameCallback = frameCallback;
 }
