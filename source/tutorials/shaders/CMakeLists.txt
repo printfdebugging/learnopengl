@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 4.0)
 include(GNUInstallDirs)
-set(APPLICATION "hello-shaders")
+set(APPLICATION "shaders")
 
 add_executable(${APPLICATION}
     source/main.c

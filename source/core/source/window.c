@@ -158,6 +158,11 @@ void winFireMainLoop(struct Window* window,
 #endif
 }
 
+/*
+ * NOTE: maybe we want a `postFrameCallback` so that the user
+ * can put some tasks there, things like cleanup etc. and then
+ * we can just call that here; feels a bit overkill, let's see
+ */
 void winPostFrameChecks(struct Window* window)
 {
 #ifdef EMSCRIPTEN

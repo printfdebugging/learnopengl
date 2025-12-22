@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 4.0)
 include(GNUInstallDirs)
-set(APPLICATION "hello-triangle")
+set(APPLICATION "triangle")
 
 add_executable(${APPLICATION}
     source/main.c

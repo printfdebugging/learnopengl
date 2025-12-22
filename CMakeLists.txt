@@ -30,8 +30,8 @@ add_subdirectory(source/core)
 add_subdirectory(source/loader)
 
 # applications
-add_subdirectory(source/tutorials/hello-triangle)
-add_subdirectory(source/tutorials/hello-shaders)
+add_subdirectory(source/tutorials/triangle)
+add_subdirectory(source/tutorials/shaders)
 add_subdirectory(source/tutorials/textures)
 
 # misc
