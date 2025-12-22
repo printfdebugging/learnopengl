@@ -7,10 +7,10 @@
 #include <stdlib.h>
 #include <stdbool.h>
 
-static const char* program_variables[] = {
-    [MESH_ATTRIBUTE_POSITION] = "in_position",
-    [MESH_ATTRIBUTE_COLOR]    = "in_color",
-    [MESH_ATTRIBUTE_UV]       = "in_uv",
+static const char* shVariableNames[] = {
+    [MESH_ATTRIBUTE_POSITION] = "inPosition",
+    [MESH_ATTRIBUTE_COLOR]    = "inColor",
+    [MESH_ATTRIBUTE_UV]       = "inUV",
 };
 
 static const char* readShaderFile(const char* filename)
@@ -83,10 +83,10 @@ static bool shLinkedSuccessfully(unsigned int program)
     return false;
 }
 
-static void shBindVariableNames(unsigned int shader_program)
+static void shBindVariableNames(unsigned int program)
 {
-    for (enum Attr i = MESH_ATTRIBUTE_POSITION; i < MESH_ATTRIBUTE_COUNT; ++i)
-        glBindAttribLocation(shader_program, i, program_variables[i]);
+    for (enum MeshAttribute i = MESH_ATTRIBUTE_POSITION; i < MESH_ATTRIBUTE_COUNT; ++i)
+        glBindAttribLocation(program, i, shVariableNames[i]);
 }
 
 struct Shader* shCreateFromFile(const char* vpath,

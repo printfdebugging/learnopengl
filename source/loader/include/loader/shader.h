@@ -4,7 +4,7 @@
 #include <stdbool.h>
 #include "loader/defines.h"
 
-enum Attr
+enum MeshAttribute
 {
     MESH_ATTRIBUTE_POSITION = 0,
     MESH_ATTRIBUTE_COLOR    = 1,
