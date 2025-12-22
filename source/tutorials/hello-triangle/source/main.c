@@ -58,8 +58,6 @@ int main()
         (void*) 0
     );
 
-    glEnableVertexAttribArray(0);
-
     data.shader = shCreateFromFile(
         ASSETS_DIR "shaders/shader.vert",
         ASSETS_DIR "shaders/shader.frag"

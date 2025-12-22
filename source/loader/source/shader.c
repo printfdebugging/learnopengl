@@ -86,7 +86,10 @@ static bool shLinkedSuccessfully(unsigned int program)
 static void shBindVariableNames(unsigned int program)
 {
     for (enum MeshAttribute i = MESH_ATTRIBUTE_POSITION; i < MESH_ATTRIBUTE_COUNT; ++i)
+    {
         glBindAttribLocation(program, i, shVariableNames[i]);
+        glEnableVertexAttribArray(i);
+    }
 }
 
 struct Shader* shCreateFromFile(const char* vpath,
