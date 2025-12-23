@@ -15,8 +15,9 @@ struct Mesh
     unsigned int vboUV;
 
     struct Shader* shader;
-    // TODO: maybe also a count for adding multiple textures ??
-    struct Texture* texture;
+
+    struct Texture* textures[TEXTURE_COUNT];
+    int             txCount;
 };
 
 LOADER_API struct Mesh* meshCreate();
@@ -52,15 +53,17 @@ LOADER_API void meshLoadUV(
     unsigned int stride
 );
 
-// LOADER_API void meshLoadShader(
-//     struct Mesh* mesh,
-//     const char*  vpath,
-//     const char*  fpath
-// );
-//
-// LOADER_API void meshLoadTexture(
-//     struct Mesh* mesh,
-//     const char*  path
-// );
+LOADER_API void meshLoadShader(
+    struct Mesh* mesh,
+    const char*  vPath,
+    const char*  fPath
+);
+
+LOADER_API void meshLoadTexture(
+    struct Mesh*      mesh,
+    const char*       path,
+    const char*       shVarName,
+    enum TextureIndex txIndex
+);
 
 #endif

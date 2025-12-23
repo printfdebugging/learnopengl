@@ -2,6 +2,7 @@
 
 #include "loader/mesh.h"
 #include "loader/shader.h"
+#include "loader/texture.h"
 
 #include <stdlib.h>
 
@@ -14,36 +15,52 @@ struct Mesh* meshCreate()
         return NULL;
     }
 
-    mesh->vao       = 0;
-    mesh->vboVertex = 0;
-    mesh->vboColor  = 0;
-    mesh->vboUV     = 0;
-    mesh->shader    = NULL;
-    mesh->texture   = NULL;
-
+    *mesh = (struct Mesh) { 0 };
     glGenVertexArrays(1, &mesh->vao);
-
     return mesh;
 }
 
 void meshDestroy(struct Mesh* mesh)
 {
-    (void) mesh;
-    // TODO: fill it in later
+    // TODO: destroy the texture
+    // TODO: destroy the shader
+
+    if (mesh->vboVertex)
+        glDeleteBuffers(1, &mesh->vboVertex);
+    if (mesh->vboColor)
+        glDeleteBuffers(1, &mesh->vboColor);
+    if (mesh->vboUV)
+        glDeleteBuffers(1, &mesh->vboUV);
+    if (mesh->vboIndices)
+        glDeleteBuffers(1, &mesh->vboIndices);
+
+    glDeleteVertexArrays(1, &mesh->vao);
 }
 
 void meshBind(struct Mesh* mesh)
 {
     glBindVertexArray(mesh->vao);
-    // shBind(mesh->shader);
-    // txBind(mesh->texture);
+
+    if (mesh->shader)
+        shBind(mesh->shader);
+
+    // TODO: PROBABLY use txCount intead of looping over all the values
+    // here.
+    for (enum TextureIndex i = TEXTURE0; i < TEXTURE_COUNT; ++i)
+        if (mesh->textures[i])
+            txBind(mesh->textures[i]);
 }
 
 void meshUnbind(struct Mesh* mesh)
 {
     glBindVertexArray(0);
     shUnbind(mesh->shader);
-    txUnbind(mesh->texture);
+    // TODO: probably we don't need to use texture
+    // at all for this, so no need to loop over
+    // all of them, unbind is same as vao, we just
+    // bind that to zero.
+    // txUnbind(mesh->texture);
+    txUnbind(NULL);
 }
 
 /*
@@ -61,7 +78,7 @@ void meshLoadVertices(struct Mesh* mesh,
     meshBind(mesh);
     glGenBuffers(1, &mesh->vboVertex);
     glBindBuffer(GL_ARRAY_BUFFER, mesh->vboVertex);
-    glBufferData(GL_ARRAY_BUFFER, count * stride * sizeof(float), data, GL_STATIC_DRAW);
+    glBufferData(GL_ARRAY_BUFFER, count * 3 * sizeof(float), data, GL_STATIC_DRAW);
     glVertexAttribPointer(MESH_ATTRIBUTE_POSITION, 3, GL_FLOAT, GL_FALSE, stride, 0);
     glEnableVertexAttribArray(MESH_ATTRIBUTE_POSITION);
 }
@@ -84,7 +101,7 @@ void meshLoadColors(struct Mesh* mesh,
     meshBind(mesh);
     glGenBuffers(1, &mesh->vboColor);
     glBindBuffer(GL_ARRAY_BUFFER, mesh->vboColor);
-    glBufferData(GL_ARRAY_BUFFER, count * stride * sizeof(float), data, GL_STATIC_DRAW);
+    glBufferData(GL_ARRAY_BUFFER, count * 3 * sizeof(float), data, GL_STATIC_DRAW);
     glVertexAttribPointer(MESH_ATTRIBUTE_COLOR, 3, GL_FLOAT, GL_FALSE, stride, 0);
     glEnableVertexAttribArray(MESH_ATTRIBUTE_COLOR);
 }
@@ -97,23 +114,49 @@ void meshLoadUV(struct Mesh* mesh,
     meshBind(mesh);
     glGenBuffers(1, &mesh->vboUV);
     glBindBuffer(GL_ARRAY_BUFFER, mesh->vboUV);
-    glBufferData(GL_ARRAY_BUFFER, count * stride * sizeof(float), data, GL_STATIC_DRAW);
+    glBufferData(GL_ARRAY_BUFFER, count * 2 * sizeof(float), data, GL_STATIC_DRAW);
     glVertexAttribPointer(MESH_ATTRIBUTE_UV, 2, GL_FLOAT, GL_FALSE, stride, 0);
     glEnableVertexAttribArray(MESH_ATTRIBUTE_UV);
 }
-//
-// void meshLoadShader(struct Mesh* mesh,
-//                     const char*  vpath,
-//                     const char*  fpath)
-// {
-//     (void) mesh;
-//     (void) vpath;
-//     (void) fpath;
-// }
-//
-// void meshLoadTexture(struct Mesh* mesh,
-//                      const char*  path)
-// {
-//     (void) mesh;
-//     (void) path;
-// }
+
+void meshLoadShader(struct Mesh* mesh,
+                    const char*  vPath,
+                    const char*  fPath)
+{
+    mesh->shader = shCreateFromFile(vPath, fPath);
+    shBind(mesh->shader);
+
+    // TODO: move this to a seprate function if that
+    // seems neccessary.
+    for (enum TextureIndex i = TEXTURE0; i < TEXTURE_COUNT; ++i)
+    {
+        if (mesh->textures[i])
+        {
+            shUniform1i(
+                mesh->shader,
+                mesh->textures[i]->shaderVarName,
+                mesh->textures[i]->txIndex
+            );
+        }
+    }
+}
+
+void meshLoadTexture(struct Mesh*      mesh,
+                     const char*       path,
+                     const char*       shVarName,
+                     enum TextureIndex txIndex)
+{
+    if (txIndex >= TEXTURE_COUNT)
+    {
+        ERROR("index greater than TEXTURE_COUNT - 1: %i\n", (int) txIndex);
+        return;
+    }
+
+    mesh->textures[txIndex] = txLoadFromFile(
+        path,
+        shVarName,
+        txIndex
+    );
+
+    mesh->txCount += 1;
+}
