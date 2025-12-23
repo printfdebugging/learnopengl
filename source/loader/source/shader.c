@@ -158,9 +158,21 @@ struct Shader* shCreateFromFile(const char* vpath,
     return shader;
 }
 
-void shUseProgram(const struct Shader* shader)
+void shDestroy(struct Shader* shader)
+{
+    glDeleteProgram(shader->program);
+    free(shader);
+}
+
+void shBind(const struct Shader* shader)
 {
     glUseProgram(shader->program);
+}
+
+void shUnbind(const struct Shader* shader)
+{
+    (void) shader;
+    glUseProgram(0);
 }
 
 bool shUniform1i(const struct Shader* shader,

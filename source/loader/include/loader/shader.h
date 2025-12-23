@@ -4,6 +4,7 @@
 #include <stdbool.h>
 #include "loader/defines.h"
 
+// TODO: maybe move this to mesh.h ??
 enum MeshAttribute
 {
     MESH_ATTRIBUTE_POSITION = 0,
@@ -22,7 +23,9 @@ LOADER_API struct Shader* shCreateFromFile(
     const char* fpath
 );
 
-LOADER_API void shUseProgram(const struct Shader* shader);
+LOADER_API void shDestroy(struct Shader* shader);
+LOADER_API void shBind(const struct Shader* shader);
+LOADER_API void shUnbind(const struct Shader* shader);
 
 LOADER_API bool shUniform1i(
     const struct Shader* shader,
