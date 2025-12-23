@@ -3,6 +3,7 @@ cmake_minimum_required(VERSION 4.0)
 add_library(loader
     source/shader.c
     source/texture.c
+    source/mesh.c
 )
 
 target_include_directories(loader
