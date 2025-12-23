@@ -15,15 +15,15 @@
 //  MESH_SHADER
 //  GLYPH_SHADER
 //  ???
-static const char* shVariableNames[] = {
+static const char *shVariableNames[] = {
     [MESH_ATTRIBUTE_POSITION] = "inPosition",
     [MESH_ATTRIBUTE_COLOR]    = "inColor",
     [MESH_ATTRIBUTE_UV]       = "inUV",
 };
 
-static const char* readShaderFile(const char* filename)
+static const char *readShaderFile(const char *filename)
 {
-    FILE* file = fopen(filename, "rb");
+    FILE *file = fopen(filename, "rb");
     if (!file)
     {
         ERROR("failed to read shader file: %s\n", filename);
@@ -41,7 +41,7 @@ static const char* readShaderFile(const char* filename)
         return NULL;
     }
 
-    char* buffer = malloc(length + 1);
+    char *buffer = malloc(length + 1);
     if (!buffer)
     {
         fclose(file);
@@ -57,7 +57,7 @@ static const char* readShaderFile(const char* filename)
 }
 
 static bool shCompiledSuccessfully(unsigned int shader,
-                                   const char*  filepath)
+                                   const char  *filepath)
 {
     int success;
     glGetShaderiv(shader, GL_COMPILE_STATUS, &success);
@@ -97,11 +97,11 @@ static void shBindVariableNames(unsigned int program)
         glBindAttribLocation(program, i, shVariableNames[i]);
 }
 
-struct Shader* shCreateFromFile(const char* vpath,
-                                const char* fpath)
+struct Shader *shCreateFromFile(const char *vpath,
+                                const char *fpath)
 {
     /* read and compile vertex shader */
-    const char* vsource = readShaderFile(vpath);
+    const char *vsource = readShaderFile(vpath);
 
     if (!vsource)
         return NULL;
@@ -110,13 +110,13 @@ struct Shader* shCreateFromFile(const char* vpath,
     glShaderSource(vshader, 1, &vsource, NULL);
     glCompileShader(vshader);
 
-    free((void*) vsource);
+    free((void *) vsource);
 
     if (!shCompiledSuccessfully(vshader, vpath))
         return NULL;
 
     /* read and compile fragment shader */
-    const char* fsource = readShaderFile(fpath);
+    const char *fsource = readShaderFile(fpath);
 
     if (!fsource)
         return NULL;
@@ -125,7 +125,7 @@ struct Shader* shCreateFromFile(const char* vpath,
     glShaderSource(fshader, 1, &fsource, NULL);
     glCompileShader(fshader);
 
-    free((void*) fsource);
+    free((void *) fsource);
 
     if (!shCompiledSuccessfully(fshader, fpath))
         return NULL;
@@ -147,7 +147,7 @@ struct Shader* shCreateFromFile(const char* vpath,
 
     glUseProgram(sprogram);
 
-    struct Shader* shader = malloc(sizeof(struct Shader));
+    struct Shader *shader = malloc(sizeof(struct Shader));
     if (!shader)
     {
         ERROR("failed to allocate shader\n");
@@ -158,25 +158,25 @@ struct Shader* shCreateFromFile(const char* vpath,
     return shader;
 }
 
-void shDestroy(struct Shader* shader)
+void shDestroy(struct Shader *shader)
 {
     glDeleteProgram(shader->program);
     free(shader);
 }
 
-void shBind(const struct Shader* shader)
+void shBind(const struct Shader *shader)
 {
     glUseProgram(shader->program);
 }
 
-void shUnbind(const struct Shader* shader)
+void shUnbind(const struct Shader *shader)
 {
     (void) shader;
     glUseProgram(0);
 }
 
-bool shUniform1i(const struct Shader* shader,
-                 const char*          name,
+bool shUniform1i(const struct Shader *shader,
+                 const char          *name,
                  int                  value)
 {
     int location = glGetUniformLocation(shader->program, name);
@@ -190,8 +190,8 @@ bool shUniform1i(const struct Shader* shader,
     return true;
 }
 
-bool shUniform3f(const struct Shader* shader,
-                 const char*          name,
+bool shUniform3f(const struct Shader *shader,
+                 const char          *name,
                  float                first,
                  float                second,
                  float                third)
@@ -207,9 +207,9 @@ bool shUniform3f(const struct Shader* shader,
     return true;
 }
 
-bool shUniformMatrix4fv(const struct Shader* shader,
-                        const char*          name,
-                        float*               value)
+bool shUniformMatrix4fv(const struct Shader *shader,
+                        const char          *name,
+                        float               *value)
 {
     int location = glGetUniformLocation(shader->program, name);
     if (location == -1)

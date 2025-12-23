@@ -48,21 +48,21 @@ enum TextureIndex
 struct Texture
 {
     unsigned int texture;
-    const char*  shaderVarName;
+    const char  *shaderVarName;
 
     /* TODO: for each vertex array we have 32 of these */
     enum TextureIndex txIndex;
 };
 
-LOADER_API struct Texture* txLoadFromFile(
-    const char*       path,
-    const char*       shVarName,
+LOADER_API struct Texture *txLoadFromFile(
+    const char       *path,
+    const char       *shVarName,
     enum TextureIndex txIndex
 );
 
-LOADER_API void txBind(struct Texture* texture);
-LOADER_API void txUnbind(struct Texture* texture);
+LOADER_API void txBind(struct Texture *texture);
+LOADER_API void txUnbind(struct Texture *texture);
 
-LOADER_API void txDestroy(struct Texture* texture);
+LOADER_API void txDestroy(struct Texture *texture);
 
 #endif

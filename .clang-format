@@ -15,7 +15,7 @@ BreakBeforeBraces: Allman
 ColumnLimit: 0
 ExperimentalAutoDetectBinPacking: false
 IndentCaseLabels: true
-PointerAlignment: Left
+PointerAlignment: Right
 TabWidth: 4
 IndentWidth: 4
 UseTab: Never

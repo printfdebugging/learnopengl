@@ -10,7 +10,7 @@
     #include "GLFW/emscripten_glfw3.h"
 #endif
 
-static void winFrameBufResizeCallback(GLFWwindow* window,
+static void winFrameBufResizeCallback(GLFWwindow *window,
                                       int         width,
                                       int         height)
 {
@@ -22,9 +22,9 @@ static void winFrameBufResizeCallback(GLFWwindow* window,
  * NOTE: `emscripten_glfw_set_next_window_canvas_selector` is required
  *       if creating more than one windows. it's a TODO.
  */
-struct Window* winCreate(unsigned int width,
+struct Window *winCreate(unsigned int width,
                          unsigned int height,
-                         const char*  title,
+                         const char  *title,
                          vec4         color)
 {
     if (!glfwInit())
@@ -47,7 +47,7 @@ struct Window* winCreate(unsigned int width,
     glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GLFW_TRUE);
 #endif
 
-    GLFWwindow* window = glfwCreateWindow(
+    GLFWwindow *window = glfwCreateWindow(
         (int) width,
         (int) height,
         title,
@@ -78,7 +78,7 @@ struct Window* winCreate(unsigned int width,
     glEnable(GL_BLEND);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
-    struct Window* win = malloc(sizeof(struct Window));
+    struct Window *win = malloc(sizeof(struct Window));
     if (!win)
     {
         ERROR("failed to initialize glad\n");
@@ -95,25 +95,25 @@ struct Window* winCreate(unsigned int width,
     return win;
 }
 
-void winSetClearColor(struct Window* window,
+void winSetClearColor(struct Window *window,
                       vec4           color)
 {
     memcpy(window->color, color, sizeof(float) * 4);
 }
 
-void winProcessInput(struct Window* window)
+void winProcessInput(struct Window *window)
 {
     if (glfwGetKey(window->window, GLFW_KEY_CAPS_LOCK) == GLFW_PRESS)
         glfwSetWindowShouldClose(window->window, GLFW_TRUE);
 }
 
-void winPollEvents(struct Window* window)
+void winPollEvents(struct Window *window)
 {
     (void) window;
     glfwPollEvents();
 }
 
-void winClearColor(struct Window* window)
+void winClearColor(struct Window *window)
 {
     (void) window;
     glClearColor(
@@ -125,26 +125,26 @@ void winClearColor(struct Window* window)
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 }
 
-void winSwapBuffers(struct Window* window)
+void winSwapBuffers(struct Window *window)
 {
     glfwSwapBuffers(window->window);
 }
 
-void winDestroy(struct Window* window)
+void winDestroy(struct Window *window)
 {
     glfwDestroyWindow(window->window);
     glfwTerminate();
 }
 
-bool winClosed(struct Window* window)
+bool winClosed(struct Window *window)
 {
     if (!window->window)
         return GL_TRUE;
     return glfwWindowShouldClose(window->window);
 }
 
-void winFireMainLoop(struct Window* window,
-                     void*          data)
+void winFireMainLoop(struct Window *window,
+                     void          *data)
 {
 #ifdef EMSCRIPTEN
     printf(
@@ -168,7 +168,7 @@ void winFireMainLoop(struct Window* window,
  * can put some tasks there, things like cleanup etc. and then
  * we can just call that here; feels a bit overkill, let's see
  */
-void winPostFrameChecks(struct Window* window)
+void winPostFrameChecks(struct Window *window)
 {
 #ifdef EMSCRIPTEN
     if (winClosed(window))
@@ -178,7 +178,7 @@ void winPostFrameChecks(struct Window* window)
 #endif
 }
 
-void winRegisterDrawFrameCallback(struct Window*        window,
+void winRegisterDrawFrameCallback(struct Window      *window,
                                   DrawFrameCallbackFn frameCallback)
 {
     if (window->drawFrameCallback != NULL)

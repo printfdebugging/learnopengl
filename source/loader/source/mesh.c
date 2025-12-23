@@ -6,9 +6,9 @@
 
 #include <stdlib.h>
 
-struct Mesh* meshCreate()
+struct Mesh *meshCreate()
 {
-    struct Mesh* mesh = malloc(sizeof(struct Mesh));
+    struct Mesh *mesh = malloc(sizeof(struct Mesh));
     if (!mesh)
     {
         ERROR("failed to allocate memory for mesh\n");
@@ -20,7 +20,7 @@ struct Mesh* meshCreate()
     return mesh;
 }
 
-void meshDestroy(struct Mesh* mesh)
+void meshDestroy(struct Mesh *mesh)
 {
     // TODO: destroy the texture
     // TODO: destroy the shader
@@ -37,7 +37,7 @@ void meshDestroy(struct Mesh* mesh)
     glDeleteVertexArrays(1, &mesh->vao);
 }
 
-void meshBind(struct Mesh* mesh)
+void meshBind(struct Mesh *mesh)
 {
     glBindVertexArray(mesh->vao);
 
@@ -51,7 +51,7 @@ void meshBind(struct Mesh* mesh)
             txBind(mesh->textures[i]);
 }
 
-void meshUnbind(struct Mesh* mesh)
+void meshUnbind(struct Mesh *mesh)
 {
     glBindVertexArray(0);
     shUnbind(mesh->shader);
@@ -70,8 +70,8 @@ void meshUnbind(struct Mesh* mesh)
  *       that means that we are going to pass the pointer to the first data entry,
  *       not the start of the chunk.
  */
-void meshLoadVertices(struct Mesh* mesh,
-                      float*       data,
+void meshLoadVertices(struct Mesh *mesh,
+                      float       *data,
                       unsigned int count,
                       unsigned int stride)
 {
@@ -83,8 +83,8 @@ void meshLoadVertices(struct Mesh* mesh,
     glEnableVertexAttribArray(MESH_ATTRIBUTE_POSITION);
 }
 
-void meshLoadIndices(struct Mesh* mesh,
-                     int*         data,
+void meshLoadIndices(struct Mesh *mesh,
+                     int         *data,
                      unsigned int count)
 {
     meshBind(mesh);
@@ -93,8 +93,8 @@ void meshLoadIndices(struct Mesh* mesh,
     glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(float) * count, data, GL_STATIC_DRAW);
 }
 
-void meshLoadColors(struct Mesh* mesh,
-                    float*       data,
+void meshLoadColors(struct Mesh *mesh,
+                    float       *data,
                     unsigned int count,
                     unsigned int stride)
 {
@@ -106,8 +106,8 @@ void meshLoadColors(struct Mesh* mesh,
     glEnableVertexAttribArray(MESH_ATTRIBUTE_COLOR);
 }
 
-void meshLoadUV(struct Mesh* mesh,
-                float*       data,
+void meshLoadUV(struct Mesh *mesh,
+                float       *data,
                 unsigned int count,
                 unsigned int stride)
 {
@@ -119,9 +119,9 @@ void meshLoadUV(struct Mesh* mesh,
     glEnableVertexAttribArray(MESH_ATTRIBUTE_UV);
 }
 
-void meshLoadShader(struct Mesh* mesh,
-                    const char*  vPath,
-                    const char*  fPath)
+void meshLoadShader(struct Mesh *mesh,
+                    const char  *vPath,
+                    const char  *fPath)
 {
     mesh->shader = shCreateFromFile(vPath, fPath);
     shBind(mesh->shader);
@@ -141,9 +141,9 @@ void meshLoadShader(struct Mesh* mesh,
     }
 }
 
-void meshLoadTexture(struct Mesh*      mesh,
-                     const char*       path,
-                     const char*       shVarName,
+void meshLoadTexture(struct Mesh      *mesh,
+                     const char       *path,
+                     const char       *shVarName,
                      enum TextureIndex txIndex)
 {
     if (txIndex >= TEXTURE_COUNT)

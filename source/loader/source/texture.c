@@ -38,11 +38,11 @@ static GLenum txUnit[TEXTURE_COUNT] = {
     [TEXTURE31] = GL_TEXTURE31,
 };
 
-struct Texture* txLoadFromFile(const char*       path,
-                               const char*       shVarName,
+struct Texture *txLoadFromFile(const char       *path,
+                               const char       *shVarName,
                                enum TextureIndex txIndex)
 {
-    struct Texture* texture = malloc(sizeof(struct Texture));
+    struct Texture *texture = malloc(sizeof(struct Texture));
     if (!texture)
     {
         ERROR("Failed to allocate memory for texture: %s\n", path);
@@ -55,7 +55,7 @@ struct Texture* txLoadFromFile(const char*       path,
     int            imgWidth;
     int            imgHeight;
     int            imgChanCount;
-    unsigned char* imgData;
+    unsigned char *imgData;
 
     stbi_set_flip_vertically_on_load(true);
     imgData = stbi_load(
@@ -114,19 +114,19 @@ struct Texture* txLoadFromFile(const char*       path,
     return texture;
 }
 
-void txBind(struct Texture* texture)
+void txBind(struct Texture *texture)
 {
     glActiveTexture(txUnit[texture->txIndex]);
     glBindTexture(GL_TEXTURE_2D, texture->texture);
 }
 
-void txUnbind(struct Texture* texture)
+void txUnbind(struct Texture *texture)
 {
     (void) texture;
     glActiveTexture(0);
 }
 
-void txDestroy(struct Texture* texture)
+void txDestroy(struct Texture *texture)
 {
     glDeleteTextures(1, &texture->texture);
     free(texture);

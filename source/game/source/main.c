@@ -11,13 +11,13 @@
 
 struct GameData
 {
-    struct Window* window;
-    struct Mesh*   mesh;
+    struct Window *window;
+    struct Mesh   *mesh;
 };
 
-void drawFrameCallback(void* data)
+void drawFrameCallback(void *data)
 {
-    struct GameData* appData = (struct GameData*) data;
+    struct GameData *appData = (struct GameData *) data;
 
     winPollEvents(appData->window);
     winProcessInput(appData->window);
@@ -80,14 +80,14 @@ int main()
 
     meshLoadTexture(
         data.mesh,
-        (char*) ASSETS_DIR "textures/container.jpg",
+        (char *) ASSETS_DIR "textures/container.jpg",
         "containerTexture",
         TEXTURE0
     );
 
     meshLoadTexture(
         data.mesh,
-        (char*) ASSETS_DIR "textures/awesomeface.png",
+        (char *) ASSETS_DIR "textures/awesomeface.png",
         "faceTexture",
         TEXTURE1
     );
@@ -99,7 +99,7 @@ int main()
     );
 
     winRegisterDrawFrameCallback(data.window, drawFrameCallback);
-    winFireMainLoop(data.window, (void*) &data);
+    winFireMainLoop(data.window, (void *) &data);
 
     winDestroy(data.window);
     meshDestroy(data.mesh);
