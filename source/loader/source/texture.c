@@ -71,6 +71,18 @@ struct Texture* txLoadFromFile(const char* path,
     return texture;
 }
 
+void txBind(struct Texture* texture)
+{
+    (void) texture;
+    // TODO: bind the texture here
+}
+
+void txUnbind(struct Texture* texture)
+{
+    (void) texture;
+    // TODO: unbind the texture here
+}
+
 void txDestroy(struct Texture* texture)
 {
     free(texture->image.data);

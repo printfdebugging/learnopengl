@@ -30,6 +30,9 @@ LOADER_API struct Texture* txLoadFromFile(
     GLenum      textureNum
 );
 
+LOADER_API void txBind(struct Texture* texture);
+LOADER_API void txUnbind(struct Texture* texture);
+
 LOADER_API void txDestroy(struct Texture* texture);
 
 #endif
