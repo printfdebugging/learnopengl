@@ -10,3 +10,6 @@
 [submodule "libs/emscripten-glfw"]
 	path = libs/emscripten-glfw
 	url = https://github.com/pongasoft/emscripten-glfw
+[submodule "libs/freetype2"]
+	path = libs/freetype2
+	url = https://github.com/freetype/freetype

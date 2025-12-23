@@ -16,6 +16,7 @@ add_subdirectory(libs/glad)
 target_compile_options(glad PRIVATE -fPIC)
 
 add_subdirectory(libs/cglm)
+add_subdirectory(libs/freetype2)
 add_subdirectory(cmake/stb)
 
 if (EMSCRIPTEN)
