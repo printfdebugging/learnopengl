@@ -178,8 +178,8 @@ void winPostFrameChecks(struct Window *window)
 #endif
 }
 
-void winRegisterDrawFrameCallback(struct Window      *window,
-                                  DrawFrameCallbackFn frameCallback)
+void winRegisterDrawFrameCallback(struct Window     *window,
+                                  DrawFrameCallback *frameCallback)
 {
     if (window->drawFrameCallback != NULL)
         ERROR("frameCallback already set")
