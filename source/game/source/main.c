@@ -1,8 +1,11 @@
-#include "loader/shader.h"
-#include "loader/texture.h"
 #include "glad/glad.h"
+
 #include "core/window.h"
 #include "core/logger.h"
+
+#include "loader/mesh.h"
+#include "loader/shader.h"
+#include "loader/texture.h"
 
 #include <stdlib.h>
 
@@ -11,6 +14,9 @@ struct GameData
     struct Window*  window;
     struct Shader*  shader;
     struct Texture* texture[2];
+    // TODO: remove the above since the
+    //       mesh has it's shaders & textures
+    struct Mesh* mesh;
 };
 
 void drawFrameCallback(void* data)
@@ -21,8 +27,17 @@ void drawFrameCallback(void* data)
     winProcessInput(appData->window);
     winClearColor(appData->window);
 
+    // TODO: create a renderer which can render mesh &
+    // just have renderer calls here.
+
+    // mesh
+    //  vertices & related data
+    //  textures
+    //  shaders <-- use the textures
+
     // getting this error in wasm for some reason
     // (index):1 [.WebGL-0x317c00179800] GL_INVALID_OPERATION: glDrawElements: Must have element array buffer bound.
+    meshBind(appData->mesh);
     glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, NULL);
 
     winSwapBuffers(appData->window);
@@ -46,57 +61,49 @@ int main()
          0.5f,  0.5f, 0.0f,     1.0f, 1.0f, 0.0f,  1.0f, 1.0f,
     };
 
+
+
+    // float vertices[] = {
+    //     -0.5f,  0.5f, 0.0f,
+    //     -0.5f, -0.5f, 0.0f,
+    //      0.5f, -0.5f, 0.0f,
+    //      0.5f,  0.5f, 0.0f,
+    // };
+    //
+    // float colors[] = {
+    //     1.0f, 0.0f, 0.0f,
+    //     0.0f, 1.0f, 0.0f,
+    //     0.0f, 0.0f, 1.0f,
+    //     1.0f, 1.0f, 0.0f,
+    // };
+    //
+    // float uv[] = {
+    //     0.0f, 1.0f,
+    //     0.0f, 0.0f,
+    //     1.0f, 0.0f,
+    //     1.0f, 1.0f,
+    // };
+
     int indices[] = {
         0, 1, 2,
         0, 2, 3,
     };
     /* clang-format on */
 
-    unsigned int vao;
-    unsigned int vbo;
-    unsigned int ebo;
+    data.mesh = meshCreate();
+    meshLoadVertices(data.mesh, vertices, 4, 8 * sizeof(float));
+    meshLoadColors(data.mesh, vertices + 3, 4, 8 * sizeof(float));
+    meshLoadUV(data.mesh, vertices + 6, 4, 8 * sizeof(float));
+    meshLoadIndices(data.mesh, indices, sizeof(indices));
 
-    glGenVertexArrays(1, &vao);
-    glBindVertexArray(vao);
+    // meshLoadVertices(data.mesh, vertices, 4, 3 * sizeof(float));
+    // meshLoadColors(data.mesh, colors, 4, 3 * sizeof(float));
+    // meshLoadUV(data.mesh, uv, 4, 2 * sizeof(float));
+    // meshLoadIndices(data.mesh, indices, sizeof(indices));
 
-    glGenBuffers(1, &vbo);
-    glBindBuffer(GL_ARRAY_BUFFER, vbo);
-    glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
-
-    glGenBuffers(1, &ebo);
-    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ebo);
-    glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);
-
-    glVertexAttribPointer(
-        MESH_ATTRIBUTE_POSITION,
-        3,
-        GL_FLOAT,
-        GL_FALSE,
-        8 * sizeof(float),
-        (void*) 0
-    );
-    glEnableVertexAttribArray(MESH_ATTRIBUTE_POSITION);
-
-    glVertexAttribPointer(
-        MESH_ATTRIBUTE_COLOR,
-        3,
-        GL_FLOAT,
-        GL_FALSE,
-        8 * sizeof(float),
-        (void*) (3 * sizeof(float))
-    );
-    glEnableVertexAttribArray(MESH_ATTRIBUTE_COLOR);
-
-    glVertexAttribPointer(
-        MESH_ATTRIBUTE_UV,
-        2,
-        GL_FLOAT,
-        GL_FALSE,
-        8 * sizeof(float),
-        (void*) (6 * sizeof(float))
-    );
-    glEnableVertexAttribArray(MESH_ATTRIBUTE_UV);
-
+    // TODO: DESIGN: think of ways to move this into mesh. should
+    // these be constructed inside a mesh or outside and then
+    // assigned?
     data.shader = shCreateFromFile(
         ASSETS_DIR "shaders/shader.vert",
         ASSETS_DIR "shaders/shader.frag"
@@ -125,9 +132,7 @@ int main()
     winDestroy(data.window);
     txDestroy(data.texture[0]);
 
-    glDeleteBuffers(1, &vbo);
-    glDeleteBuffers(1, &ebo);
-    glDeleteVertexArrays(1, &vao);
+    meshDestroy(data.mesh);
 
     return 0;
 }
