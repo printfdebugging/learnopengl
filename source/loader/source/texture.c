@@ -40,6 +40,9 @@ struct Texture* txLoadFromFile(const char* path,
     }
 
     glActiveTexture(textureNum);
+    // TODO: maybe move out the texture generation/setup opengl code into
+    // a static function so that it can be used by other loader functions like
+    // the ones for characters etc.
     glGenTextures(1, &texture->texture);
     glBindTexture(GL_TEXTURE_2D, texture->texture);
 

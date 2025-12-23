@@ -22,10 +22,20 @@ LOADER_API struct Shader* shCreateFromFile(
     const char* fpath
 );
 
+LOADER_API void shUseProgram(const struct Shader* shader);
+
 LOADER_API bool shUniform1i(
     const struct Shader* shader,
     const char*          name,
     int                  value
+);
+
+LOADER_API bool shUniform3f(
+    const struct Shader* shader,
+    const char*          name,
+    float                first,
+    float                second,
+    float                third
 );
 
 LOADER_API bool shUniformMatrix4fv(

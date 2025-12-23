@@ -7,6 +7,14 @@
 #include <stdlib.h>
 #include <stdbool.h>
 
+// do i need to refactor this? there are multiple shaders for different purposes and
+// certainly each one would name the attributes differently.
+// probably i need to introduce a type in the shCreateFromFile function which
+// sets different names based on the type.
+// types: enum ShaderType
+//  MESH_SHADER
+//  GLYPH_SHADER
+//  ???
 static const char* shVariableNames[] = {
     [MESH_ATTRIBUTE_POSITION] = "inPosition",
     [MESH_ATTRIBUTE_COLOR]    = "inColor",
@@ -150,6 +158,11 @@ struct Shader* shCreateFromFile(const char* vpath,
     return shader;
 }
 
+void shUseProgram(const struct Shader* shader)
+{
+    glUseProgram(shader->program);
+}
+
 bool shUniform1i(const struct Shader* shader,
                  const char*          name,
                  int                  value)
@@ -165,6 +178,23 @@ bool shUniform1i(const struct Shader* shader,
     return true;
 }
 
+bool shUniform3f(const struct Shader* shader,
+                 const char*          name,
+                 float                first,
+                 float                second,
+                 float                third)
+{
+    int location = glGetUniformLocation(shader->program, name);
+    if (location == -1)
+    {
+        ERROR("no uniform named '%s' found in shader->program\n", name);
+        return false;
+    }
+
+    glUniform3f(location, first, second, third);
+    return true;
+}
+
 bool shUniformMatrix4fv(const struct Shader* shader,
                         const char*          name,
                         float*               value)
@@ -176,12 +206,6 @@ bool shUniformMatrix4fv(const struct Shader* shader,
         return false;
     }
 
-    glUniformMatrix4fv(
-        location,
-        1,
-        GL_FALSE,
-        value
-    );
-
+    glUniformMatrix4fv(location, 1, GL_FALSE, value);
     return true;
 }
