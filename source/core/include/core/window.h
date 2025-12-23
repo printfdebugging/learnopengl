@@ -7,7 +7,7 @@
 
 #include <stdbool.h>
 
-typedef void (*FrameRenderCallbackFn) (void * data);
+typedef void (*DrawFrameCallbackFn) (void * data);
 
 struct Window
 {
@@ -17,7 +17,7 @@ struct Window
     GLFWwindow*  window;
     vec4         color;
 
-    FrameRenderCallbackFn drawFrameCallback;
+    DrawFrameCallbackFn drawFrameCallback;
 };
 
 CORE_API struct Window* winCreate(
@@ -43,7 +43,7 @@ CORE_API void winPostFrameChecks(struct Window* window);
 
 CORE_API void winRegisterDrawFrameCallback(
     struct Window*        window,
-    FrameRenderCallbackFn frameCallback
+    DrawFrameCallbackFn frameCallback
 );
 
 
