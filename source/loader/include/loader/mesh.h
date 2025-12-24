@@ -6,6 +6,14 @@
 #include "loader/shader.h"
 #include "loader/texture.h"
 
+enum MeshAttribute
+{
+    MESH_ATTRIBUTE_POSITION = 0,
+    MESH_ATTRIBUTE_COLOR    = 1,
+    MESH_ATTRIBUTE_UV       = 2,
+    MESH_ATTRIBUTE_COUNT,
+};
+
 struct Mesh
 {
     unsigned int vao;
@@ -25,7 +33,6 @@ LOADER_API void         meshDestroy(struct Mesh *mesh);
 LOADER_API void         meshBind(struct Mesh *mesh);
 LOADER_API void         meshUnbind(struct Mesh *mesh);
 
-// TODO: maybe provide the strides too
 LOADER_API void meshLoadVertices(
     struct Mesh *mesh,
     float       *data,

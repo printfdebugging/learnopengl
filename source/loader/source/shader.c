@@ -2,6 +2,7 @@
 #include "core/logger.h"
 
 #include "loader/shader.h"
+#include "loader/mesh.h"
 
 #include <stdio.h>
 #include <stdlib.h>
