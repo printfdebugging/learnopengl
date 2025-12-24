@@ -15,23 +15,7 @@ struct GameData
     struct Mesh   *mesh;
 };
 
-void drawFrameCallback(void *data)
-{
-    struct GameData *appData = (struct GameData *) data;
-
-    winPollEvents(appData->window);
-    winProcessInput(appData->window);
-    winClearColor(appData->window);
-
-    // TODO: create a renderer which can render mesh &
-    // just have renderer calls here.
-
-    meshBind(appData->mesh);
-    glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, NULL);
-
-    winSwapBuffers(appData->window);
-    winPostFrameChecks(appData->window);
-}
+DrawFrameCallback drawFrameCallback;
 
 int main()
 {
@@ -105,4 +89,22 @@ int main()
     meshDestroy(data.mesh);
 
     return 0;
+}
+
+void drawFrameCallback(void *data)
+{
+    struct GameData *appData = (struct GameData *) data;
+
+    winPollEvents(appData->window);
+    winProcessInput(appData->window);
+    winClearColor(appData->window);
+
+    // TODO: create a renderer which can render mesh &
+    // just have renderer calls here.
+
+    meshBind(appData->mesh);
+    glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, NULL);
+
+    winSwapBuffers(appData->window);
+    winPostFrameChecks(appData->window);
 }
