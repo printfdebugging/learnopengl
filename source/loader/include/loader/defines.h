@@ -13,13 +13,13 @@
     #define LOADER_API
 #else
     #ifdef LOADER_EXPORT
-        #ifdef WIN32
+        #if LOADER_PLATFORM_WIN32
             #define LOADER_API __declspec(dllexport)
         #else
             #define LOADER_API __attribute__((visibility("default")))
         #endif
     #elif defined(LOADER_IMPORT)
-        #ifdef WIN32
+        #if LOADER_PLATFORM_WIN32
             #define LOADER_API __declspec(dllimport)
         #else
             #define LOADER_API

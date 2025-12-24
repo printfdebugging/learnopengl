@@ -13,13 +13,13 @@
     #define CORE_API
 #else
     #ifdef CORE_EXPORT
-        #ifdef WIN32
+        #if CORE_PLATFORM_WIN32
             #define CORE_API __declspec(dllexport)
         #else
             #define CORE_API __attribute__((visibility("default")))
         #endif
     #elif defined(CORE_IMPORT)
-        #ifdef WIN32
+        #if CORE_PLATFORM_WIN32
             #define CORE_API __declspec(dllimport)
         #else
             #define CORE_API
