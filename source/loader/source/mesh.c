@@ -123,8 +123,10 @@ int meshLoadShader(struct Mesh *mesh,
                    const char  *vPath,
                    const char  *fPath)
 {
-    mesh->shader = shCreateFromFile(vPath, fPath);
+    mesh->shader = shCreate();
     if (!mesh->shader)
+        return 1;
+    if (shLoadFromFile(mesh->shader, vPath, fPath))
         return 1;
 
     shBind(mesh->shader);

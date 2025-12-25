@@ -6,7 +6,6 @@
 
 #include <stdio.h>
 #include <stdlib.h>
-#include <stdbool.h>
 
 // do i need to refactor this? there are multiple shaders for different purposes and
 // certainly each one would name the attributes differently.
@@ -57,14 +56,14 @@ static const char *readShaderFile(const char *filename)
     return buffer;
 }
 
-static bool shCompiledSuccessfully(unsigned int shader,
-                                   const char  *filepath)
+static int shCompiledSuccessfully(unsigned int shader,
+                                  const char  *filepath)
 {
     int success;
     glGetShaderiv(shader, GL_COMPILE_STATUS, &success);
 
     if (success)
-        return true;
+        return 0;
 
     int infoLogLen;
     glGetShaderiv(shader, GL_INFO_LOG_LENGTH, &infoLogLen);
@@ -72,16 +71,16 @@ static bool shCompiledSuccessfully(unsigned int shader,
     char infoLog[infoLogLen];
     glGetShaderInfoLog(shader, infoLogLen, NULL, infoLog);
     ERROR("failed to compile shader: %s: %s\n", filepath, infoLog);
-    return false;
+    return 1;
 }
 
-static bool shLinkedSuccessfully(unsigned int program)
+static int shLinkedSuccessfully(unsigned int program)
 {
     int success;
     glGetProgramiv(program, GL_LINK_STATUS, &success);
 
     if (success)
-        return true;
+        return 0;
 
     int infoLogLen;
     glGetProgramiv(program, GL_INFO_LOG_LENGTH, &infoLogLen);
@@ -89,7 +88,7 @@ static bool shLinkedSuccessfully(unsigned int program)
     char infoLog[infoLogLen];
     glGetProgramInfoLog(program, infoLogLen, NULL, infoLog);
     ERROR("failed to link shader program: %s\n", infoLog);
-    return false;
+    return 1;
 }
 
 static void shBindVariableNames(unsigned int program)
@@ -98,14 +97,28 @@ static void shBindVariableNames(unsigned int program)
         glBindAttribLocation(program, i, shVariableNames[i]);
 }
 
-struct Shader *shCreateFromFile(const char *vpath,
-                                const char *fpath)
+struct Shader *shCreate()
+{
+    struct Shader *shader = malloc(sizeof(struct Shader));
+    if (!shader)
+    {
+        ERROR("failed to allocate memory for shader\n");
+        return NULL;
+    }
+
+    *shader = (struct Shader) { 0 };
+    return shader;
+}
+
+int shLoadFromFile(struct Shader *shader,
+                   const char    *vpath,
+                   const char    *fpath)
 {
     /* read and compile vertex shader */
     const char *vsource = readShaderFile(vpath);
 
     if (!vsource)
-        return NULL;
+        return 1;
 
     unsigned int vshader = glCreateShader(GL_VERTEX_SHADER);
     glShaderSource(vshader, 1, &vsource, NULL);
@@ -113,14 +126,14 @@ struct Shader *shCreateFromFile(const char *vpath,
 
     free((void *) vsource);
 
-    if (!shCompiledSuccessfully(vshader, vpath))
-        return NULL;
+    if (shCompiledSuccessfully(vshader, vpath))
+        return 1;
 
     /* read and compile fragment shader */
     const char *fsource = readShaderFile(fpath);
 
     if (!fsource)
-        return NULL;
+        return 1;
 
     unsigned int fshader = glCreateShader(GL_FRAGMENT_SHADER);
     glShaderSource(fshader, 1, &fsource, NULL);
@@ -128,8 +141,8 @@ struct Shader *shCreateFromFile(const char *vpath,
 
     free((void *) fsource);
 
-    if (!shCompiledSuccessfully(fshader, fpath))
-        return NULL;
+    if (shCompiledSuccessfully(fshader, fpath))
+        return 1;
 
     /* create shader program */
     unsigned int sprogram = glCreateProgram();
@@ -143,20 +156,13 @@ struct Shader *shCreateFromFile(const char *vpath,
     glDeleteShader(vshader);
     glDeleteShader(fshader);
 
-    if (!shLinkedSuccessfully(sprogram))
-        return NULL;
+    if (shLinkedSuccessfully(sprogram))
+        return 1;
 
     glUseProgram(sprogram);
 
-    struct Shader *shader = malloc(sizeof(struct Shader));
-    if (!shader)
-    {
-        ERROR("failed to allocate shader\n");
-        return NULL;
-    }
-
     shader->program = sprogram;
-    return shader;
+    return 0;
 }
 
 void shDestroy(struct Shader *shader)

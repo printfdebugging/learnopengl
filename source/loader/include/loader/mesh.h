@@ -14,6 +14,11 @@ enum MeshAttribute
     MESH_ATTRIBUTE_COUNT,
 };
 
+// TODO: in my own implementation of cglm some day, use
+// structs with x,y,z,union{w,a...} for vectors etc..
+// that way it will be very convenient to copy them
+// by assignment.
+
 struct Mesh
 {
     unsigned int vao;
@@ -28,6 +33,11 @@ struct Mesh
     int             txCount;
 };
 
+// TODO: use this pattern, two functions to create and destroy,
+// rest other functions take in the struct pointer and return
+// integer for success or failure, this way, we can wrap them
+// in if conditioanls.
+// DO it in texture & shader.
 LOADER_API struct Mesh *meshCreate();
 LOADER_API void         meshDestroy(struct Mesh *mesh);
 LOADER_API void         meshBind(struct Mesh *mesh);
