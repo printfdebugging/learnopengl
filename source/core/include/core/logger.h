@@ -27,28 +27,28 @@
  *       at 1 as opposed to 0 of the coordinate system.
  */
 
-#define DEFINE_PRINT_MATRIX(n)                   \
-    DECLARE_PRINT_MATRIX(n)                      \
-    {                                            \
-        for (int row = 0; row < n; ++row)        \
-        {                                        \
-            for (int col = 0; col < n; ++col)    \
-            {                                    \
-                printf("%.1f, ", mat[col][row]); \
-            }                                    \
-            printf("\n");                        \
-        }                                        \
-        printf("\n");                            \
+#define DEFINE_PRINT_MATRIX(n)                            \
+    DECLARE_PRINT_MATRIX(n)                               \
+    {                                                     \
+        for (int row = 0; row < n; ++row)                 \
+        {                                                 \
+            for (int col = 0; col < n; ++col)             \
+            {                                             \
+                fprintf(stderr, "%.1f, ", mat[col][row]); \
+            }                                             \
+            fprintf(stderr, "\n");                        \
+        }                                                 \
+        fprintf(stderr, "\n");                            \
     }
 
-#define DEFINE_PRINT_VECTOR(n)       \
-    DECLARE_PRINT_VECTOR(n)          \
-    {                                \
-        for (int i = 0; i < n; ++i)  \
-        {                            \
-            printf("%.1f ", vec[i]); \
-        }                            \
-        printf("\n");                \
+#define DEFINE_PRINT_VECTOR(n)                \
+    DECLARE_PRINT_VECTOR(n)                   \
+    {                                         \
+        for (int i = 0; i < n; ++i)           \
+        {                                     \
+            fprintf(stderr, "%.1f ", vec[i]); \
+        }                                     \
+        fprintf(stderr, "\n");                \
     }
 
 DECLARE_PRINT_MATRIX(4);
