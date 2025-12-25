@@ -48,7 +48,7 @@ enum TextureIndex
 struct Texture
 {
     unsigned int texture;
-    const char  *shaderVarName;
+    const char  *shVarName;
 
     /* TODO: for each vertex array we have 32 of these */
     enum TextureIndex txIndex;

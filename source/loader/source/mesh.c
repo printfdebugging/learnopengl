@@ -137,7 +137,7 @@ int meshLoadShader(struct Mesh *mesh,
         {
             if (shUniform1i(
                     mesh->shader,
-                    mesh->textures[i]->shaderVarName,
+                    mesh->textures[i]->shVarName,
                     mesh->textures[i]->txIndex
                 ))
             {

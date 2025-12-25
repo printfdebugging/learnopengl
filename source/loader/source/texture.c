@@ -49,8 +49,8 @@ struct Texture *txLoadFromFile(const char       *path,
         return NULL;
     }
 
-    texture->shaderVarName = shVarName;
-    texture->txIndex       = txIndex;
+    texture->shVarName = shVarName;
+    texture->txIndex   = txIndex;
 
     int            imgWidth;
     int            imgHeight;
