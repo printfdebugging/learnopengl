@@ -75,6 +75,7 @@ struct Window *winCreate(unsigned int width,
 
     // TODO: this is explained in the blending section
     // https://learnopengl.com/Advanced-OpenGL/Blending.
+    glEnable(GL_CULL_FACE);
     glEnable(GL_BLEND);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
