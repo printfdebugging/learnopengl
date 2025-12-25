@@ -33,6 +33,51 @@ struct Character
  * this is a broad topic, so dive deep when the time comes.
  */
 
+/*
+ * NOTE:
+ * the vao, the shader and the textures are not inherently dependent
+ * on each other. there are slots in the graphics card for textures,
+ * a slot for the active vao and one for the active shader program.
+ * to draw something, all these work together, so a shader can have
+ * uniform sampler2D variables to tell which texture to take colors from,
+ * a texture is well it's an image so that's that :), it can be specific
+ * to a vao though, like a texture of a model.
+ *
+ * so it's like to make anything meaningful we need all three, but there isn't
+ * any sequence to which one to implement/initialize/load first. just that
+ * at the time of drawing, the vao, the shader and the texture slots should have
+ * the right references.
+ */
+
+/*
+ * NOTE:
+ * user interface has quite a few approaches, one i like is the 3d approach
+ * where the objects are arranged in parallel to the xy plane across the z
+ * axis front-n-back. they are related to each other with IDs and flags, IDs
+ * for relations and flags for state. the objects are created in arenas
+ * and there is no or very shallow hierarchy involved in the object
+ * types. thanks to orthographic projection, the 3d front-back arrangement looks 2d
+ * on the screen, when camera is placed parallel to z (or maybe otherwise too)
+ *
+ * when the user clicks, we send a ray through that pixel parallel to the z axis
+ * and we loop over the world to find which boxes the ray collides and find the
+ * closest one.then we just bubble events from this widget through it's parents.
+ * there are some generic events which all widgets share, ones like redraw, resize,
+ * invalidate, reset... and others are widget specific.
+ *
+ * we redraw specific parts of the ui using these bubbled up events.
+ *
+ * https://www.addictivetips.com/app/uploads/2012/03/Firefox-3D-Effect.jpg
+ *
+ * this approach is quite fast but has limitations, for example the bounding
+ * boxes of 3d objects are quite large so a click might not grab the exact point
+ * on the model. the other approach is to use the object's IDs instead of colors
+ * in the fragment shader. this way each object will have a "unique" color assuming
+ * they had unique IDs. then we can fetch the color of the pixel the user clicked on
+ * and find the ID of the object that color (ID) corresponds to. this is much more
+ * accurate.
+ */
+
 struct GameData
 {
     struct Window *window;
