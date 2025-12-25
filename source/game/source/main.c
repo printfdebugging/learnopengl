@@ -20,6 +20,18 @@ struct Character
     vec2         bearing;
     unsigned int advance;
 };
+/*
+ * with this approach, we are caching the textures, and sending
+ * the vao data to draw it in, each frame. instead we can fetch
+ * the geometry data from the ttf font file for a codepoint range &
+ * create triangles from them and send those to the gpu in a big vao
+ * (like one vao per language) and then using uniforms tell the shader
+ * which language's which glyph we are to render...
+ * TODO:
+ * this is just the first thought that came to my mind reading the following article
+ * https://medium.com/@evanwallace/easy-scalable-text-rendering-on-the-gpu-c3f4d782c5ac
+ * this is a broad topic, so dive deep when the time comes.
+ */
 
 struct GameData
 {
@@ -196,6 +208,13 @@ int main()
         return EXIT_FAILURE;
     }
 
+    {
+        mat4 projection;
+        // TODO: look into how the math behind this works, how to imagine these
+        glm_ortho(0.0f, 800.0f, 0.0f, 600.0f, -1.0f, 1.0f, projection);
+        shUniformMatrix4fv(data.glyphShader, "projection", (float *) projection);
+    }
+
     {  // vao creation code
         glGenVertexArrays(1, &data.glyphVao);
         glBindVertexArray(data.glyphVao);
@@ -248,6 +267,11 @@ void drawText(const char      *text,
     shBind(data->glyphShader);
     glBindVertexArray(data->glyphVao);
     glActiveTexture(GL_TEXTURE0);
+    // TODO: in the implementations of these functions,
+    // we are asking over and over "what's the location of this".
+    // we should cache that in the shader. there will be probably
+    // a fixed number of these variables per shader... and they would change
+    // based on the shader type??? don't know.
     shUniform3f(data->glyphShader, "glyphColor", color[0], color[1], color[2]);
     shUniform1i(data->glyphShader, "glyphTexture", TEXTURE0);
 
