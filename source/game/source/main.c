@@ -62,25 +62,34 @@ int main()
     meshLoadUV(data.mesh, uv, 4, 2 * sizeof(float));
     meshLoadIndices(data.mesh, indices, sizeof(indices));
 
-    meshLoadTexture(
-        data.mesh,
-        (char *) ASSETS_DIR "textures/container.jpg",
-        "containerTexture",
-        TEXTURE0
-    );
+    if (meshLoadTexture(
+            data.mesh,
+            (char *) ASSETS_DIR "textures/container.jpg",
+            "containerTexture",
+            TEXTURE0
+        ))
+    {
+        return EXIT_FAILURE;
+    }
 
-    meshLoadTexture(
-        data.mesh,
-        (char *) ASSETS_DIR "textures/awesomeface.png",
-        "faceTexture",
-        TEXTURE1
-    );
+    if (meshLoadTexture(
+            data.mesh,
+            (char *) ASSETS_DIR "textures/awesomeface.png",
+            "faceTexture",
+            TEXTURE1
+        ))
+    {
+        return EXIT_FAILURE;
+    }
 
-    meshLoadShader(
-        data.mesh,
-        ASSETS_DIR "shaders/shader.vert",
-        ASSETS_DIR "shaders/shader.frag"
-    );
+    if (meshLoadShader(
+            data.mesh,
+            ASSETS_DIR "shaders/shader.vert",
+            ASSETS_DIR "shaders/shader.frag"
+        ))
+    {
+        return EXIT_FAILURE;
+    }
 
     winRegisterDrawFrameCallback(data.window, drawFrameCallback);
     winFireMainLoop(data.window, (void *) &data);

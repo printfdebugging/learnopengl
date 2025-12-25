@@ -18,13 +18,21 @@ LOADER_API void shDestroy(struct Shader *shader);
 LOADER_API void shBind(const struct Shader *shader);
 LOADER_API void shUnbind(const struct Shader *shader);
 
-LOADER_API bool shUniform1i(
+/*
+ * returns 0 on success
+ * returns 1 on failure
+ */
+LOADER_API int shUniform1i(
     const struct Shader *shader,
     const char          *name,
     int                  value
 );
 
-LOADER_API bool shUniform3f(
+/*
+ * returns 0 on success
+ * returns 1 on failure
+ */
+LOADER_API int shUniform3f(
     const struct Shader *shader,
     const char          *name,
     float                first,
@@ -32,7 +40,11 @@ LOADER_API bool shUniform3f(
     float                third
 );
 
-LOADER_API bool shUniformMatrix4fv(
+/*
+ * returns 0 on success
+ * returns 1 on failure
+ */
+LOADER_API int shUniformMatrix4fv(
     const struct Shader *shader,
     const char          *name,
     float               *value

@@ -60,13 +60,21 @@ LOADER_API void meshLoadUV(
     unsigned int stride
 );
 
-LOADER_API void meshLoadShader(
+/*
+ * returns 0 on success
+ * returns 1 on failure.
+ */
+LOADER_API int meshLoadShader(
     struct Mesh *mesh,
     const char  *vPath,
     const char  *fPath
 );
 
-LOADER_API void meshLoadTexture(
+/*
+ * returns 0 on success
+ * returns 1 on failure.
+ */
+LOADER_API int meshLoadTexture(
     struct Mesh      *mesh,
     const char       *path,
     const char       *shVarName,

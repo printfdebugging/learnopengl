@@ -119,11 +119,14 @@ void meshLoadUV(struct Mesh *mesh,
     glEnableVertexAttribArray(MESH_ATTRIBUTE_UV);
 }
 
-void meshLoadShader(struct Mesh *mesh,
-                    const char  *vPath,
-                    const char  *fPath)
+int meshLoadShader(struct Mesh *mesh,
+                   const char  *vPath,
+                   const char  *fPath)
 {
     mesh->shader = shCreateFromFile(vPath, fPath);
+    if (!mesh->shader)
+        return 1;
+
     shBind(mesh->shader);
 
     // TODO: move this to a seprate function if that
@@ -132,24 +135,28 @@ void meshLoadShader(struct Mesh *mesh,
     {
         if (mesh->textures[i])
         {
-            shUniform1i(
-                mesh->shader,
-                mesh->textures[i]->shaderVarName,
-                mesh->textures[i]->txIndex
-            );
+            if (shUniform1i(
+                    mesh->shader,
+                    mesh->textures[i]->shaderVarName,
+                    mesh->textures[i]->txIndex
+                ))
+            {
+                return 1;
+            }
         }
     }
+    return 0;
 }
 
-void meshLoadTexture(struct Mesh      *mesh,
-                     const char       *path,
-                     const char       *shVarName,
-                     enum TextureIndex txIndex)
+int meshLoadTexture(struct Mesh      *mesh,
+                    const char       *path,
+                    const char       *shVarName,
+                    enum TextureIndex txIndex)
 {
     if (txIndex >= TEXTURE_COUNT)
     {
         ERROR("index greater than TEXTURE_COUNT - 1: %i\n", (int) txIndex);
-        return;
+        return 1;
     }
 
     mesh->textures[txIndex] = txLoadFromFile(
@@ -158,5 +165,9 @@ void meshLoadTexture(struct Mesh      *mesh,
         txIndex
     );
 
+    if (!mesh->textures[txIndex])
+        return 1;
+
     mesh->txCount += 1;
+    return 0;
 }

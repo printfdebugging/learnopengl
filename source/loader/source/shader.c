@@ -176,49 +176,49 @@ void shUnbind(const struct Shader *shader)
     glUseProgram(0);
 }
 
-bool shUniform1i(const struct Shader *shader,
-                 const char          *name,
-                 int                  value)
+int shUniform1i(const struct Shader *shader,
+                const char          *name,
+                int                  value)
 {
     int location = glGetUniformLocation(shader->program, name);
     if (location == -1)
     {
         ERROR("no uniform named '%s' found in shader->program\n", name);
-        return false;
+        return 1;
     }
 
     glUniform1i(location, value);
-    return true;
+    return 0;
 }
 
-bool shUniform3f(const struct Shader *shader,
-                 const char          *name,
-                 float                first,
-                 float                second,
-                 float                third)
+int shUniform3f(const struct Shader *shader,
+                const char          *name,
+                float                first,
+                float                second,
+                float                third)
 {
     int location = glGetUniformLocation(shader->program, name);
     if (location == -1)
     {
         ERROR("no uniform named '%s' found in shader->program\n", name);
-        return false;
+        return 1;
     }
 
     glUniform3f(location, first, second, third);
-    return true;
+    return 0;
 }
 
-bool shUniformMatrix4fv(const struct Shader *shader,
-                        const char          *name,
-                        float               *value)
+int shUniformMatrix4fv(const struct Shader *shader,
+                       const char          *name,
+                       float               *value)
 {
     int location = glGetUniformLocation(shader->program, name);
     if (location == -1)
     {
         ERROR("no uniform named '%s' found in shader->program\n", name);
-        return false;
+        return 1;
     }
 
     glUniformMatrix4fv(location, 1, GL_FALSE, value);
-    return true;
+    return 0;
 }
