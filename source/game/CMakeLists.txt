@@ -13,7 +13,7 @@ target_include_directories(${APPLICATION}
 target_link_libraries(${APPLICATION}
     core
     loader
-    freetype
+    renderer
 )
 
 target_compile_options(${APPLICATION} PUBLIC

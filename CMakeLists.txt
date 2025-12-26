@@ -29,6 +29,7 @@ endif()
 # internal libs/modules/units
 add_subdirectory(source/core)
 add_subdirectory(source/loader)
+add_subdirectory(source/renderer)
 
 # applications
 add_subdirectory(source/game)

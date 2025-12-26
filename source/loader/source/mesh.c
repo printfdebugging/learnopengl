@@ -31,8 +31,8 @@ void meshDestroy(struct Mesh *mesh)
         glDeleteBuffers(1, &mesh->vboColor);
     if (mesh->vboUV)
         glDeleteBuffers(1, &mesh->vboUV);
-    if (mesh->vboIndices)
-        glDeleteBuffers(1, &mesh->vboIndices);
+    if (mesh->ebo)
+        glDeleteBuffers(1, &mesh->ebo);
 
     glDeleteVertexArrays(1, &mesh->vao);
 }
@@ -44,8 +44,7 @@ void meshBind(struct Mesh *mesh)
     if (mesh->shader)
         shBind(mesh->shader);
 
-    // TODO: PROBABLY use txCount intead of looping over all the values
-    // here.
+    // TODO: PROBABLY use txCount intead of looping over all the values here.
     for (enum TextureIndex i = TEXTURE0; i < TEXTURE_COUNT; ++i)
         if (mesh->textures[i])
             txBind(mesh->textures[i]);
@@ -85,12 +84,16 @@ void meshLoadVertices(struct Mesh *mesh,
 
 void meshLoadIndices(struct Mesh *mesh,
                      int         *data,
-                     unsigned int count)
+                     unsigned int count,
+                     GLenum       type)
 {
     meshBind(mesh);
-    glGenBuffers(1, &mesh->vboIndices);
-    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, mesh->vboIndices);
+    glGenBuffers(1, &mesh->ebo);
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, mesh->ebo);
     glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(float) * count, data, GL_STATIC_DRAW);
+
+    mesh->eboCount = count;
+    mesh->eboType  = type;
 }
 
 void meshLoadColors(struct Mesh *mesh,

@@ -23,9 +23,12 @@ struct Mesh
 {
     unsigned int vao;
     unsigned int vboVertex;
-    unsigned int vboIndices;
     unsigned int vboColor;
     unsigned int vboUV;
+
+    unsigned int ebo;
+    unsigned int eboCount;
+    GLenum       eboType;
 
     struct Shader *shader;
 
@@ -49,7 +52,8 @@ LOADER_API void meshLoadVertices(
 LOADER_API void meshLoadIndices(
     struct Mesh *mesh,
     int         *data,
-    unsigned int count
+    unsigned int count,
+    GLenum       type
 );
 
 LOADER_API void meshLoadColors(

@@ -9,6 +9,8 @@
 #include "loader/shader.h"
 #include "loader/texture.h"
 
+#include "renderer/renderer.h"
+
 #include <stdlib.h>
 
 struct Character
@@ -87,7 +89,7 @@ int main()
     meshLoadVertices(data.mesh, vertices, 4, 3 * sizeof(float));
     meshLoadColors(data.mesh, colors, 4, 3 * sizeof(float));
     meshLoadUV(data.mesh, uv, 4, 2 * sizeof(float));
-    meshLoadIndices(data.mesh, indices, sizeof(indices));
+    meshLoadIndices(data.mesh, indices, sizeof(indices), GL_UNSIGNED_INT);
 
     if (meshLoadTexture(
             data.mesh,
@@ -226,12 +228,8 @@ void drawFrameCallback(void *data)
     winProcessInput(appData->window);
     winClearColor(appData->window);
 
-    // TODO: create a renderer which can render mesh &
-    // just have renderer calls here.
-
     drawText("printfdebugging", 240.0f, 270.0f, 0.5f, (vec3) { 1.0f, 0.0f, 0.0f }, data);
-    meshBind(appData->mesh);
-    glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, NULL);
+    renderMesh(appData->mesh);
     // interestingly enough firing drawText calls after glDrawElements
     // doesn't draw the text over the other textures & when it does
     // when i call it before glDrawElements. When it draws, the text is
