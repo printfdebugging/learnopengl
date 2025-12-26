@@ -38,17 +38,11 @@ static GLenum txUnit[TEXTURE_COUNT] = {
     [TEXTURE31] = GL_TEXTURE31,
 };
 
-struct Texture *txLoadFromFile(const char       *path,
-                               const char       *shVarName,
-                               enum TextureIndex txUnitIndex)
+int txLoadFromFile(struct Texture   *texture,
+                   const char       *path,
+                   const char       *shVarName,
+                   enum TextureIndex txUnitIndex)
 {
-    struct Texture *texture = malloc(sizeof(struct Texture));
-    if (!texture)
-    {
-        ERROR("Failed to allocate memory for texture: %s\n", path);
-        return NULL;
-    }
-
     texture->shVarName   = shVarName;
     texture->txUnitIndex = txUnitIndex;
 
@@ -78,7 +72,7 @@ struct Texture *txLoadFromFile(const char       *path,
         ERROR("Failed to load texture %s\n", path)
         free(texture);
         stbi_image_free(imgData);
-        return NULL;
+        return 1;
     }
 
     // tdoO: use the converted glenum here
@@ -109,6 +103,19 @@ struct Texture *txLoadFromFile(const char       *path,
     glGenerateMipmap(GL_TEXTURE_2D);
 
     stbi_image_free(imgData);
+    return 0;
+}
+
+struct Texture *txCreate()
+{
+    struct Texture *texture = malloc(sizeof(struct Texture));
+    if (!texture)
+    {
+        ERROR("Failed to allocate memory for texture\n");
+        return NULL;
+    }
+
+    *texture = (struct Texture) { 0 };
     return texture;
 }
 

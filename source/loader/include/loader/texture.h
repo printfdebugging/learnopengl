@@ -59,7 +59,10 @@ struct Texture
     enum TextureIndex txUnitIndex;
 };
 
-LOADER_API struct Texture *txLoadFromFile(
+LOADER_API struct Texture *txCreate();
+
+LOADER_API int txLoadFromFile(
+    struct Texture   *texture,
     const char       *path,
     const char       *shVarName,
     enum TextureIndex txUnitIndex
@@ -67,7 +70,6 @@ LOADER_API struct Texture *txLoadFromFile(
 
 LOADER_API void txBind(struct Texture *texture);
 LOADER_API void txUnbind(struct Texture *texture);
-
 LOADER_API void txDestroy(struct Texture *texture);
 
 #endif
