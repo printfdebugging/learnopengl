@@ -1,6 +1,6 @@
 # LearnOpenGL
-- The tutorials are deployed at [printfdebugging.in](https://printfdebugging.in/) (check out the graphics section)
-- Following [Learn OpenGL](https://learnopengl.com/) tutorials
+<!-- - The tutorials are deployed at [printfdebugging.in](https://printfdebugging.in/) (check out the graphics section) -->
+<!-- - Following [Learn OpenGL](https://learnopengl.com/) tutorials -->
 
 ## Project Structure
 
@@ -42,53 +42,53 @@ module.
  CMakeLists.txt
 ```
 
-### Emscripten Specific Details
-
-The cmake build files use `if (EMSCRIPTEN)` conditional blocks to
-separate normal build commands from wasm specific commands. Each
-tutorial generates three files `index.{html,js,wasm}`. These are
-copied over to `prefix/bin/${tutorial}` directory during installation.
-
-Tutorial specific asset files live in the tutorial's local `assets`
-directory while common assets live in the `/assets` directory. Both
-can be accessed from within the build tutorials using `ASSETS_DIR` and
-`COMMON_ASSETS_DIR` definitions respectively. This way asset location
-can be changed just by changing the build files.
-
-Code Usage:
-
-```c
-shader = shCreateFromFile(
-    ASSETS_DIR "shaders/shader.vert",
-    ASSETS_DIR "shaders/shader.frag"
-);
-```
-
-Wasm builds use the `scripts/index.html` shell file by default unless
-`USE_GENERATED_INDEX_HTML:BOOLEAN` `GENERATED_GRAPHICS_DIR_PATH:STRING`
-are defined. These allow us to use a different shell file. You can also
-see each tutorial has a `README.md` file with a similar header. 
-
-```md
----
-title: Hello Triangle
-date: 2025-12-17
----
-
-{{ include(path="/canvas.md") }}
-
-This is some dummy text, should be removed later.
-```
-
-This `README.md` file is copied over to my [website] which then uses
-`zola` (a static site generator) to generate a new shell file. Then
-the wasm/html files are generated using the generated shell file &
-finally everything is copied & deployed on the website. See [scripts]
-and the [gitlab-ci] file for more details.
-
-[zola website repo]: https://gitlab.com/printfdebugging/website
-[scripts]: https://gitlab.com/printfdebugging/website/-/tree/main/scripts?ref_type=heads
-[gitlab-ci]: https://gitlab.com/printfdebugging/website/-/blob/main/.gitlab-ci.yml?ref_type=heads
+<!-- ### Emscripten Specific Details -->
+<!---->
+<!-- The cmake build files use `if (EMSCRIPTEN)` conditional blocks to -->
+<!-- separate normal build commands from wasm specific commands. Each -->
+<!-- tutorial generates three files `index.{html,js,wasm}`. These are -->
+<!-- copied over to `prefix/bin/${tutorial}` directory during installation. -->
+<!---->
+<!-- Tutorial specific asset files live in the tutorial's local `assets` -->
+<!-- directory while common assets live in the `/assets` directory. Both -->
+<!-- can be accessed from within the build tutorials using `ASSETS_DIR` and -->
+<!-- `COMMON_ASSETS_DIR` definitions respectively. This way asset location -->
+<!-- can be changed just by changing the build files. -->
+<!---->
+<!-- Code Usage: -->
+<!---->
+<!-- ```c -->
+<!-- shader = shCreateFromFile( -->
+<!--     ASSETS_DIR "shaders/shader.vert", -->
+<!--     ASSETS_DIR "shaders/shader.frag" -->
+<!-- ); -->
+<!-- ``` -->
+<!---->
+<!-- Wasm builds use the `scripts/index.html` shell file by default unless -->
+<!-- `USE_GENERATED_INDEX_HTML:BOOLEAN` `GENERATED_GRAPHICS_DIR_PATH:STRING` -->
+<!-- are defined. These allow us to use a different shell file. You can also -->
+<!-- see each tutorial has a `README.md` file with a similar header.  -->
+<!---->
+<!-- ```md -->
+<!-- --- -->
+<!-- title: Hello Triangle -->
+<!-- date: 2025-12-17 -->
+<!-- --- -->
+<!---->
+<!-- {{ include(path="/canvas.md") }} -->
+<!---->
+<!-- This is some dummy text, should be removed later. -->
+<!-- ``` -->
+<!---->
+<!-- This `README.md` file is copied over to my [website] which then uses -->
+<!-- `zola` (a static site generator) to generate a new shell file. Then -->
+<!-- the wasm/html files are generated using the generated shell file & -->
+<!-- finally everything is copied & deployed on the website. See [scripts] -->
+<!-- and the [gitlab-ci] file for more details. -->
+<!---->
+<!-- [zola website repo]: https://gitlab.com/printfdebugging/website -->
+<!-- [scripts]: https://gitlab.com/printfdebugging/website/-/tree/main/scripts?ref_type=heads -->
+<!-- [gitlab-ci]: https://gitlab.com/printfdebugging/website/-/blob/main/.gitlab-ci.yml?ref_type=heads -->
 
 ## Dependencies
 
