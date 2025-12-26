@@ -294,8 +294,12 @@ void drawFrameCallback(void *data)
     // TODO: create a renderer which can render mesh &
     // just have renderer calls here.
 
-    // meshBind(appData->mesh);
-    // glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, NULL);
+    meshBind(appData->mesh);
+    glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, NULL);
+    // interestingly enough firing drawText calls after glDrawElements
+    // doesn't draw the text over the other textures & when it does
+    // when i call it before glDrawElements. When it draws, the text is
+    // in drawn in boxes which don't have transparent background.
     drawText("printfdebugging", 240.0f, 270.0f, 0.5f, (vec3) { 1.0f, 0.0f, 0.0f }, data);
 
     winSwapBuffers(appData->window);
