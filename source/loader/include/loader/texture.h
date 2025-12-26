@@ -61,12 +61,33 @@ struct Texture
 
 LOADER_API struct Texture *txCreate();
 
+// TODO: create enums for txFormat, txInternalFormat
+LOADER_API int txLoad(
+    struct Texture *texture,
+    void           *txData,
+    unsigned int    txWidth,
+    unsigned int    txHeight,
+    GLenum          txFormat,
+    GLenum          txDataType,
+    GLenum          txInternalFormat,
+    GLboolean       txGenMipmaps
+);
+
 LOADER_API int txLoadFromFile(
     struct Texture   *texture,
     const char       *path,
     const char       *shVarName,
     enum TextureIndex txUnitIndex
 );
+
+/* TODO: later!
+LOADER_API int txLoadFromData(
+    struct Texture   *texture,
+    const char       *path,  // <-- data, width, height, format
+    const char       *shVarName,
+    enum TextureIndex txIndex
+);
+*/
 
 LOADER_API void txBind(struct Texture *texture);
 LOADER_API void txUnbind(struct Texture *texture);

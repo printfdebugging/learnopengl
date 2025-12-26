@@ -75,32 +75,19 @@ int txLoadFromFile(struct Texture   *texture,
         return 1;
     }
 
-    // tdoO: use the converted glenum here
-    glActiveTexture(txUnit[txUnitIndex]);
-    // TODO: maybe move out the texture generation/setup opengl code into
-    // a static function so that it can be used by other loader functions like
-    // the ones for characters etc.
-    glGenTextures(1, &texture->texture);
-    glBindTexture(GL_TEXTURE_2D, texture->texture);
-
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-
-    glTexImage2D(
-        GL_TEXTURE_2D,
-        0,
-        imgFormat,
-        imgWidth,
-        imgHeight,
-        0,
-        imgFormat,
-        GL_UNSIGNED_BYTE,
-        imgData
-    );
-
-    glGenerateMipmap(GL_TEXTURE_2D);
+    if (txLoad(
+            texture,
+            imgData,
+            imgWidth,
+            imgHeight,
+            imgFormat,
+            GL_UNSIGNED_BYTE,
+            imgFormat,
+            GL_TRUE
+        ))
+    {
+        return 1;
+    }
 
     stbi_image_free(imgData);
     return 0;
@@ -117,6 +104,58 @@ struct Texture *txCreate()
 
     *texture = (struct Texture) { 0 };
     return texture;
+}
+
+int txLoad(struct Texture *texture,
+           void           *txData,
+           unsigned int    txWidth,
+           unsigned int    txHeight,
+           GLenum          txFormat,
+           GLenum          txDataType,
+           GLenum          txInternalFormat,
+           GLboolean       txGenMipmaps)
+{
+    glActiveTexture(txUnit[texture->txUnitIndex]);
+    glGenTextures(1, &texture->texture);
+    glBindTexture(GL_TEXTURE_2D, texture->texture);
+
+    glTexImage2D(
+        GL_TEXTURE_2D,
+        GL_ZERO,
+        txInternalFormat,
+        txWidth,
+        txHeight,
+        GL_ZERO,
+        txFormat,
+        txDataType,
+        txData
+    );
+
+    glTexParameteri(
+        GL_TEXTURE_2D,
+        GL_TEXTURE_WRAP_S,
+        GL_REPEAT
+    );
+    glTexParameteri(
+        GL_TEXTURE_2D,
+        GL_TEXTURE_WRAP_T,
+        GL_REPEAT
+    );
+    glTexParameteri(
+        GL_TEXTURE_2D,
+        GL_TEXTURE_MIN_FILTER,
+        txGenMipmaps ? GL_LINEAR_MIPMAP_LINEAR : GL_LINEAR
+    );
+    glTexParameteri(
+        GL_TEXTURE_2D,
+        GL_TEXTURE_MAG_FILTER,
+        GL_LINEAR
+    );
+
+    if (txGenMipmaps)
+        glGenerateMipmap(GL_TEXTURE_2D);
+
+    return 0;
 }
 
 void txBind(struct Texture *texture)
