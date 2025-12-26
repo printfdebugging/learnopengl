@@ -140,7 +140,7 @@ int meshLoadShader(struct Mesh *mesh,
             if (shUniform1i(
                     mesh->shader,
                     mesh->textures[i]->shVarName,
-                    mesh->textures[i]->txIndex
+                    mesh->textures[i]->txUnitIndex
                 ))
             {
                 return 1;
@@ -153,21 +153,21 @@ int meshLoadShader(struct Mesh *mesh,
 int meshLoadTexture(struct Mesh      *mesh,
                     const char       *path,
                     const char       *shVarName,
-                    enum TextureIndex txIndex)
+                    enum TextureIndex txUnitIndex)
 {
-    if (txIndex >= TEXTURE_COUNT)
+    if (txUnitIndex >= TEXTURE_COUNT)
     {
-        ERROR("index greater than TEXTURE_COUNT - 1: %i\n", (int) txIndex);
+        ERROR("index greater than TEXTURE_COUNT - 1: %i\n", (int) txUnitIndex);
         return 1;
     }
 
-    mesh->textures[txIndex] = txLoadFromFile(
+    mesh->textures[txUnitIndex] = txLoadFromFile(
         path,
         shVarName,
-        txIndex
+        txUnitIndex
     );
 
-    if (!mesh->textures[txIndex])
+    if (!mesh->textures[txUnitIndex])
         return 1;
 
     mesh->txCount += 1;

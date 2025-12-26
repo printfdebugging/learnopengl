@@ -40,7 +40,7 @@ static GLenum txUnit[TEXTURE_COUNT] = {
 
 struct Texture *txLoadFromFile(const char       *path,
                                const char       *shVarName,
-                               enum TextureIndex txIndex)
+                               enum TextureIndex txUnitIndex)
 {
     struct Texture *texture = malloc(sizeof(struct Texture));
     if (!texture)
@@ -49,8 +49,8 @@ struct Texture *txLoadFromFile(const char       *path,
         return NULL;
     }
 
-    texture->shVarName = shVarName;
-    texture->txIndex   = txIndex;
+    texture->shVarName   = shVarName;
+    texture->txUnitIndex = txUnitIndex;
 
     int            imgWidth;
     int            imgHeight;
@@ -82,7 +82,7 @@ struct Texture *txLoadFromFile(const char       *path,
     }
 
     // tdoO: use the converted glenum here
-    glActiveTexture(txUnit[txIndex]);
+    glActiveTexture(txUnit[txUnitIndex]);
     // TODO: maybe move out the texture generation/setup opengl code into
     // a static function so that it can be used by other loader functions like
     // the ones for characters etc.
@@ -114,12 +114,19 @@ struct Texture *txLoadFromFile(const char       *path,
 
 void txBind(struct Texture *texture)
 {
-    glActiveTexture(txUnit[texture->txIndex]);
+    glActiveTexture(txUnit[texture->txUnitIndex]);
     glBindTexture(GL_TEXTURE_2D, texture->texture);
 }
 
 void txUnbind(struct Texture *texture)
 {
+    /*
+     * nothing to do here for now, although we can
+     * do the following to be explicit (but it's wasteful)
+     *
+     * glActiveTexture(txUnit[texture->txIndex]);
+     * glBindBuffer(GL_TEXTURE_2D, 0);
+     */
     (void) texture;
 }
 

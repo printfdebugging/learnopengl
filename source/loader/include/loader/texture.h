@@ -41,23 +41,28 @@ enum TextureIndex
     TEXTURE_COUNT = 32,
 };
 
-// TODO: think about destroying the image later, it might be worth keeping it
-// as we might want to clone a texture to create some other texture. but then
-// maybe it's better to just store the path and load it again from the file
-// system.
 struct Texture
 {
     unsigned int texture;
-    const char  *shVarName;
 
-    /* TODO: for each vertex array we have 32 of these */
-    enum TextureIndex txIndex;
+    /*
+     * Textures are used with shaders, the shaders define a `sampler2D`
+     * uniform variable which refers to a texture unit on the GPU.
+     * `shVarName` is the variable name this texture binds to in the
+     * shader.
+     */
+    const char *shVarName;
+
+    /*
+     * `txIndex` is the texture unit this texture is bound to on the GPU.
+     */
+    enum TextureIndex txUnitIndex;
 };
 
 LOADER_API struct Texture *txLoadFromFile(
     const char       *path,
     const char       *shVarName,
-    enum TextureIndex txIndex
+    enum TextureIndex txUnitIndex
 );
 
 LOADER_API void txBind(struct Texture *texture);

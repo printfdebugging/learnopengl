@@ -33,15 +33,11 @@ struct Mesh
     int             txCount;
 };
 
-// TODO: use this pattern, two functions to create and destroy,
-// rest other functions take in the struct pointer and return
-// integer for success or failure, this way, we can wrap them
-// in if conditioanls.
-// DO it in texture & shader.
 LOADER_API struct Mesh *meshCreate();
-LOADER_API void         meshDestroy(struct Mesh *mesh);
-LOADER_API void         meshBind(struct Mesh *mesh);
-LOADER_API void         meshUnbind(struct Mesh *mesh);
+
+LOADER_API void meshDestroy(struct Mesh *mesh);
+LOADER_API void meshBind(struct Mesh *mesh);
+LOADER_API void meshUnbind(struct Mesh *mesh);
 
 LOADER_API void meshLoadVertices(
     struct Mesh *mesh,
@@ -88,7 +84,7 @@ LOADER_API int meshLoadTexture(
     struct Mesh      *mesh,
     const char       *path,
     const char       *shVarName,
-    enum TextureIndex txIndex
+    enum TextureIndex txUnitIndex
 );
 
 #endif
