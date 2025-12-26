@@ -4,6 +4,7 @@ set(MODULE core)
 add_library(${MODULE}
     source/logger.c
     source/window.c
+    source/utils/string.c
 )
 
 target_include_directories(${MODULE} PUBLIC include)
