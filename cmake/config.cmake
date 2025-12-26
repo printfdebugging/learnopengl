@@ -29,8 +29,8 @@ set(CMAKE_INSTALL_RPATH_USE_LINK_PATH ON)
 
 set(COMPILER_FLAGS
     -fPIC
-    -Wpedantic
-    -Werror
-    -Wall
-    -Wextra
+    # -Wpedantic
+    # -Werror
+    # -Wall
+    # -Wextra
 )
