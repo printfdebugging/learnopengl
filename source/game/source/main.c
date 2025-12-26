@@ -13,9 +13,8 @@
 
 struct Character
 {
-    // I wonder if i can add a texture here intead of texture id
-    // struct Texture *texture;
-    unsigned int txID;
+    struct Texture *txGlyph;
+
     vec2         size;
     vec2         bearing;
     unsigned int advance;
@@ -231,29 +230,22 @@ int main()
                 continue;
             }
 
-            // should probably do activetexture here?
-            // and that too after binding the shader?
-            unsigned int texture;
-            glGenTextures(1, &texture);
-            glBindTexture(GL_TEXTURE_2D, texture);
-            glTexImage2D(
-                GL_TEXTURE_2D,
-                0,
-                GL_RED,
-                face->glyph->bitmap.width,
-                face->glyph->bitmap.rows,
-                0,
-                GL_RED,
-                GL_UNSIGNED_BYTE,
-                face->glyph->bitmap.buffer
-            );
+            data.characters[c].txGlyph = txCreate();
+            if (txLoad(
+                    data.characters[c].txGlyph,
+                    face->glyph->bitmap.buffer,
+                    face->glyph->bitmap.width,
+                    face->glyph->bitmap.rows,
+                    GL_RED,
+                    GL_UNSIGNED_BYTE,
+                    GL_RED,
+                    GL_FALSE
+                ))
+            {
+                return -1;
+            }
 
-            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
-            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-
-            data.characters[c].txID       = texture;
+            // data.characters[c].txID       = texture;
             data.characters[c].size[0]    = face->glyph->bitmap.width;
             data.characters[c].size[1]    = face->glyph->bitmap.rows;
             data.characters[c].bearing[0] = face->glyph->bitmap_left;
@@ -320,13 +312,13 @@ void drawFrameCallback(void *data)
     // TODO: create a renderer which can render mesh &
     // just have renderer calls here.
 
+    drawText("printfdebugging", 240.0f, 270.0f, 0.5f, (vec3) { 1.0f, 0.0f, 0.0f }, data);
     meshBind(appData->mesh);
     glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, NULL);
     // interestingly enough firing drawText calls after glDrawElements
     // doesn't draw the text over the other textures & when it does
     // when i call it before glDrawElements. When it draws, the text is
     // in drawn in boxes which don't have transparent background.
-    drawText("printfdebugging", 240.0f, 270.0f, 0.5f, (vec3) { 1.0f, 0.0f, 0.0f }, data);
 
     winSwapBuffers(appData->window);
     winPostFrameChecks(appData->window);
@@ -383,7 +375,7 @@ void drawText(const char      *text,
         // irrespective of scale. and we need to save the vbo refernece
         // too as we need to dynamically change the data on it.
 
-        glBindTexture(GL_TEXTURE_2D, ch->txID);
+        glBindTexture(GL_TEXTURE_2D, ch->txGlyph->texture);
         glBindBuffer(GL_ARRAY_BUFFER, data->glyphVbo);
         glBufferSubData(GL_ARRAY_BUFFER, 0, sizeof(vertices), vertices);
         glBindBuffer(GL_ARRAY_BUFFER, 0);
