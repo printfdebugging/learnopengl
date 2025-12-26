@@ -78,6 +78,32 @@ struct Character
  * accurate.
  */
 
+/*
+ * NOTE:
+ * the texture units are hardware slots on the gpu, to work with a texture or for
+ * a shader to use a texture, we have to bind it to a texture unit.
+ *
+ *      the programmer can work with one slot at a time, this is called the active
+ *      texture unit, he can put a texture into this slot by calling glBindTexture
+ *      after activating the texture unit with glActiveTexture. then he can load
+ *      some data into this texture using glTexImage2D. to unbind this texture
+ *      from the active texture unit we can call glBindTexture(GL_TEXTURE_2D, 0),
+ *      though that's not suggested as subsequent binds unbind the last one anyways.
+ *
+ *      if the programmer doesn't unbind the texture, it remains bound to the active
+ *      texture unit. kind of like a mail in a mailbox. then a programmer can go
+ *      over all the texture units one at a time (by making it active) & bind textures
+ *      to them.
+ *
+ *      then the programmer has to set some sampler2D uniform variables on the shader
+ *      program in use and these uniforms are just ints to tell which texture unit
+ *      to get the shader from.
+ *
+ *      so the programmer binds textures to texture units and sets uniforms to use
+ *      these textures in the shader.
+ *
+ */
+
 struct GameData
 {
     struct Window *window;
