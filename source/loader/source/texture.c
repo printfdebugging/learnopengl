@@ -109,8 +109,6 @@ struct Texture *txLoadFromFile(const char       *path,
     glGenerateMipmap(GL_TEXTURE_2D);
 
     stbi_image_free(imgData);
-    glActiveTexture(0);
-
     return texture;
 }
 
@@ -123,7 +121,6 @@ void txBind(struct Texture *texture)
 void txUnbind(struct Texture *texture)
 {
     (void) texture;
-    glActiveTexture(0);
 }
 
 void txDestroy(struct Texture *texture)
