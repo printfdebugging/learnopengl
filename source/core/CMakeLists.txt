@@ -1,41 +1,42 @@
 cmake_minimum_required(VERSION 4.0)
+set(MODULE core)
 
-add_library(core
+add_library(${MODULE}
     source/logger.c
     source/window.c
 )
 
-target_include_directories(core PUBLIC include)
+target_include_directories(${MODULE} PUBLIC include)
 
-target_link_libraries(core
+target_link_libraries(${MODULE}
     PUBLIC glad
     PUBLIC glfw
     PUBLIC cglm
 )
 
-target_compile_options(core PUBLIC
+target_compile_options(${MODULE} PUBLIC
     ${COMPILER_FLAGS}
 )
 
 if(EMSCRIPTEN)
-    target_compile_definitions(core
+    target_compile_definitions(${MODULE}
         PRIVATE CORE_STATIC
     )
 else()
-    target_compile_definitions(core
+    target_compile_definitions(${MODULE}
         PRIVATE   CORE_EXPORT
         INTERFACE CORE_IMPORT
         PRIVATE   GLAD_GLAPI_EXPORT
         INTERFACE GLAD_GLAPI_EXPORT
     )
     install(
-        DIRECTORY include/core
+        DIRECTORY include/${MODULE}
         DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}
     )
 
     install(
-        TARGETS core
-        EXPORT  core
+        TARGETS ${MODULE}
+        EXPORT  ${MODULE}
         LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
         ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
         RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
