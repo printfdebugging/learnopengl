@@ -14,6 +14,14 @@ struct Shader
 // instead of struct pointer, except for the constructor & destructor
 // (which returns void atleast for now)
 
+/*
+    TODO: move the header declaration to the shader code
+          which will compile the shader with appropriate
+          version based on the platform we are building
+          for. also we will add macro declarations to enable
+          or disable certain parts of a shader.
+*/
+
 LOADER_API struct Shader *shCreate();
 
 LOADER_API void shDestroy(struct Shader *shader);

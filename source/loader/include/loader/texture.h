@@ -51,6 +51,7 @@ struct Texture
      * `shVarName` is the variable name this texture binds to in the
      * shader.
      */
+    // TODO: this should be moved into the shader.
     const char *shVarName;
 
     /*

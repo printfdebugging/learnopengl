@@ -193,6 +193,8 @@ int main()
     {
         mat4 projection;
         // TODO: look into how the math behind this works, how to imagine these
+        // these are not mere numbers, but the dimentions of a unit box at the
+        // origin of the coordinate system.
         glm_ortho(0.0f, 800.0f, 0.0f, 600.0f, -1.0f, 1.0f, projection);
         shUniformMatrix4fv(data.glyphShader, "projection", (float *) projection);
     }
