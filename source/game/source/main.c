@@ -197,7 +197,10 @@ int main()
         // these are not mere numbers, but the dimensions of a unit box at the
         // origin of the coordinate system.
         glm_ortho(0.0f, 800.0f, 0.0f, 600.0f, -1.0f, 1.0f, projection);
-        shUniformMatrix4fv(data.glyphShader, "projection", (float *) projection);
+
+        int projectionLocation = shGetUniformLocation(data.glyphShader, "projection");
+        if (projectionLocation != -1)
+            glUniformMatrix4fv(projectionLocation, 1, GL_FALSE, (float *) projection);
     }
 
     {  // vao creation code
@@ -245,7 +248,11 @@ void drawFrameCallback(void *data)
     // shUniform1f(d->mesh->shader, "canvasWidth", (float) w);
     // shUniform1f(d->mesh->shader, "canvasHeight", (float) h);
     // shUniform1f(d->mesh->shader, "time", t);
-    shUniform3f(d->mesh->shader, "canvasDimensions", dimensions[0], dimensions[1], dimensions[2]);
+    {
+        int canvasDimensionsLocation = shGetUniformLocation(d->mesh->shader, "canvasDimensions");
+        if (canvasDimensionsLocation != -1)
+            glUniform3f(canvasDimensionsLocation, dimensions[0], dimensions[1], dimensions[2]);
+    }
 
     winPollEvents(d->window);
     winProcessInput(d->window);
@@ -277,8 +284,18 @@ void drawText(const char      *text,
     // we should cache that in the shader. there will be probably
     // a fixed number of these variables per shader... and they would change
     // based on the shader type??? don't know.
-    shUniform3f(data->glyphShader, "glyphColor", color[0], color[1], color[2]);
-    shUniform1i(data->glyphShader, "glyphTexture", TEXTURE0);
+
+    {
+        int glyphColorLocation = shGetUniformLocation(data->glyphShader, "glyphColor");
+        if (glyphColorLocation != -1)
+            glUniform3f(glyphColorLocation, color[0], color[1], color[2]);
+    }
+
+    {
+        int glyphTextureLocation = shGetUniformLocation(data->glyphShader, "glyphTexture");
+        if (glyphTextureLocation != -1)
+            glUniform1i(glyphTextureLocation, TEXTURE0);
+    }
 
     int len = strlen(text);
 

@@ -182,97 +182,15 @@ void shUnbind(const struct Shader *shader)
     glUseProgram(0);
 }
 
-int shUniform1i(const struct Shader *shader,
-                const char          *name,
-                int                  value)
+int shGetUniformLocation(const struct Shader *shader,
+                         const char          *name)
 {
     shBind(shader);
     int location = glGetUniformLocation(shader->program, name);
     if (location == -1)
     {
         ERROR("no uniform named '%s' found in shader->program\n", name);
-        return 1;
+        return -1;
     }
-
-    glUniform1i(location, value);
-    return 0;
-}
-
-int shUniform1f(const struct Shader *shader,
-                const char          *name,
-                float                value)
-{
-    shBind(shader);
-    int location = glGetUniformLocation(shader->program, name);
-    if (location == -1)
-    {
-        ERROR("no uniform named '%s' found in shader->program\n", name);
-        return 1;
-    }
-    glUniform1f(location, value);
-    return 0;
-}
-
-int shUniform2fv(const struct Shader *shader,
-                 const char          *name,
-                 float               *value)
-{
-    shBind(shader);
-    int location = glGetUniformLocation(shader->program, name);
-    if (location == -1)
-    {
-        ERROR("no uniform named '%s' found in shader->program\n", name);
-        return 1;
-    }
-    glUniform2fv(location, 2, value);
-    return 0;
-}
-
-int shUniform2iv(const struct Shader *shader,
-                 const char          *name,
-                 int                 *value)
-{
-    shBind(shader);
-    int location = glGetUniformLocation(shader->program, name);
-    if (location == -1)
-    {
-        ERROR("no uniform named '%s' found in shader->program\n", name);
-        return 1;
-    }
-    glUniform2iv(location, 2, value);
-    return 0;
-}
-
-int shUniform3f(const struct Shader *shader,
-                const char          *name,
-                float                first,
-                float                second,
-                float                third)
-{
-    shBind(shader);
-    int location = glGetUniformLocation(shader->program, name);
-    if (location == -1)
-    {
-        ERROR("no uniform named '%s' found in shader->program\n", name);
-        return 1;
-    }
-
-    glUniform3f(location, first, second, third);
-    return 0;
-}
-
-int shUniformMatrix4fv(const struct Shader *shader,
-                       const char          *name,
-                       float               *value)
-{
-    shBind(shader);
-    int location = glGetUniformLocation(shader->program, name);
-    if (location == -1)
-    {
-        ERROR("no uniform named '%s' found in shader->program\n", name);
-        return 1;
-    }
-
-    glUniformMatrix4fv(location, 1, GL_FALSE, value);
-    return 0;
+    return location;
 }

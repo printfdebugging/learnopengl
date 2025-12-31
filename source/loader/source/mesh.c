@@ -140,14 +140,9 @@ int meshLoadShader(struct Mesh *mesh,
     {
         if (mesh->textures[i])
         {
-            if (shUniform1i(
-                    mesh->shader,
-                    mesh->textures[i]->shVarName,
-                    mesh->textures[i]->txUnitIndex
-                ))
-            {
-                return 1;
-            }
+            int location = shGetUniformLocation(mesh->shader, mesh->textures[i]->shVarName);
+            if (location != -1)
+                glUniform1i(location, mesh->textures[i]->txUnitIndex);
         }
     }
     return 0;

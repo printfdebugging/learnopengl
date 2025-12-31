@@ -44,66 +44,9 @@ LOADER_API int shLoadFromFile(
     const char    *fpath
 );
 
-/*
- * returns 0 on success
- * returns 1 on failure
- */
-LOADER_API int shUniform1i(
+LOADER_API int shGetUniformLocation(
     const struct Shader *shader,
-    const char          *name,
-    int                  value
-);
-
-/*
- * returns 0 on success
- * returns 1 on failure
- */
-LOADER_API int shUniform1f(
-    const struct Shader *shader,
-    const char          *name,
-    float                value
-);
-
-/*
- * returns 0 on success
- * returns 1 on failure
- */
-LOADER_API int shUniform2fv(
-    const struct Shader *shader,
-    const char          *name,
-    float               *value
-);
-
-/*
- * returns 0 on success
- * returns 1 on failure
- */
-LOADER_API int shUniform2iv(
-    const struct Shader *shader,
-    const char          *name,
-    int                 *value
-);
-
-/*
- * returns 0 on success
- * returns 1 on failure
- */
-LOADER_API int shUniform3f(
-    const struct Shader *shader,
-    const char          *name,
-    float                first,
-    float                second,
-    float                third
-);
-
-/*
- * returns 0 on success
- * returns 1 on failure
- */
-LOADER_API int shUniformMatrix4fv(
-    const struct Shader *shader,
-    const char          *name,
-    float               *value
+    const char          *name
 );
 
 #endif
