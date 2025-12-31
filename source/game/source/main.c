@@ -244,12 +244,12 @@ void drawFrameCallback(void *data)
     // shUniform1f(d->mesh->shader, "canvasWidth", (float) w);
     // shUniform1f(d->mesh->shader, "canvasHeight", (float) h);
     // shUniform1f(d->mesh->shader, "time", t);
+    shUniform2fv(d->mesh->shader, "canvasDimensions", &dimensions[0]);
 
     winPollEvents(d->window);
     winProcessInput(d->window);
     winClearColor(d->window);
 
-    shUniform2fv(d->mesh->shader, "canvasDimensions", (float *) dimensions);
     // drawText("printfdebugging", 240.0f, 270.0f, 0.5f, (vec3) { 0.5, 0.8f, 0.2f }, data);
     renderMesh(d->mesh);
     // interestingly enough firing drawText calls after glDrawElements
