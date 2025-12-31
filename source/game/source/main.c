@@ -194,7 +194,7 @@ int main()
     {
         mat4 projection;
         // TODO: look into how the math behind this works, how to imagine these
-        // these are not mere numbers, but the dimentions of a unit box at the
+        // these are not mere numbers, but the dimensions of a unit box at the
         // origin of the coordinate system.
         glm_ortho(0.0f, 800.0f, 0.0f, 600.0f, -1.0f, 1.0f, projection);
         shUniformMatrix4fv(data.glyphShader, "projection", (float *) projection);
@@ -235,13 +235,12 @@ void drawFrameCallback(void *data)
     // double t = glfwGetTime();
 
     // vec2 position   = { x, y };
-    vec2 dimentions = {
+    vec2 dimensions = {
         [0] = 800.0f,
         [1] = 600.0f,
     };
 
     // shUniform2fv(d->mesh->shader, "cursorPosition", (float *) position);
-    shUniform2fv(d->mesh->shader, "canvasDimentions", (float *) dimentions);
     // shUniform1f(d->mesh->shader, "canvasWidth", (float) w);
     // shUniform1f(d->mesh->shader, "canvasHeight", (float) h);
     // shUniform1f(d->mesh->shader, "time", t);
@@ -250,6 +249,7 @@ void drawFrameCallback(void *data)
     winProcessInput(d->window);
     winClearColor(d->window);
 
+    shUniform2fv(d->mesh->shader, "canvasDimensions", (float *) dimensions);
     // drawText("printfdebugging", 240.0f, 270.0f, 0.5f, (vec3) { 0.5, 0.8f, 0.2f }, data);
     renderMesh(d->mesh);
     // interestingly enough firing drawText calls after glDrawElements
