@@ -1,3 +1,4 @@
 2025-12-31
     - [ ] Implement an fps counter
+    - [ ] Performance Metrics using Timer Queries (https://wikis.khronos.org/opengl/Query_Object#Timer_queries)
     - [ ] Load a simple glTF model with a few textures
