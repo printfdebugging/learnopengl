@@ -186,6 +186,7 @@ int shUniform1i(const struct Shader *shader,
                 const char          *name,
                 int                  value)
 {
+    shBind(shader);
     int location = glGetUniformLocation(shader->program, name);
     if (location == -1)
     {
@@ -201,6 +202,7 @@ int shUniform1f(const struct Shader *shader,
                 const char          *name,
                 float                value)
 {
+    shBind(shader);
     int location = glGetUniformLocation(shader->program, name);
     if (location == -1)
     {
@@ -215,6 +217,7 @@ int shUniform2fv(const struct Shader *shader,
                  const char          *name,
                  float               *value)
 {
+    shBind(shader);
     int location = glGetUniformLocation(shader->program, name);
     if (location == -1)
     {
@@ -229,6 +232,7 @@ int shUniform2iv(const struct Shader *shader,
                  const char          *name,
                  int                 *value)
 {
+    shBind(shader);
     int location = glGetUniformLocation(shader->program, name);
     if (location == -1)
     {
@@ -245,6 +249,7 @@ int shUniform3f(const struct Shader *shader,
                 float                second,
                 float                third)
 {
+    shBind(shader);
     int location = glGetUniformLocation(shader->program, name);
     if (location == -1)
     {
@@ -260,6 +265,7 @@ int shUniformMatrix4fv(const struct Shader *shader,
                        const char          *name,
                        float               *value)
 {
+    shBind(shader);
     int location = glGetUniformLocation(shader->program, name);
     if (location == -1)
     {

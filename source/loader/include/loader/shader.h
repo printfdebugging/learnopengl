@@ -22,6 +22,16 @@ struct Shader
           or disable certain parts of a shader.
 */
 
+/*
+    TODO: the current appraoch is quite bad where we are switching
+    shaders for each setUniform call and for each render call on a
+    mesh.
+
+    as you do more things, fix this, and also the uniform locations
+    should be cached, we shouldn't fetch them again and agian.
+    there are probably other things which should be fixed.
+*/
+
 LOADER_API struct Shader *shCreate();
 
 LOADER_API void shDestroy(struct Shader *shader);
