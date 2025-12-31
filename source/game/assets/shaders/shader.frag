@@ -10,11 +10,20 @@ uniform sampler2D faceTexture;
 
 out vec4 colorOut;
 
+float plot(vec2 st)
+{
+    return smoothstep(0.02, 0.0, abs(st.y - st.x));
+}
+
 void main()
 {
-    vec2 st = vec2(
-        gl_FragCoord.x / canvasDimensions.x,
-        gl_FragCoord.y / canvasDimensions.y
-    );
-    colorOut = vec4(st.xy, 0.0, 1.0);
+    vec2  st    = vec2(gl_FragCoord.xy / canvasDimensions);
+    float y     = st.x; /* 1:1 relation between y and x (brightness & x)*/
+    vec3  color = vec3(y);
+
+    float a     = plot(st);
+    vec3  green = vec3(0.0f, 1.0f, 0.0f);
+    color       = a * green + ((1.0f - a) * color);
+
+    colorOut = vec4(color, 1.0);
 }
