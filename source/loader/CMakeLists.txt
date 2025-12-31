@@ -14,10 +14,7 @@ target_include_directories(${MODULE}
 target_link_libraries(${MODULE}
     PUBLIC core
     PUBLIC stb
-)
-
-target_compile_options(${MODULE} PUBLIC
-    ${COMPILER_FLAGS}
+    PRIVATE common
 )
 
 if (EMSCRIPTEN)

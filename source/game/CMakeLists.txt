@@ -11,13 +11,10 @@ target_include_directories(${APPLICATION}
 )
 
 target_link_libraries(${APPLICATION}
-    core
-    loader
-    renderer
-)
-
-target_compile_options(${APPLICATION} PUBLIC
-    ${COMPILER_FLAGS}
+    PUBLIC core
+    PUBLIC loader
+    PUBLIC renderer
+    PRIVATE common
 )
 
 set(PROJECT_ASSETS_DIR     "${PROJECT_NAME}/assets/")

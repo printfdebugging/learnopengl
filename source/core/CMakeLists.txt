@@ -13,10 +13,7 @@ target_link_libraries(${MODULE}
     PUBLIC glad
     PUBLIC glfw
     PUBLIC cglm
-)
-
-target_compile_options(${MODULE} PUBLIC
-    ${COMPILER_FLAGS}
+    PRIVATE common
 )
 
 if(EMSCRIPTEN)

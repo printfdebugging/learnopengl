@@ -2,6 +2,7 @@ cmake_minimum_required(VERSION 4.0)
 
 set(CMAKE_C_STANDARD 23)
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
+set(CMAKE_BUILD_TYPE Debug)
 set(CMAKE_THREAD_LIBS_INIT "-lpthread")
 set(CMAKE_HAVE_THREADS_LIBRARY 1)
 set(CMAKE_USE_WIN32_THREADS_INIT 0)
@@ -27,7 +28,14 @@ set(CMAKE_INSTALL_RPATH "$ORIGIN/../lib")
 set(CMAKE_BUILD_WITH_INSTALL_RPATH OFF)
 set(CMAKE_INSTALL_RPATH_USE_LINK_PATH ON)
 
-set(COMPILER_FLAGS
+# common target
+add_library(common INTERFACE)
+
+target_compile_definitions(common INTERFACE
+    $<IF:$<CONFIG:Debug>,-DDEBUG_BUILD,-DRELEASE_BUILD>
+)
+
+target_compile_options(common INTERFACE
     -fPIC
     -Wpedantic
     -Werror

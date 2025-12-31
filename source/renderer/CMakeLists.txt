@@ -11,12 +11,9 @@ target_include_directories(${MODULE}
 )
 
 target_link_libraries(${MODULE}
-    loader
-    freetype
-)
-
-target_compile_options(${MODULE} PUBLIC
-    ${COMPILER_FLAGS}
+    PUBLIC loader
+    PUBLIC freetype
+    PRIVATE common
 )
 
 if (EMSCRIPTEN)
