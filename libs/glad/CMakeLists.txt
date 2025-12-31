@@ -10,6 +10,10 @@ target_include_directories(glad
     PUBLIC include
 )
 
+target_compile_options(glad
+    PRIVATE -fPIC
+)
+
 install(
     DIRECTORY 
         include/glad 
