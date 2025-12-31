@@ -197,6 +197,34 @@ int shUniform1i(const struct Shader *shader,
     return 0;
 }
 
+int shUniform1f(const struct Shader *shader,
+                const char          *name,
+                float                value)
+{
+    int location = glGetUniformLocation(shader->program, name);
+    if (location == -1)
+    {
+        ERROR("no uniform named '%s' found in shader->program\n", name);
+        return 1;
+    }
+    glUniform1f(location, value);
+    return 0;
+}
+
+int shUniform2fv(const struct Shader *shader,
+                 const char          *name,
+                 float               *value)
+{
+    int location = glGetUniformLocation(shader->program, name);
+    if (location == -1)
+    {
+        ERROR("no uniform named '%s' found in shader->program\n", name);
+        return 1;
+    }
+    glUniform2fv(location, 2, value);
+    return 0;
+}
+
 int shUniform3f(const struct Shader *shader,
                 const char          *name,
                 float                first,

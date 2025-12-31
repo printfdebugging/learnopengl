@@ -48,6 +48,26 @@ LOADER_API int shUniform1i(
  * returns 0 on success
  * returns 1 on failure
  */
+LOADER_API int shUniform1f(
+    const struct Shader *shader,
+    const char          *name,
+    float                value
+);
+
+/*
+ * returns 0 on success
+ * returns 1 on failure
+ */
+LOADER_API int shUniform2fv(
+    const struct Shader *shader,
+    const char          *name,
+    float               *value
+);
+
+/*
+ * returns 0 on success
+ * returns 1 on failure
+ */
 LOADER_API int shUniform3f(
     const struct Shader *shader,
     const char          *name,
