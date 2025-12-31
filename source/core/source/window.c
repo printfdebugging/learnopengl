@@ -64,6 +64,7 @@ struct Window *winCreate(unsigned int width,
     }
 
     glfwSetFramebufferSizeCallback(window, winFrameBufResizeCallback);
+    glfwSwapInterval(1);
     glEnable(GL_DEPTH_TEST);
 
     // TODO: this is explained in the blending section
