@@ -5,8 +5,6 @@ precision mediump float;
 #endif
 
 in vec3 inPosition;
-in vec3 inColor;
-in vec2 inUV;
 
 void main()
 {
