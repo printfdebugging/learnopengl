@@ -114,3 +114,9 @@ but when there are multiple words involved, we use the shrinked words
 in camel case, like `txUnits` or `shVarName`. This is applicable for
 both variable and function names. For entities like `mesh`, the base
 name is already not that long, so we don't shorten that further.
+
+TODO: we need a proper naming convention for the shader variables,
+- uniforms
+- vertex attributes
+- internal variables
+
