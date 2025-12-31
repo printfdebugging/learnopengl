@@ -120,3 +120,8 @@ TODO: we need a proper naming convention for the shader variables,
 - vertex attributes
 - internal variables
 
+# shaders
+
+- https://www.shadertoy.com/ -- shader examples
+- https://thebookofshaders.com -- shaders 101
+- https://github.com/septag/dmon -- shader hot reloading
