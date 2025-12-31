@@ -5,7 +5,7 @@ precision mediump float;
 #endif
 
 uniform vec2  cursorPosition;
-uniform vec2  canvasDimensions;
+uniform vec3  canvasDimensions;
 uniform float canvasWidth;
 uniform float canvasHeight;
 uniform float time;

@@ -235,16 +235,17 @@ void drawFrameCallback(void *data)
     // double t = glfwGetTime();
 
     // vec2 position   = { x, y };
-    vec2 dimensions = {
-        [0] = 800.0f,
-        [1] = 600.0f,
+    float dimensions[3] = {
+        [0] = w,
+        [1] = h,
+        [2] = 0.0f
     };
 
     // shUniform2fv(d->mesh->shader, "cursorPosition", (float *) position);
     // shUniform1f(d->mesh->shader, "canvasWidth", (float) w);
     // shUniform1f(d->mesh->shader, "canvasHeight", (float) h);
     // shUniform1f(d->mesh->shader, "time", t);
-    shUniform2fv(d->mesh->shader, "canvasDimensions", &dimensions[0]);
+    shUniform3f(d->mesh->shader, "canvasDimensions", dimensions[0], dimensions[1], dimensions[2]);
 
     winPollEvents(d->window);
     winProcessInput(d->window);
