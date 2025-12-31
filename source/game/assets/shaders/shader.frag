@@ -4,15 +4,22 @@
 precision mediump float;
 #endif
 
-in vec3 color;
-in vec2 uv;
-
-out vec4 colorOut;
+uniform vec2  cursorPosition;
+uniform vec2  canvasDimentions;
+uniform float canvasWidth;
+uniform float canvasHeight;
+uniform float time;
 
 uniform sampler2D containerTexture;
 uniform sampler2D faceTexture;
 
+out vec4 colorOut;
+
 void main()
 {
-    colorOut = mix(texture(containerTexture, uv), texture(faceTexture, uv), 0.2);
+    vec2 st = vec2(
+        gl_FragCoord.x / canvasDimentions.x,
+        gl_FragCoord.y / canvasDimentions.y
+    );
+    colorOut = vec4(st.xy, 0.0, 1.0);
 }

@@ -1,3 +1,4 @@
+#include "GLFW/glfw3.h"
 #include "glad/glad.h"
 #include "ft2build.h"
 #include FT_FREETYPE_H
@@ -56,10 +57,10 @@ int main()
 
     /* clang-format off */
     float vertices[] = {
-        -0.5f,  0.5f, 0.0f,
-        -0.5f, -0.5f, 0.0f,
-         0.5f, -0.5f, 0.0f,
-         0.5f,  0.5f, 0.0f,
+        -1.0f,  1.0f, 0.0f,
+        -1.0f, -1.0f, 0.0f,
+         1.0f, -1.0f, 0.0f,
+         1.0f,  1.0f, 0.0f,
     };
 
     float colors[] = {
@@ -91,25 +92,25 @@ int main()
     meshLoadUV(data.mesh, uv, 4, 2 * sizeof(float));
     meshLoadIndices(data.mesh, indices, sizeof(indices), GL_UNSIGNED_INT);
 
-    if (meshLoadTexture(
-            data.mesh,
-            (char *) ASSETS_DIR "textures/container.jpg",
-            "containerTexture",
-            TEXTURE0
-        ))
-    {
-        return EXIT_FAILURE;
-    }
+    // if (meshLoadTexture(
+    //         data.mesh,
+    //         (char *) ASSETS_DIR "textures/container.jpg",
+    //         "containerTexture",
+    //         TEXTURE0
+    //     ))
+    // {
+    //     return EXIT_FAILURE;
+    // }
 
-    if (meshLoadTexture(
-            data.mesh,
-            (char *) ASSETS_DIR "textures/awesomeface.png",
-            "faceTexture",
-            TEXTURE1
-        ))
-    {
-        return EXIT_FAILURE;
-    }
+    // if (meshLoadTexture(
+    //         data.mesh,
+    //         (char *) ASSETS_DIR "textures/awesomeface.png",
+    //         "faceTexture",
+    //         TEXTURE1
+    //     ))
+    // {
+    //     return EXIT_FAILURE;
+    // }
 
     if (meshLoadShader(
             data.mesh,
@@ -224,21 +225,40 @@ int main()
 
 void drawFrameCallback(void *data)
 {
-    struct GameData *appData = (struct GameData *) data;
+    struct GameData *d = (struct GameData *) data;
 
-    winPollEvents(appData->window);
-    winProcessInput(appData->window);
-    winClearColor(appData->window);
+    double x, y;
+    int    w, h;
 
-    drawText("printfdebugging", 240.0f, 270.0f, 0.5f, (vec3) { 1.0f, 0.0f, 0.0f }, data);
-    renderMesh(appData->mesh);
+    glfwGetCursorPos(d->window->window, &x, &y);
+    glfwGetWindowSize(d->window->window, &w, &h);
+    // double t = glfwGetTime();
+
+    // vec2 position   = { x, y };
+    vec2 dimentions = {
+        [0] = 800.0f,
+        [1] = 600.0f,
+    };
+
+    // shUniform2fv(d->mesh->shader, "cursorPosition", (float *) position);
+    shUniform2fv(d->mesh->shader, "canvasDimentions", (float *) dimentions);
+    // shUniform1f(d->mesh->shader, "canvasWidth", (float) w);
+    // shUniform1f(d->mesh->shader, "canvasHeight", (float) h);
+    // shUniform1f(d->mesh->shader, "time", t);
+
+    winPollEvents(d->window);
+    winProcessInput(d->window);
+    winClearColor(d->window);
+
+    // drawText("printfdebugging", 240.0f, 270.0f, 0.5f, (vec3) { 0.5, 0.8f, 0.2f }, data);
+    renderMesh(d->mesh);
     // interestingly enough firing drawText calls after glDrawElements
     // doesn't draw the text over the other textures & when it does
     // when i call it before glDrawElements. When it draws, the text is
     // in drawn in boxes which don't have transparent background.
 
-    winSwapBuffers(appData->window);
-    winPostFrameChecks(appData->window);
+    winSwapBuffers(d->window);
+    winPostFrameChecks(d->window);
 }
 
 void drawText(const char      *text,
