@@ -225,6 +225,20 @@ int shUniform2fv(const struct Shader *shader,
     return 0;
 }
 
+int shUniform2iv(const struct Shader *shader,
+                 const char          *name,
+                 int                 *value)
+{
+    int location = glGetUniformLocation(shader->program, name);
+    if (location == -1)
+    {
+        ERROR("no uniform named '%s' found in shader->program\n", name);
+        return 1;
+    }
+    glUniform2iv(location, 2, value);
+    return 0;
+}
+
 int shUniform3f(const struct Shader *shader,
                 const char          *name,
                 float                first,
