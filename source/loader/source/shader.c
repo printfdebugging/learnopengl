@@ -49,9 +49,20 @@ static const char *readShaderFile(const char *filename)
         return NULL;
     }
 
-    fread(buffer, 1, length, file);
+    int readCount = fread(buffer, 1, length, file);
+    if (readCount < length || readCount == 0)
+    {
+        fclose(file);
+        ERROR("read returned %i which is either 0 or less than %li", readCount, length);
+        return NULL;
+    }
+
     buffer[length] = '\0';
-    fclose(file);
+    if (fclose(file))
+    {
+        ERROR("fclose failed\n");
+        return NULL;
+    }
 
     return buffer;
 }
