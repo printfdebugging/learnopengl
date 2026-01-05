@@ -13,3 +13,6 @@
 [submodule "libs/freetype2"]
 	path = libs/freetype2
 	url = https://github.com/freetype/freetype
+[submodule "libs/cgltf"]
+	path = libs/cgltf
+	url = https://github.com/jkuhlmann/cgltf

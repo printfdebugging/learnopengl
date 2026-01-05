@@ -16,6 +16,7 @@ add_subdirectory(libs/glad)
 add_subdirectory(libs/cglm)
 add_subdirectory(libs/freetype2)
 add_subdirectory(cmake/stb)
+add_subdirectory(cmake/cgltf)
 
 if (EMSCRIPTEN)
     add_subdirectory(libs/emscripten-glfw)
