@@ -16,3 +16,9 @@
 [submodule "libs/cgltf"]
 	path = libs/cgltf
 	url = https://github.com/jkuhlmann/cgltf
+[submodule "docs/gltf"]
+	path = docs/gltf
+	url = https://github.com/KhronosGroup/glTF
+[submodule "docs/gltf-tutorials"]
+	path = docs/gltf-tutorials
+	url = https://github.com/KhronosGroup/glTF-Tutorials
