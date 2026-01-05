@@ -1,3 +1,5 @@
+
+.PHONY: build
 build:
 	cmake -B build
 	cmake --build build -j 32 -v
@@ -7,6 +9,9 @@ run:
 	cmake -B build
 	cmake --build build -j 32 -v
 	./build/source/game/game
+
+install: build
+	cmake --install build --prefix install
 
 # run-wasm:
 # 	cd /home/printfdebugging/repos/website && ./scripts/generate-graphics.sh
