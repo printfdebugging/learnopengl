@@ -1,6 +1,7 @@
 #include "loader/texture.h"
 #include "core/logger.h"
 
+#include "loader/shader.h"
 #include "stb_image.h"
 
 static GLenum txUnit[TEXTURE_COUNT] = {
@@ -60,7 +61,7 @@ int txLoadFromFile(struct Texture   *texture,
         0
     );
 
-    // TODO: make this a bit more robust
+    // TODO: make this a bit more robust using switch
     GLenum imgFormat;
     if (imgChanCount == 3)
         imgFormat = GL_RGB;

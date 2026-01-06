@@ -15,6 +15,7 @@ target_link_libraries(${APPLICATION}
     PUBLIC loader
     PUBLIC renderer
     PUBLIC cgltf
+    PUBLIC m
     PRIVATE common
 )
 
