@@ -102,9 +102,9 @@ int main()
         }
 
         {
-            int containerTextureLocation = shGetUniformLocation(data.mesh->shader, "containerTexture");
-            if (containerTextureLocation != -1)
-                glUniform1i(containerTextureLocation, TEXTURE0);
+            int faceTextureLocation = shGetUniformLocation(data.mesh->shader, "faceTexture");
+            if (faceTextureLocation != -1)
+                glUniform1i(faceTextureLocation, TEXTURE0);
         }
 
         if (txLoadFromFile(
@@ -118,9 +118,9 @@ int main()
         }
 
         {
-            int faceTextureLocation = shGetUniformLocation(data.mesh->shader, "containerTexture");
-            if (faceTextureLocation != -1)
-                glUniform1i(faceTextureLocation, TEXTURE1);
+            int containerTextureLocation = shGetUniformLocation(data.mesh->shader, "containerTexture");
+            if (containerTextureLocation != -1)
+                glUniform1i(containerTextureLocation, TEXTURE1);
         }
     }
 
