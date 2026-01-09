@@ -39,10 +39,10 @@ static GLenum txUnit[TEXTURE_COUNT] = {
     [TEXTURE31] = GL_TEXTURE31,
 };
 
-int txLoadFromFile(struct Texture   *texture,
-                   const char       *path,
-                   const char       *shVarName,
-                   enum TextureIndex txUnitIndex)
+int texLoadFromFile(struct Texture   *texture,
+                    const char       *path,
+                    const char       *shVarName,
+                    enum TextureIndex txUnitIndex)
 {
     texture->shVarName   = shVarName;
     texture->txUnitIndex = txUnitIndex;
@@ -76,7 +76,7 @@ int txLoadFromFile(struct Texture   *texture,
         return 1;
     }
 
-    if (txLoad(
+    if (texLoad(
             texture,
             imgData,
             imgWidth,
@@ -94,7 +94,7 @@ int txLoadFromFile(struct Texture   *texture,
     return 0;
 }
 
-struct Texture *txCreate()
+struct Texture *texCreate()
 {
     struct Texture *texture = malloc(sizeof(struct Texture));
     if (!texture)
@@ -107,14 +107,14 @@ struct Texture *txCreate()
     return texture;
 }
 
-int txLoad(struct Texture *texture,
-           void           *txData,
-           unsigned int    txWidth,
-           unsigned int    txHeight,
-           GLenum          txFormat,
-           GLenum          txDataType,
-           GLenum          txInternalFormat,
-           GLboolean       txGenMipmaps)
+int texLoad(struct Texture *texture,
+            void           *txData,
+            unsigned int    txWidth,
+            unsigned int    txHeight,
+            GLenum          txFormat,
+            GLenum          txDataType,
+            GLenum          txInternalFormat,
+            GLboolean       txGenMipmaps)
 {
     glActiveTexture(txUnit[texture->txUnitIndex]);
     glGenTextures(1, &texture->texture);
@@ -159,7 +159,7 @@ int txLoad(struct Texture *texture,
     return 0;
 }
 
-void txDestroy(struct Texture *texture)
+void texDestroy(struct Texture *texture)
 {
     glDeleteTextures(1, &texture->texture);
     free(texture);

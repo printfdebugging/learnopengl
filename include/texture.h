@@ -59,10 +59,10 @@ struct Texture
     enum TextureIndex txUnitIndex;
 };
 
-struct Texture *txCreate();
+struct Texture *texCreate();
 
 // TODO: create enums for txFormat, txInternalFormat
-int txLoad(
+int texLoad(
     struct Texture *texture,
     void           *txData,
     unsigned int    txWidth,
@@ -73,7 +73,7 @@ int txLoad(
     GLboolean       txGenMipmaps
 );
 
-int txLoadFromFile(
+int texLoadFromFile(
     struct Texture   *texture,
     const char       *path,
     const char       *shVarName,
@@ -89,6 +89,6 @@ int txLoadFromData(
 );
 */
 
-void txDestroy(struct Texture *texture);
+void texDestroy(struct Texture *texture);
 
 #endif

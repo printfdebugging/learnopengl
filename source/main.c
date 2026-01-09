@@ -77,7 +77,7 @@ int main()
         }
 
         {
-            if (txLoadFromFile(mesh->textures[TEXTURE0], ASSETS_DIR "textures/container.jpg", "containerTexture", TEXTURE0))
+            if (texLoadFromFile(mesh->textures[TEXTURE0], ASSETS_DIR "textures/container.jpg", "containerTexture", TEXTURE0))
                 return EXIT_FAILURE;
 
             int faceTextureLocation = shGetUniformLocation(mesh->shader, "faceTexture");
@@ -86,7 +86,7 @@ int main()
         }
 
         {
-            if (txLoadFromFile(mesh->textures[TEXTURE1], ASSETS_DIR "textures/awesomeface.png", "faceTexture", TEXTURE1))
+            if (texLoadFromFile(mesh->textures[TEXTURE1], ASSETS_DIR "textures/awesomeface.png", "faceTexture", TEXTURE1))
                 return EXIT_FAILURE;
 
             int containerTextureLocation = shGetUniformLocation(mesh->shader, "containerTexture");

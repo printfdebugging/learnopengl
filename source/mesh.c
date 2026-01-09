@@ -133,11 +133,11 @@ int meshLoadTexture(struct Mesh      *mesh,
         return 1;
     }
 
-    mesh->textures[txUnitIndex] = txCreate();
+    mesh->textures[txUnitIndex] = texCreate();
     if (!mesh->textures[txUnitIndex])
         return 1;
 
-    if (txLoadFromFile(mesh->textures[txUnitIndex], path, shVarName, txUnitIndex))
+    if (texLoadFromFile(mesh->textures[txUnitIndex], path, shVarName, txUnitIndex))
         return 1;
 
     mesh->txCount += 1;
