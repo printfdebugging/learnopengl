@@ -100,6 +100,8 @@ if (EMSCRIPTEN)
         -sNO_DISABLE_EXCEPTION_CATCHING
         -sASSERTIONS=1
         -sWASM=1
+        -sGL_ASSERTIONS=1 
+        -sGL_DEBUG=1
         -sSAFE_HEAP=1
         --embed-file=${PROJECT_SOURCE_DIR}/assets@${PROJECT_ASSETS_DIR}
         --shell-file=${TEMPLATE_INDEX_HTML_FILE}
