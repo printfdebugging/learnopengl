@@ -6,30 +6,6 @@ struct Shader
     unsigned int program;
 };
 
-// TODO: add a shCreate() function to just create a shader object
-// and change the below function to shLoadFromFile. then add another
-// function shLoadFromMemory... and make these functions return int
-// instead of struct pointer, except for the constructor & destructor
-// (which returns void atleast for now)
-
-/*
-    TODO: move the header declaration to the shader code
-          which will compile the shader with appropriate
-          version based on the platform we are building
-          for. also we will add macro declarations to enable
-          or disable certain parts of a shader.
-*/
-
-/*
-    TODO: the current appraoch is quite bad where we are switching
-    shaders for each setUniform call and for each render call on a
-    mesh.
-
-    as you do more things, fix this, and also the uniform locations
-    should be cached, we shouldn't fetch them again and agian.
-    there are probably other things which should be fixed.
-*/
-
 struct Shader *shCreate();
 
 void shDestroy(struct Shader *shader);
