@@ -13,13 +13,7 @@ int texLoadFromFile(struct Texture *texture,
     unsigned char *imgData;
 
     stbi_set_flip_vertically_on_load(true);
-    imgData = stbi_load(
-        path,
-        &imgWidth,
-        &imgHeight,
-        &imgChanCount,
-        0
-    );
+    imgData = stbi_load(path, &imgWidth, &imgHeight, &imgChanCount, 0);
 
     // TODO: make this a bit more robust using switch
     GLenum imgFormat;
@@ -36,19 +30,8 @@ int texLoadFromFile(struct Texture *texture,
         return 1;
     }
 
-    if (texLoad(
-            texture,
-            imgData,
-            imgWidth,
-            imgHeight,
-            imgFormat,
-            GL_UNSIGNED_BYTE,
-            imgFormat,
-            GL_TRUE
-        ))
-    {
+    if (texLoad(texture, imgData, imgWidth, imgHeight, imgFormat, GL_UNSIGNED_BYTE, imgFormat, GL_TRUE))
         return 1;
-    }
 
     stbi_image_free(imgData);
     return 0;
@@ -78,39 +61,12 @@ int texLoad(struct Texture *texture,
 {
     glGenTextures(1, &texture->texture);
     glBindTexture(GL_TEXTURE_2D, texture->texture);
+    glTexImage2D(GL_TEXTURE_2D, GL_ZERO, txInternalFormat, txWidth, txHeight, GL_ZERO, txFormat, txDataType, txData);
 
-    glTexImage2D(
-        GL_TEXTURE_2D,
-        GL_ZERO,
-        txInternalFormat,
-        txWidth,
-        txHeight,
-        GL_ZERO,
-        txFormat,
-        txDataType,
-        txData
-    );
-
-    glTexParameteri(
-        GL_TEXTURE_2D,
-        GL_TEXTURE_WRAP_S,
-        GL_REPEAT
-    );
-    glTexParameteri(
-        GL_TEXTURE_2D,
-        GL_TEXTURE_WRAP_T,
-        GL_REPEAT
-    );
-    glTexParameteri(
-        GL_TEXTURE_2D,
-        GL_TEXTURE_MIN_FILTER,
-        txGenMipmaps ? GL_LINEAR_MIPMAP_LINEAR : GL_LINEAR
-    );
-    glTexParameteri(
-        GL_TEXTURE_2D,
-        GL_TEXTURE_MAG_FILTER,
-        GL_LINEAR
-    );
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, txGenMipmaps ? GL_LINEAR_MIPMAP_LINEAR : GL_LINEAR);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 
     if (txGenMipmaps)
         glGenerateMipmap(GL_TEXTURE_2D);
