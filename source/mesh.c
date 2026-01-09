@@ -31,6 +31,8 @@ void meshDestroy(struct Mesh *mesh)
         glDeleteBuffers(1, &mesh->ebo);
 
     glDeleteVertexArrays(1, &mesh->vao);
+
+    free(mesh);
 }
 
 /*

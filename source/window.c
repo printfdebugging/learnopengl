@@ -113,6 +113,7 @@ void winDestroy(struct Window *window)
 {
     glfwDestroyWindow(window->window);
     glfwTerminate();
+    free(window);
 }
 
 bool winClosed(struct Window *window)
