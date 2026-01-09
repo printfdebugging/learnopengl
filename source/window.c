@@ -5,11 +5,6 @@
 
 #include <stdlib.h>
 #include <string.h>
-#ifdef EMSCRIPTEN
-    #include <emscripten/emscripten.h>
-    #include "GLFW/emscripten_glfw3.h"
-#endif
-
 static void winFrameBufResizeCallback(GLFWwindow *window,
                                       int         width,
                                       int         height)
@@ -18,10 +13,6 @@ static void winFrameBufResizeCallback(GLFWwindow *window,
     glViewport(0, 0, width, height);
 }
 
-/*
- * NOTE: `emscripten_glfw_set_next_window_canvas_selector` is required
- *       if creating more than one windows. it's a TODO.
- */
 struct Window *winCreate(unsigned int width,
                          unsigned int height,
                          const char  *title,
@@ -33,14 +24,8 @@ struct Window *winCreate(unsigned int width,
         return NULL;
     }
 
-#if EMSCRIPTEN  // set WEBGL=2
-    glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 2);
-    glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 0);
-#else
     glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
     glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
-#endif
-
     glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
     glfwWindowHint(GLFW_TRANSPARENT_FRAMEBUFFER, GLFW_TRUE);
 #ifdef __APPLE__
