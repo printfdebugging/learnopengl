@@ -1,9 +1,7 @@
 #ifndef RENDERER_H
 #define RENDERER_H
 
-#include "renderer/defines.h"
-
-#include "loader/mesh.h"
+#include "mesh.h"
 
 /*
  * TODO: as the mesh gets more attributes like various transforms
@@ -18,8 +16,6 @@
  *       value, i think not as it doesn't feel right to keep stopping for
  *       these checks in the middle of a frame.
  */
-RENDERER_API void renderMesh(
-    struct Mesh *mesh
-);
+void renderMesh(struct Mesh *mesh);
 
 #endif

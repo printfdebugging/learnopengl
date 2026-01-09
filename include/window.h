@@ -3,7 +3,6 @@
 
 #include "GLFW/glfw3.h"
 #include "cglm/cglm.h"
-#include "core/defines.h"
 
 #include <stdbool.h>
 
@@ -20,33 +19,33 @@ struct Window
     DrawFrameCallback *drawFrameCallback;
 };
 
-CORE_API struct Window *winCreate(
+struct Window *winCreate(
     unsigned int width,
     unsigned int height,
     const char  *title,
     vec4         color
 );
 
-CORE_API void winSetClearColor(
+void winSetClearColor(
     struct Window *window,
     vec4           color
 );
 
-CORE_API void winProcessInput(struct Window *window);
-CORE_API void winPollEvents(struct Window *window);
-CORE_API void winClearColor(struct Window *window);
-CORE_API void winSwapBuffers(struct Window *window);
-CORE_API void winDestroy(struct Window *window);
-CORE_API bool winClosed(struct Window *window);
+void winProcessInput(struct Window *window);
+void winPollEvents(struct Window *window);
+void winClearColor(struct Window *window);
+void winSwapBuffers(struct Window *window);
+void winDestroy(struct Window *window);
+bool winClosed(struct Window *window);
 
-CORE_API void winFireMainLoop(
+void winFireMainLoop(
     struct Window *window,
     void          *data
 );
 
-CORE_API void winPostFrameChecks(struct Window *window);
+void winPostFrameChecks(struct Window *window);
 
-CORE_API void winRegisterDrawFrameCallback(
+void winRegisterDrawFrameCallback(
     struct Window     *window,
     DrawFrameCallback *frameCallback
 );

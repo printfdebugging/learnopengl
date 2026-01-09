@@ -1,8 +1,8 @@
-#include "glad/glad.h"
-#include "core/logger.h"
+#include "logger.h"
+#include "shader.h"
+#include "mesh.h"
 
-#include "loader/shader.h"
-#include "loader/mesh.h"
+#include "glad/glad.h"
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -199,9 +199,6 @@ int shGetUniformLocation(const struct Shader *shader,
     shBind(shader);
     int location = glGetUniformLocation(shader->program, name);
     if (location == -1)
-    {
-        ERROR("no uniform named '%s' found in shader->program\n", name);
-        return -1;
-    }
+        ERROR("no uniform named '%s' found in shader->program\n", name)
     return location;
 }

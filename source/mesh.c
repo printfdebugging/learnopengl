@@ -1,8 +1,7 @@
-#include "core/logger.h"
-
-#include "loader/mesh.h"
-#include "loader/shader.h"
-#include "loader/texture.h"
+#include "logger.h"
+#include "mesh.h"
+#include "shader.h"
+#include "texture.h"
 
 #include <stdlib.h>
 

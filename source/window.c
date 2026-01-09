@@ -1,7 +1,7 @@
 #include "glad/glad.h"
 
-#include "core/window.h"
-#include "core/logger.h"
+#include "window.h"
+#include "logger.h"
 
 #include <stdlib.h>
 #include <string.h>

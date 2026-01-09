@@ -1,7 +1,6 @@
 #ifndef TEXTURE_H
 #define TEXTURE_H
 
-#include "loader/defines.h"
 #include "glad/glad.h"
 
 enum TextureIndex
@@ -60,10 +59,10 @@ struct Texture
     enum TextureIndex txUnitIndex;
 };
 
-LOADER_API struct Texture *txCreate();
+struct Texture *txCreate();
 
 // TODO: create enums for txFormat, txInternalFormat
-LOADER_API int txLoad(
+int txLoad(
     struct Texture *texture,
     void           *txData,
     unsigned int    txWidth,
@@ -74,7 +73,7 @@ LOADER_API int txLoad(
     GLboolean       txGenMipmaps
 );
 
-LOADER_API int txLoadFromFile(
+int txLoadFromFile(
     struct Texture   *texture,
     const char       *path,
     const char       *shVarName,
@@ -82,7 +81,7 @@ LOADER_API int txLoadFromFile(
 );
 
 /* TODO: later!
-LOADER_API int txLoadFromData(
+int txLoadFromData(
     struct Texture   *texture,
     const char       *path,  // <-- data, width, height, format
     const char       *shVarName,
@@ -90,8 +89,8 @@ LOADER_API int txLoadFromData(
 );
 */
 
-LOADER_API void txBind(struct Texture *texture);
-LOADER_API void txUnbind(struct Texture *texture);
-LOADER_API void txDestroy(struct Texture *texture);
+void txBind(struct Texture *texture);
+void txUnbind(struct Texture *texture);
+void txDestroy(struct Texture *texture);
 
 #endif

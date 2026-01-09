@@ -1,7 +1,7 @@
-#include "loader/texture.h"
-#include "core/logger.h"
+#include "texture.h"
+#include "logger.h"
+#include "shader.h"
 
-#include "loader/shader.h"
 #include "stb_image.h"
 
 static GLenum txUnit[TEXTURE_COUNT] = {

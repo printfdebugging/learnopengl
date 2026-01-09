@@ -1,4 +1,4 @@
-#include "renderer/renderer.h"
+#include "renderer.h"
 
 void renderMesh(struct Mesh *mesh)
 {

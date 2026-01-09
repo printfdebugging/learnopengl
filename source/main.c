@@ -1,14 +1,12 @@
-#include "GLFW/glfw3.h"
 #include "glad/glad.h"
+#include "GLFW/glfw3.h"
 
-#include "core/window.h"
-#include "core/logger.h"
-
-#include "loader/mesh.h"
-#include "loader/shader.h"
-#include "loader/texture.h"
-
-#include "renderer/renderer.h"
+#include "window.h"
+#include "logger.h"
+#include "mesh.h"
+#include "shader.h"
+#include "texture.h"
+#include "renderer.h"
 
 #include <stdlib.h>
 
@@ -144,7 +142,7 @@ void drawFrameCallback(void *data)
     {
         mat4 transform = GLM_MAT4_IDENTITY_INIT;
         glm_rotate(transform, glm_rad(90.0f), (vec3) { 0.0, 0.0, 1.0 });
-        glm_scale(transform, (vec3) { 0.5, 0.5, 0.5 });
+        glm_scale(transform, (vec3) { 1.0, 1.0, 1.0 });
 
         {
             int transformLocation = shGetUniformLocation(d->mesh->shader, "transform");

@@ -3,8 +3,8 @@
 
 #include "glad/glad.h"
 
-#include "loader/shader.h"
-#include "loader/texture.h"
+#include "shader.h"
+#include "texture.h"
 
 enum MeshAttribute
 {
@@ -36,38 +36,38 @@ struct Mesh
     int             txCount;
 };
 
-LOADER_API struct Mesh *meshCreate();
+struct Mesh *meshCreate();
 
-LOADER_API void meshDestroy(struct Mesh *mesh);
+void meshDestroy(struct Mesh *mesh);
 // TODO: remove these and instead use plain opengl functions in the renderer.
 // and we probably don't need these elsewhere because we are just saying "render mesh"
 // and a mesh has all the info, the textures & the shaders... if not in it then bundled with
 // it in a scene.
-LOADER_API void meshBind(struct Mesh *mesh);
-LOADER_API void meshUnbind(struct Mesh *mesh);
+void meshBind(struct Mesh *mesh);
+void meshUnbind(struct Mesh *mesh);
 
-LOADER_API void meshLoadVertices(
+void meshLoadVertices(
     struct Mesh *mesh,
     float       *data,
     unsigned int count,
     unsigned int stride
 );
 
-LOADER_API void meshLoadIndices(
+void meshLoadIndices(
     struct Mesh *mesh,
     int         *data,
     unsigned int count,
     GLenum       type
 );
 
-LOADER_API void meshLoadColors(
+void meshLoadColors(
     struct Mesh *mesh,
     float       *data,
     unsigned int count,
     unsigned int stride
 );
 
-LOADER_API void meshLoadUV(
+void meshLoadUV(
     struct Mesh *mesh,
     float       *data,
     unsigned int count,
@@ -78,7 +78,7 @@ LOADER_API void meshLoadUV(
  * returns 0 on success
  * returns 1 on failure.
  */
-LOADER_API int meshLoadShader(
+int meshLoadShader(
     struct Mesh *mesh,
     const char  *vPath,
     const char  *fPath
@@ -88,7 +88,7 @@ LOADER_API int meshLoadShader(
  * returns 0 on success
  * returns 1 on failure.
  */
-LOADER_API int meshLoadTexture(
+int meshLoadTexture(
     struct Mesh      *mesh,
     const char       *path,
     const char       *shVarName,

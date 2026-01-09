@@ -8,16 +8,15 @@ build:
 run:
 	cmake -B build
 	cmake --build build -j 32 -v
-	./build/source/game/game
+	./build/executable
 
 install: build
 	cmake --install build --prefix install
 
 # run-wasm:
-# 	cd /home/printfdebugging/repos/website && ./scripts/generate-graphics.sh
 # 	emcmake cmake -B build
 # 	cmake --build build -j 32
-# 	python -m http.server -d ./build/source/tutorials/textures
+# 	python -m http.server -d ./build
 
 clean:
 	rm -rf build

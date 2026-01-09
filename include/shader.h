@@ -1,8 +1,6 @@
 #ifndef SHADER_H
 #define SHADER_H
 
-#include "loader/defines.h"
-
 struct Shader
 {
     unsigned int program;
@@ -32,19 +30,19 @@ struct Shader
     there are probably other things which should be fixed.
 */
 
-LOADER_API struct Shader *shCreate();
+struct Shader *shCreate();
 
-LOADER_API void shDestroy(struct Shader *shader);
-LOADER_API void shBind(const struct Shader *shader);
-LOADER_API void shUnbind(const struct Shader *shader);
+void shDestroy(struct Shader *shader);
+void shBind(const struct Shader *shader);
+void shUnbind(const struct Shader *shader);
 
-LOADER_API int shLoadFromFile(
+int shLoadFromFile(
     struct Shader *shader,
     const char    *vpath,
     const char    *fpath
 );
 
-LOADER_API int shGetUniformLocation(
+int shGetUniformLocation(
     const struct Shader *shader,
     const char          *name
 );
