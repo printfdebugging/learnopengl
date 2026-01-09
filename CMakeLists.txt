@@ -34,13 +34,7 @@ add_subdirectory(libs/cglm)
 add_subdirectory(libs/freetype2)
 add_subdirectory(cmake/stb)
 add_subdirectory(cmake/cgltf)
-
-if (EMSCRIPTEN)
-    add_subdirectory(libs/emscripten-glfw)
-    add_library(glfw ALIAS glfw3)
-else()
-    add_subdirectory(libs/glfw)
-endif()
+add_subdirectory(libs/glfw)
 
 # misc
 add_subdirectory(cmake/graphviz)        # dependency graphs
@@ -66,7 +60,7 @@ add_executable(${APPLICATION}
 target_compile_definitions(${APPLICATION} PRIVATE
     GLFW_INCLUDE_NONE
     $<IF:$<CONFIG:Debug>,-DDEBUG_BUILD,-DRELEASE_BUILD>
-    $<IF:$<PLATFORM_ID:Emscripten>,ASSETS_DIR="${PROJECT_ASSETS_DIR}",ASSETS_DIR="$<BUILD_INTERFACE:${CMAKE_SOURCE_DIR}/assets/>$<INSTALL_INTERFACE:${CMAKE_INSTALL_FULL_DATAROOTDIR}/${PROJECT_ASSETS_DIR}>">
+    ASSETS_DIR="$<BUILD_INTERFACE:${CMAKE_SOURCE_DIR}/assets/>$<INSTALL_INTERFACE:${CMAKE_INSTALL_FULL_DATAROOTDIR}/${PROJECT_ASSETS_DIR}>"
 )
 
 target_compile_options(${APPLICATION} PRIVATE
@@ -91,40 +85,15 @@ target_link_libraries(${APPLICATION} PUBLIC
     m
 )
 
-if (EMSCRIPTEN)
-    set_target_properties(${APPLICATION} PROPERTIES OUTPUT_NAME "index")
-    set_target_properties(${APPLICATION} PROPERTIES SUFFIX ".html")
+install(
+    TARGETS ${APPLICATION}
+    EXPORT  ${APPLICATION}
+    LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
+    ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
+    RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
+)
 
-    target_link_options(${APPLICATION} PRIVATE
-        -sMAX_WEBGL_VERSION=2
-        -sNO_DISABLE_EXCEPTION_CATCHING
-        -sASSERTIONS=1
-        -sWASM=1
-        -sGL_ASSERTIONS=1 
-        -sGL_DEBUG=1
-        -sSAFE_HEAP=1
-        --embed-file=${PROJECT_SOURCE_DIR}/assets@${PROJECT_ASSETS_DIR}
-        --shell-file=${TEMPLATE_INDEX_HTML_FILE}
-    )
-
-    install(
-        FILES
-            ${CMAKE_CURRENT_BINARY_DIR}/index.html
-            ${CMAKE_CURRENT_BINARY_DIR}/index.js
-            ${CMAKE_CURRENT_BINARY_DIR}/index.wasm
-        DESTINATION ${CMAKE_INSTALL_BINDIR}/${APPLICATION}
-    )
-else()
-    install(
-        TARGETS ${APPLICATION}
-        EXPORT  ${APPLICATION}
-        LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
-        ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
-        RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
-    )
-
-    install(
-        DIRECTORY "${CMAKE_CURRENT_LIST_DIR}/assets"
-        DESTINATION "${CMAKE_INSTALL_DATAROOTDIR}/${PROJECT_NAME}"
-    )
-endif()
+install(
+    DIRECTORY "${CMAKE_CURRENT_LIST_DIR}/assets"
+    DESTINATION "${CMAKE_INSTALL_DATAROOTDIR}/${PROJECT_NAME}"
+)
