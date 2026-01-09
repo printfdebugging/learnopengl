@@ -12,8 +12,11 @@
 
 int main()
 {
-    struct Window *window;
-    struct Mesh   *mesh;
+    struct Window  *window;
+    struct Mesh    *mesh;
+    struct Shader  *shader;
+    struct Texture *faceTexture;
+    struct Texture *containerTexture;
 
     window = winCreate(800, 600, "OpenGL", (vec4) { 0.156f, 0.172f, 0.203f, 1.0f });
     if (!window)
@@ -61,37 +64,39 @@ int main()
 
     {
         // SHADER
-        if (meshLoadShader(mesh, ASSETS_DIR "shaders/shader.vert", ASSETS_DIR "shaders/shader.frag"))
+        shader = shCreate();
+        if (!shader)
+            return EXIT_FAILURE;
+
+        if (shLoadFromFile(shader, ASSETS_DIR "shaders/shader.vert", ASSETS_DIR "shaders/shader.frag"))
             return EXIT_FAILURE;
     }
 
     {
-        // TEXTURES & THEIR UNIFORMS IN THE SHADER
-        mesh->textures[TEXTURE0] = malloc(sizeof(struct Texture) * 2);
-        mesh->textures[TEXTURE1] = malloc(sizeof(struct Texture));
-
-        if (!mesh->textures[TEXTURE0] || !mesh->textures[TEXTURE1])
         {
-            ERROR("failed to allocate memory for textures\n");
-            return EXIT_FAILURE;
-        }
-
-        {
-            if (texLoadFromFile(mesh->textures[TEXTURE0], ASSETS_DIR "textures/container.jpg", "containerTexture", TEXTURE0))
+            faceTexture = texCreate();
+            if (!faceTexture)
                 return EXIT_FAILURE;
 
-            int faceTextureLocation = shGetUniformLocation(mesh->shader, "faceTexture");
+            if (texLoadFromFile(faceTexture, ASSETS_DIR "textures/awesomeface.png"))
+                return EXIT_FAILURE;
+
+            int faceTextureLocation = shGetUniformLocation(shader, "faceTexture");
             if (faceTextureLocation != -1)
-                glUniform1i(faceTextureLocation, TEXTURE0);
+                glUniform1i(faceTextureLocation, 0);
         }
 
         {
-            if (texLoadFromFile(mesh->textures[TEXTURE1], ASSETS_DIR "textures/awesomeface.png", "faceTexture", TEXTURE1))
+            containerTexture = texCreate();
+            if (!containerTexture)
                 return EXIT_FAILURE;
 
-            int containerTextureLocation = shGetUniformLocation(mesh->shader, "containerTexture");
+            if (texLoadFromFile(containerTexture, ASSETS_DIR "textures/container.jpg"))
+                return EXIT_FAILURE;
+
+            int containerTextureLocation = shGetUniformLocation(shader, "containerTexture");
             if (containerTextureLocation != -1)
-                glUniform1i(containerTextureLocation, TEXTURE1);
+                glUniform1i(containerTextureLocation, 1);
         }
     }
 
@@ -107,7 +112,7 @@ int main()
             glm_scale(transform, (vec3) { 1.0, 1.0, 1.0 });
 
             {
-                int transformLocation = shGetUniformLocation(mesh->shader, "transform");
+                int transformLocation = shGetUniformLocation(shader, "transform");
                 if (transformLocation != -1)
                     glUniformMatrix4fv(transformLocation, 1, GL_FALSE, (float *) transform);
             }
@@ -116,12 +121,11 @@ int main()
         glBindVertexArray(mesh->vao);
 
         glActiveTexture(GL_TEXTURE0);
-        glBindTexture(GL_TEXTURE_2D, mesh->textures[0]->texture);
-
+        glBindTexture(GL_TEXTURE_2D, containerTexture->texture);
         glActiveTexture(GL_TEXTURE1);
-        glBindTexture(GL_TEXTURE_2D, mesh->textures[1]->texture);
+        glBindTexture(GL_TEXTURE_2D, faceTexture->texture);
 
-        glUseProgram(mesh->shader->program);
+        glUseProgram(shader->program);
         glDrawElements(GL_TRIANGLES, mesh->eboCount, mesh->eboType, 0);
 
         winSwapBuffers(window);
@@ -129,6 +133,9 @@ int main()
 
     winDestroy(window);
     meshDestroy(mesh);
+    shDestroy(shader);
+    texDestroy(faceTexture);
+    texDestroy(containerTexture);
 
     return 0;
 }

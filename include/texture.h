@@ -43,25 +43,10 @@ enum TextureIndex
 struct Texture
 {
     unsigned int texture;
-
-    /*
-     * Textures are used with shaders, the shaders define a `sampler2D`
-     * uniform variable which refers to a texture unit on the GPU.
-     * `shVarName` is the variable name this texture binds to in the
-     * shader.
-     */
-    // TODO: this should be moved into the shader.
-    const char *shVarName;
-
-    /*
-     * `txIndex` is the texture unit this texture is bound to on the GPU.
-     */
-    enum TextureIndex txUnitIndex;
 };
 
 struct Texture *texCreate();
 
-// TODO: create enums for txFormat, txInternalFormat
 int texLoad(
     struct Texture *texture,
     void           *txData,
@@ -74,10 +59,8 @@ int texLoad(
 );
 
 int texLoadFromFile(
-    struct Texture   *texture,
-    const char       *path,
-    const char       *shVarName,
-    enum TextureIndex txUnitIndex
+    struct Texture *texture,
+    const char     *path
 );
 
 /* TODO: later!

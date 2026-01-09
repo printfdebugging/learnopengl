@@ -8,9 +8,9 @@ struct Shader
 
 struct Shader *shCreate();
 
-void shDestroy(struct Shader *shader);
-void shBind(const struct Shader *shader);
-void shUnbind(const struct Shader *shader);
+void shDestroy(
+    struct Shader *shader
+);
 
 int shLoadFromFile(
     struct Shader *shader,

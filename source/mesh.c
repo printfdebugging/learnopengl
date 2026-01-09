@@ -21,9 +21,6 @@ struct Mesh *meshCreate()
 
 void meshDestroy(struct Mesh *mesh)
 {
-    // TODO: destroy the texture
-    // TODO: destroy the shader
-
     if (mesh->vboVertex)
         glDeleteBuffers(1, &mesh->vboVertex);
     if (mesh->vboColor)
@@ -94,52 +91,4 @@ void meshLoadUV(struct Mesh *mesh,
     glBufferData(GL_ARRAY_BUFFER, count * 2 * sizeof(float), data, GL_STATIC_DRAW);
     glVertexAttribPointer(MESH_ATTRIBUTE_UV, 2, GL_FLOAT, GL_FALSE, stride, 0);
     glEnableVertexAttribArray(MESH_ATTRIBUTE_UV);
-}
-
-int meshLoadShader(struct Mesh *mesh,
-                   const char  *vPath,
-                   const char  *fPath)
-{
-    mesh->shader = shCreate();
-    if (!mesh->shader)
-        return 1;
-    if (shLoadFromFile(mesh->shader, vPath, fPath))
-        return 1;
-
-    glUseProgram(mesh->shader->program);
-
-    // TODO: move this to a seprate function if that
-    // seems neccessary.
-    for (enum TextureIndex i = TEXTURE0; i < TEXTURE_COUNT; ++i)
-    {
-        if (mesh->textures[i])
-        {
-            int location = shGetUniformLocation(mesh->shader, mesh->textures[i]->shVarName);
-            if (location != -1)
-                glUniform1i(location, mesh->textures[i]->txUnitIndex);
-        }
-    }
-    return 0;
-}
-
-int meshLoadTexture(struct Mesh      *mesh,
-                    const char       *path,
-                    const char       *shVarName,
-                    enum TextureIndex txUnitIndex)
-{
-    if (txUnitIndex >= TEXTURE_COUNT)
-    {
-        ERROR("index greater than TEXTURE_COUNT - 1: %i\n", (int) txUnitIndex);
-        return 1;
-    }
-
-    mesh->textures[txUnitIndex] = texCreate();
-    if (!mesh->textures[txUnitIndex])
-        return 1;
-
-    if (texLoadFromFile(mesh->textures[txUnitIndex], path, shVarName, txUnitIndex))
-        return 1;
-
-    mesh->txCount += 1;
-    return 0;
 }

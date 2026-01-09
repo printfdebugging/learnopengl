@@ -14,11 +14,6 @@ enum MeshAttribute
     MESH_ATTRIBUTE_COUNT,
 };
 
-// TODO: in my own implementation of cglm some day, use
-// structs with x,y,z,union{w,a...} for vectors etc..
-// that way it will be very convenient to copy them
-// by assignment.
-
 struct Mesh
 {
     unsigned int vao;
@@ -29,11 +24,6 @@ struct Mesh
     unsigned int ebo;
     unsigned int eboCount;
     GLenum       eboType;
-
-    struct Shader *shader;
-
-    struct Texture *textures[TEXTURE_COUNT];
-    int             txCount;
 };
 
 struct Mesh *meshCreate();
@@ -66,16 +56,6 @@ void meshLoadUV(
     float       *data,
     unsigned int count,
     unsigned int stride
-);
-
-/*
- * returns 0 on success
- * returns 1 on failure.
- */
-int meshLoadShader(
-    struct Mesh *mesh,
-    const char  *vPath,
-    const char  *fPath
 );
 
 /*
