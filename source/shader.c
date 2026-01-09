@@ -157,6 +157,12 @@ int shLoadFromFile(struct Shader *shader,
 
     /* create shader program */
     unsigned int sprogram = glCreateProgram();
+    if (sprogram == 0)
+    {
+        ERROR("failed to create shader program\n");
+        return 1;
+    }
+
     glAttachShader(sprogram, vshader);
     glAttachShader(sprogram, fshader);
 

@@ -137,15 +137,8 @@ int meshLoadTexture(struct Mesh      *mesh,
     if (!mesh->textures[txUnitIndex])
         return 1;
 
-    if (txLoadFromFile(
-            mesh->textures[txUnitIndex],
-            path,
-            shVarName,
-            txUnitIndex
-        ))
-    {
+    if (txLoadFromFile(mesh->textures[txUnitIndex], path, shVarName, txUnitIndex))
         return 1;
-    }
 
     mesh->txCount += 1;
     return 0;

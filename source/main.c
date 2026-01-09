@@ -68,14 +68,8 @@ int main()
 
     {
         // SHADER
-        if (meshLoadShader(
-                data.mesh,
-                ASSETS_DIR "shaders/shader.vert",
-                ASSETS_DIR "shaders/shader.frag"
-            ))
-        {
+        if (meshLoadShader(data.mesh, ASSETS_DIR "shaders/shader.vert", ASSETS_DIR "shaders/shader.frag"))
             return EXIT_FAILURE;
-        }
     }
 
     {
@@ -89,33 +83,19 @@ int main()
             return EXIT_FAILURE;
         }
 
-        if (txLoadFromFile(
-                data.mesh->textures[TEXTURE0],
-                ASSETS_DIR "textures/container.jpg",
-                "containerTexture",
-                TEXTURE0
-            ))
         {
-            return EXIT_FAILURE;
-        }
+            if (txLoadFromFile(data.mesh->textures[TEXTURE0], ASSETS_DIR "textures/container.jpg", "containerTexture", TEXTURE0))
+                return EXIT_FAILURE;
 
-        {
             int faceTextureLocation = shGetUniformLocation(data.mesh->shader, "faceTexture");
             if (faceTextureLocation != -1)
                 glUniform1i(faceTextureLocation, TEXTURE0);
         }
 
-        if (txLoadFromFile(
-                data.mesh->textures[TEXTURE1],
-                ASSETS_DIR "textures/awesomeface.png",
-                "faceTexture",
-                TEXTURE1
-            ))
         {
-            return EXIT_FAILURE;
-        }
+            if (txLoadFromFile(data.mesh->textures[TEXTURE1], ASSETS_DIR "textures/awesomeface.png", "faceTexture", TEXTURE1))
+                return EXIT_FAILURE;
 
-        {
             int containerTextureLocation = shGetUniformLocation(data.mesh->shader, "containerTexture");
             if (containerTextureLocation != -1)
                 glUniform1i(containerTextureLocation, TEXTURE1);
