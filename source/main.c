@@ -10,20 +10,13 @@
 
 #include <stdlib.h>
 
-struct GameData
+int main()
 {
     struct Window *window;
     struct Mesh   *mesh;
-};
 
-DrawFrameCallback drawFrameCallback;
-
-int main()
-{
-    struct GameData data;
-
-    data.window = winCreate(800, 600, "OpenGL", (vec4) { 0.156f, 0.172f, 0.203f, 1.0f });
-    if (!data.window)
+    window = winCreate(800, 600, "OpenGL", (vec4) { 0.156f, 0.172f, 0.203f, 1.0f });
+    if (!window)
         return EXIT_FAILURE;
 
     {
@@ -56,92 +49,86 @@ int main()
         };
         /* clang-format on */
 
-        data.mesh = meshCreate();
-        if (!data.mesh)
+        mesh = meshCreate();
+        if (!mesh)
             return EXIT_FAILURE;
 
-        meshLoadVertices(data.mesh, vertices, 4, 3 * sizeof(float));
-        meshLoadColors(data.mesh, colors, 4, 3 * sizeof(float));
-        meshLoadUV(data.mesh, uv, 4, 2 * sizeof(float));
-        meshLoadIndices(data.mesh, indices, sizeof(indices), GL_UNSIGNED_INT);
+        meshLoadVertices(mesh, vertices, 4, 3 * sizeof(float));
+        meshLoadColors(mesh, colors, 4, 3 * sizeof(float));
+        meshLoadUV(mesh, uv, 4, 2 * sizeof(float));
+        meshLoadIndices(mesh, indices, sizeof(indices), GL_UNSIGNED_INT);
     }
 
     {
         // SHADER
-        if (meshLoadShader(data.mesh, ASSETS_DIR "shaders/shader.vert", ASSETS_DIR "shaders/shader.frag"))
+        if (meshLoadShader(mesh, ASSETS_DIR "shaders/shader.vert", ASSETS_DIR "shaders/shader.frag"))
             return EXIT_FAILURE;
     }
 
     {
         // TEXTURES & THEIR UNIFORMS IN THE SHADER
-        data.mesh->textures[TEXTURE0] = malloc(sizeof(struct Texture) * 2);
-        data.mesh->textures[TEXTURE1] = malloc(sizeof(struct Texture));
+        mesh->textures[TEXTURE0] = malloc(sizeof(struct Texture) * 2);
+        mesh->textures[TEXTURE1] = malloc(sizeof(struct Texture));
 
-        if (!data.mesh->textures[TEXTURE0] || !data.mesh->textures[TEXTURE1])
+        if (!mesh->textures[TEXTURE0] || !mesh->textures[TEXTURE1])
         {
             ERROR("failed to allocate memory for textures\n");
             return EXIT_FAILURE;
         }
 
         {
-            if (txLoadFromFile(data.mesh->textures[TEXTURE0], ASSETS_DIR "textures/container.jpg", "containerTexture", TEXTURE0))
+            if (txLoadFromFile(mesh->textures[TEXTURE0], ASSETS_DIR "textures/container.jpg", "containerTexture", TEXTURE0))
                 return EXIT_FAILURE;
 
-            int faceTextureLocation = shGetUniformLocation(data.mesh->shader, "faceTexture");
+            int faceTextureLocation = shGetUniformLocation(mesh->shader, "faceTexture");
             if (faceTextureLocation != -1)
                 glUniform1i(faceTextureLocation, TEXTURE0);
         }
 
         {
-            if (txLoadFromFile(data.mesh->textures[TEXTURE1], ASSETS_DIR "textures/awesomeface.png", "faceTexture", TEXTURE1))
+            if (txLoadFromFile(mesh->textures[TEXTURE1], ASSETS_DIR "textures/awesomeface.png", "faceTexture", TEXTURE1))
                 return EXIT_FAILURE;
 
-            int containerTextureLocation = shGetUniformLocation(data.mesh->shader, "containerTexture");
+            int containerTextureLocation = shGetUniformLocation(mesh->shader, "containerTexture");
             if (containerTextureLocation != -1)
                 glUniform1i(containerTextureLocation, TEXTURE1);
         }
     }
 
-    winRegisterDrawFrameCallback(data.window, drawFrameCallback);
-    winFireMainLoop(data.window, (void *) &data);
-
-    winDestroy(data.window);
-    meshDestroy(data.mesh);
-
-    return 0;
-}
-
-void drawFrameCallback(void *data)
-{
-    struct GameData *d = (struct GameData *) data;
-
-    winPollEvents(d->window);
-    winProcessInput(d->window);
-    winClearColor(d->window);
-
+    while (!winClosed(window))
     {
-        mat4 transform = GLM_MAT4_IDENTITY_INIT;
-        glm_rotate(transform, glm_rad(90.0f), (vec3) { 0.0, 0.0, 1.0 });
-        glm_scale(transform, (vec3) { 1.0, 1.0, 1.0 });
+        winPollEvents(window);
+        winProcessInput(window);
+        winClearColor(window);
 
         {
-            int transformLocation = shGetUniformLocation(d->mesh->shader, "transform");
-            if (transformLocation != -1)
-                glUniformMatrix4fv(transformLocation, 1, GL_FALSE, (float *) transform);
+            mat4 transform = GLM_MAT4_IDENTITY_INIT;
+            glm_rotate(transform, glm_rad(90.0f), (vec3) { 0.0, 0.0, 1.0 });
+            glm_scale(transform, (vec3) { 1.0, 1.0, 1.0 });
+
+            {
+                int transformLocation = shGetUniformLocation(mesh->shader, "transform");
+                if (transformLocation != -1)
+                    glUniformMatrix4fv(transformLocation, 1, GL_FALSE, (float *) transform);
+            }
         }
+
+        glBindVertexArray(mesh->vao);
+
+        glActiveTexture(GL_TEXTURE0);
+        glBindTexture(GL_TEXTURE_2D, mesh->textures[0]->texture);
+
+        glActiveTexture(GL_TEXTURE1);
+        glBindTexture(GL_TEXTURE_2D, mesh->textures[1]->texture);
+
+        glUseProgram(mesh->shader->program);
+        glDrawElements(GL_TRIANGLES, mesh->eboCount, mesh->eboType, 0);
+
+        winSwapBuffers(window);
     }
 
-    glBindVertexArray(d->mesh->vao);
+    winDestroy(window);
+    meshDestroy(mesh);
 
-    glActiveTexture(GL_TEXTURE0);
-    glBindTexture(GL_TEXTURE_2D, d->mesh->textures[0]->texture);
-
-    glActiveTexture(GL_TEXTURE1);
-    glBindTexture(GL_TEXTURE_2D, d->mesh->textures[1]->texture);
-
-    glUseProgram(d->mesh->shader->program);
-    glDrawElements(GL_TRIANGLES, d->mesh->eboCount, d->mesh->eboType, 0);
-
-    winSwapBuffers(d->window);
-    winPostFrameChecks(d->window);
+    return 0;
 }

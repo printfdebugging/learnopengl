@@ -85,8 +85,7 @@ struct Window *winCreate(unsigned int width,
     win->height = height;
     win->title  = title;
     memcpy(win->color, color, sizeof(float) * 4);
-    win->window            = window;
-    win->drawFrameCallback = NULL;
+    win->window = window;
     return win;
 }
 
@@ -136,47 +135,4 @@ bool winClosed(struct Window *window)
     if (!window->window)
         return GL_TRUE;
     return glfwWindowShouldClose(window->window);
-}
-
-void winFireMainLoop(struct Window *window,
-                     void          *data)
-{
-#ifdef EMSCRIPTEN
-    printf(
-        "emscripten: v%d.%d.%d\n",
-        __EMSCRIPTEN_major__,
-        __EMSCRIPTEN_minor__,
-        __EMSCRIPTEN_tiny__
-    );
-    emscripten_set_main_loop_arg(window->drawFrameCallback, data, 0, false);
-#else
-    while (!winClosed(window))
-    {
-        if (window->drawFrameCallback)
-            window->drawFrameCallback(data);
-    }
-#endif
-}
-
-/*
- * NOTE: maybe we want a `postFrameCallback` so that the user
- * can put some tasks there, things like cleanup etc. and then
- * we can just call that here; feels a bit overkill, let's see
- */
-void winPostFrameChecks(struct Window *window)
-{
-#ifdef EMSCRIPTEN
-    if (winClosed(window))
-        emscripten_cancel_main_loop();
-#else
-    (void) window;
-#endif
-}
-
-void winRegisterDrawFrameCallback(struct Window     *window,
-                                  DrawFrameCallback *frameCallback)
-{
-    if (window->drawFrameCallback != NULL)
-        ERROR("frameCallback already set")
-    window->drawFrameCallback = frameCallback;
 }

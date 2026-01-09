@@ -6,8 +6,6 @@
 
 #include <stdbool.h>
 
-typedef void DrawFrameCallback(void *data);
-
 struct Window
 {
     unsigned int width;
@@ -15,8 +13,6 @@ struct Window
     const char  *title;
     GLFWwindow  *window;
     vec4         color;
-
-    DrawFrameCallback *drawFrameCallback;
 };
 
 struct Window *winCreate(
@@ -37,17 +33,5 @@ void winClearColor(struct Window *window);
 void winSwapBuffers(struct Window *window);
 void winDestroy(struct Window *window);
 bool winClosed(struct Window *window);
-
-void winFireMainLoop(
-    struct Window *window,
-    void          *data
-);
-
-void winPostFrameChecks(struct Window *window);
-
-void winRegisterDrawFrameCallback(
-    struct Window     *window,
-    DrawFrameCallback *frameCallback
-);
 
 #endif
