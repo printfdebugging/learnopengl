@@ -39,12 +39,6 @@ struct Mesh
 struct Mesh *meshCreate();
 
 void meshDestroy(struct Mesh *mesh);
-// TODO: remove these and instead use plain opengl functions in the renderer.
-// and we probably don't need these elsewhere because we are just saying "render mesh"
-// and a mesh has all the info, the textures & the shaders... if not in it then bundled with
-// it in a scene.
-void meshBind(struct Mesh *mesh);
-void meshUnbind(struct Mesh *mesh);
 
 void meshLoadVertices(
     struct Mesh *mesh,

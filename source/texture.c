@@ -159,24 +159,6 @@ int txLoad(struct Texture *texture,
     return 0;
 }
 
-void txBind(struct Texture *texture)
-{
-    glActiveTexture(txUnit[texture->txUnitIndex]);
-    glBindTexture(GL_TEXTURE_2D, texture->texture);
-}
-
-void txUnbind(struct Texture *texture)
-{
-    /*
-     * nothing to do here for now, although we can
-     * do the following to be explicit (but it's wasteful)
-     *
-     * glActiveTexture(txUnit[texture->txIndex]);
-     * glBindBuffer(GL_TEXTURE_2D, 0);
-     */
-    (void) texture;
-}
-
 void txDestroy(struct Texture *texture)
 {
     glDeleteTextures(1, &texture->texture);

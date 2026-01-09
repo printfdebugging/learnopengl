@@ -89,8 +89,6 @@ int txLoadFromData(
 );
 */
 
-void txBind(struct Texture *texture);
-void txUnbind(struct Texture *texture);
 void txDestroy(struct Texture *texture);
 
 #endif

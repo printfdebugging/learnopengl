@@ -36,31 +36,6 @@ void meshDestroy(struct Mesh *mesh)
     glDeleteVertexArrays(1, &mesh->vao);
 }
 
-void meshBind(struct Mesh *mesh)
-{
-    glBindVertexArray(mesh->vao);
-
-    if (mesh->shader)
-        shBind(mesh->shader);
-
-    // TODO: PROBABLY use txCount intead of looping over all the values here.
-    for (enum TextureIndex i = TEXTURE0; i < TEXTURE_COUNT; ++i)
-        if (mesh->textures[i])
-            txBind(mesh->textures[i]);
-}
-
-void meshUnbind(struct Mesh *mesh)
-{
-    glBindVertexArray(0);
-    shUnbind(mesh->shader);
-    // TODO: probably we don't need to use texture
-    // at all for this, so no need to loop over
-    // all of them, unbind is same as vao, we just
-    // bind that to zero.
-    // txUnbind(mesh->texture);
-    txUnbind(NULL);
-}
-
 /*
  * NOTE: if the vertices are packed together, then the stride would be
  *       the size of an individual chunk (before the attribute start repeating).
@@ -73,7 +48,7 @@ void meshLoadVertices(struct Mesh *mesh,
                       unsigned int count,
                       unsigned int stride)
 {
-    meshBind(mesh);
+    glBindVertexArray(mesh->vao);
     glGenBuffers(1, &mesh->vboVertex);
     glBindBuffer(GL_ARRAY_BUFFER, mesh->vboVertex);
     glBufferData(GL_ARRAY_BUFFER, count * 3 * sizeof(float), data, GL_STATIC_DRAW);
@@ -86,7 +61,7 @@ void meshLoadIndices(struct Mesh *mesh,
                      unsigned int count,
                      GLenum       type)
 {
-    meshBind(mesh);
+    glBindVertexArray(mesh->vao);
     glGenBuffers(1, &mesh->ebo);
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, mesh->ebo);
     glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(float) * count, data, GL_STATIC_DRAW);
@@ -100,7 +75,7 @@ void meshLoadColors(struct Mesh *mesh,
                     unsigned int count,
                     unsigned int stride)
 {
-    meshBind(mesh);
+    glBindVertexArray(mesh->vao);
     glGenBuffers(1, &mesh->vboColor);
     glBindBuffer(GL_ARRAY_BUFFER, mesh->vboColor);
     glBufferData(GL_ARRAY_BUFFER, count * 3 * sizeof(float), data, GL_STATIC_DRAW);
@@ -113,7 +88,7 @@ void meshLoadUV(struct Mesh *mesh,
                 unsigned int count,
                 unsigned int stride)
 {
-    meshBind(mesh);
+    glBindVertexArray(mesh->vao);
     glGenBuffers(1, &mesh->vboUV);
     glBindBuffer(GL_ARRAY_BUFFER, mesh->vboUV);
     glBufferData(GL_ARRAY_BUFFER, count * 2 * sizeof(float), data, GL_STATIC_DRAW);
@@ -131,7 +106,7 @@ int meshLoadShader(struct Mesh *mesh,
     if (shLoadFromFile(mesh->shader, vPath, fPath))
         return 1;
 
-    shBind(mesh->shader);
+    glUseProgram(mesh->shader->program);
 
     // TODO: move this to a seprate function if that
     // seems neccessary.

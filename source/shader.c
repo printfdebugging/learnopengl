@@ -182,23 +182,14 @@ void shDestroy(struct Shader *shader)
     free(shader);
 }
 
-void shBind(const struct Shader *shader)
-{
-    glUseProgram(shader->program);
-}
-
-void shUnbind(const struct Shader *shader)
-{
-    (void) shader;
-    glUseProgram(0);
-}
-
 int shGetUniformLocation(const struct Shader *shader,
                          const char          *name)
 {
-    shBind(shader);
+    glUseProgram(shader->program);
+
     int location = glGetUniformLocation(shader->program, name);
     if (location == -1)
         ERROR("no uniform named '%s' found in shader->program\n", name)
+
     return location;
 }

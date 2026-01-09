@@ -151,7 +151,16 @@ void drawFrameCallback(void *data)
         }
     }
 
-    renderMesh(d->mesh);
+    glBindVertexArray(d->mesh->vao);
+
+    glActiveTexture(GL_TEXTURE0);
+    glBindTexture(GL_TEXTURE_2D, d->mesh->textures[0]->texture);
+
+    glActiveTexture(GL_TEXTURE1);
+    glBindTexture(GL_TEXTURE_2D, d->mesh->textures[1]->texture);
+
+    glUseProgram(d->mesh->shader->program);
+    glDrawElements(GL_TRIANGLES, d->mesh->eboCount, d->mesh->eboType, 0);
 
     winSwapBuffers(d->window);
     winPostFrameChecks(d->window);
