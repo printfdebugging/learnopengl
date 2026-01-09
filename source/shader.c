@@ -7,14 +7,6 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-// do i need to refactor this? there are multiple shaders for different purposes and
-// certainly each one would name the attributes differently.
-// probably i need to introduce a type in the shCreateFromFile function which
-// sets different names based on the type.
-// types: enum ShaderType
-//  MESH_SHADER
-//  GLYPH_SHADER
-//  ???
 static const char *shVariableNames[] = {
     [MESH_ATTRIBUTE_POSITION] = "inPosition",
     [MESH_ATTRIBUTE_COLOR]    = "inColor",
