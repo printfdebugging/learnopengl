@@ -17,11 +17,12 @@ static const char *shVariableNames[] = {
 #if defined(EMSCRIPTEN)
 static const char *version = "#version 300 es\n";
 #else
-static const char *version        = "#version 330 core\n";
+static const char *version = "#version 330 core\n";
+#endif
+
 static const char *floatPrecision = "#ifdef GL_ES\n"
                                     "precision mediump float;\n"
                                     "#endif\n";
-#endif
 
 static int shCompiledSuccessfully(unsigned int shader,
                                   const char  *filepath)
