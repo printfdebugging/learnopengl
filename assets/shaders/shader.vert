@@ -1,9 +1,3 @@
-#version 300 es
-
-#ifdef GL_ES
-precision mediump float;
-#endif
-
 uniform mat4 transform;
 
 in vec3 inPosition;

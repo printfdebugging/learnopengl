@@ -1,8 +1,8 @@
 #include "glad/glad.h"
 #include "GLFW/glfw3.h"
 
+#include "utils.h"
 #include "window.h"
-#include "logger.h"
 #include "mesh.h"
 #include "shader.h"
 #include "texture.h"

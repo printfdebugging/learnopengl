@@ -55,6 +55,7 @@ add_executable(${APPLICATION}
     source/shader.c
     source/texture.c
     source/window.c
+    source/utils.c
 )
 
 target_compile_definitions(${APPLICATION} PRIVATE

@@ -1,6 +1,7 @@
 #include "logger.h"
 #include "shader.h"
 #include "mesh.h"
+#include "utils.h"
 
 #include "glad/glad.h"
 
@@ -13,51 +14,14 @@ static const char *shVariableNames[] = {
     [MESH_ATTRIBUTE_UV]       = "inUV",
 };
 
-static const char *readShaderFile(const char *filename)
-{
-    FILE *file = fopen(filename, "rb");
-    if (!file)
-    {
-        fprintf(stderr, "failed to read shader file: %s\n", filename);
-        return NULL;
-    }
-
-    fseek(file, 0, SEEK_END);
-    long length = ftell(file);
-    fseek(file, 0, SEEK_SET);
-
-    if (length < 0)
-    {
-        fclose(file);
-        fprintf(stderr, "failed to get the shader file's length: %s\n", filename);
-        return NULL;
-    }
-
-    char *buffer = malloc(length + 1);
-    if (!buffer)
-    {
-        fclose(file);
-        fprintf(stderr, "failed to allocate memory for shader file: %s\n", filename);
-        return NULL;
-    }
-
-    int readCount = fread(buffer, 1, length, file);
-    if (readCount < length || readCount == 0)
-    {
-        fclose(file);
-        fprintf(stderr, "read returned %i which is either 0 or less than %li", readCount, length);
-        return NULL;
-    }
-
-    buffer[length] = '\0';
-    if (fclose(file))
-    {
-        fprintf(stderr, "fclose failed\n");
-        return NULL;
-    }
-
-    return buffer;
-}
+#if defined(EMSCRIPTEN)
+static const char *version = "#version 300 es\n";
+#else
+static const char *version        = "#version 330 core\n";
+static const char *floatPrecision = "#ifdef GL_ES\n"
+                                    "precision mediump float;\n"
+                                    "#endif\n";
+#endif
 
 static int shCompiledSuccessfully(unsigned int shader,
                                   const char  *filepath)
@@ -118,31 +82,39 @@ int shLoadFromFile(struct Shader *shader,
                    const char    *fpath)
 {
     /* read and compile vertex shader */
-    const char *vsource = readShaderFile(vpath);
-
+    struct String *vsource = strCreate(NULL);
     if (!vsource)
+        return 1;
+    if (strAppend(vsource, version))
+        return 1;
+    if (strAppend(vsource, floatPrecision))
+        return 1;
+    if (strAppendFile(vsource, vpath))
         return 1;
 
     unsigned int vshader = glCreateShader(GL_VERTEX_SHADER);
-    glShaderSource(vshader, 1, &vsource, NULL);
+    glShaderSource(vshader, 1, (const char **) &vsource->data, NULL);
     glCompileShader(vshader);
-
-    free((void *) vsource);
+    strDestroy(vsource);
 
     if (shCompiledSuccessfully(vshader, vpath))
         return 1;
 
     /* read and compile fragment shader */
-    const char *fsource = readShaderFile(fpath);
-
+    struct String *fsource = strCreate(NULL);
     if (!fsource)
+        return 1;
+    if (strAppend(fsource, version))
+        return 1;
+    if (strAppend(fsource, floatPrecision))
+        return 1;
+    if (strAppendFile(fsource, fpath))
         return 1;
 
     unsigned int fshader = glCreateShader(GL_FRAGMENT_SHADER);
-    glShaderSource(fshader, 1, &fsource, NULL);
+    glShaderSource(fshader, 1, (const char **) &fsource->data, NULL);
     glCompileShader(fshader);
-
-    free((void *) fsource);
+    strDestroy(fsource);
 
     if (shCompiledSuccessfully(fshader, fpath))
         return 1;

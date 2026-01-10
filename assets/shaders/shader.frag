@@ -1,9 +1,3 @@
-#version 300 es
-
-#ifdef GL_ES
-precision mediump float;
-#endif
-
 uniform sampler2D containerTexture;
 uniform sampler2D faceTexture;
 

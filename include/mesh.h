@@ -1,5 +1,5 @@
-#ifndef LOADER_MESH_H
-#define LOADER_MESH_H
+#ifndef MESH_H
+#define MESH_H
 
 #include "glad/glad.h"
 
