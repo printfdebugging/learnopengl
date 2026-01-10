@@ -5,6 +5,7 @@
 
 #include <stdlib.h>
 #include <string.h>
+
 static void winFrameBufResizeCallback(GLFWwindow *window,
                                       int         width,
                                       int         height)
@@ -20,7 +21,7 @@ struct Window *winCreate(unsigned int width,
 {
     if (!glfwInit())
     {
-        ERROR("failed to initialize glfw");
+        fprintf(stderr, "failed to initialize glfw");
         return NULL;
     }
 
@@ -35,7 +36,7 @@ struct Window *winCreate(unsigned int width,
     GLFWwindow *window = glfwCreateWindow((int) width, (int) height, title, NULL, NULL);
     if (!window)
     {
-        ERROR("failed to create glfw winodw\n");
+        fprintf(stderr, "failed to create glfw winodw\n");
         glfwTerminate();
         return NULL;
     }
@@ -43,7 +44,7 @@ struct Window *winCreate(unsigned int width,
     glfwMakeContextCurrent(window);
     if (!gladLoadGLLoader((GLADloadproc) glfwGetProcAddress))
     {
-        ERROR("failed to initialize glad\n");
+        fprintf(stderr, "failed to initialize glad\n");
         glfwTerminate();
         return NULL;
     }
@@ -61,7 +62,7 @@ struct Window *winCreate(unsigned int width,
     struct Window *win = malloc(sizeof(struct Window));
     if (!win)
     {
-        ERROR("failed to initialize glad\n");
+        fprintf(stderr, "failed to initialize glad\n");
         glfwTerminate();
         return NULL;
     }

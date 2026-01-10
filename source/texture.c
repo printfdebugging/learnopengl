@@ -24,7 +24,7 @@ int texLoadFromFile(struct Texture *texture,
 
     if (!imgData)
     {
-        ERROR("Failed to load texture %s\n", path)
+        fprintf(stderr, "Failed to load texture %s\n", path);
         free(texture);
         stbi_image_free(imgData);
         return 1;
@@ -42,7 +42,7 @@ struct Texture *texCreate()
     struct Texture *texture = malloc(sizeof(struct Texture));
     if (!texture)
     {
-        ERROR("Failed to allocate memory for texture\n");
+        fprintf(stderr, "Failed to allocate memory for texture\n");
         return NULL;
     }
 

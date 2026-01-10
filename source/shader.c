@@ -18,7 +18,7 @@ static const char *readShaderFile(const char *filename)
     FILE *file = fopen(filename, "rb");
     if (!file)
     {
-        ERROR("failed to read shader file: %s\n", filename);
+        fprintf(stderr, "failed to read shader file: %s\n", filename);
         return NULL;
     }
 
@@ -29,7 +29,7 @@ static const char *readShaderFile(const char *filename)
     if (length < 0)
     {
         fclose(file);
-        ERROR("failed to get the shader file's length: %s\n", filename);
+        fprintf(stderr, "failed to get the shader file's length: %s\n", filename);
         return NULL;
     }
 
@@ -37,7 +37,7 @@ static const char *readShaderFile(const char *filename)
     if (!buffer)
     {
         fclose(file);
-        ERROR("failed to allocate memory for shader file: %s\n", filename);
+        fprintf(stderr, "failed to allocate memory for shader file: %s\n", filename);
         return NULL;
     }
 
@@ -45,14 +45,14 @@ static const char *readShaderFile(const char *filename)
     if (readCount < length || readCount == 0)
     {
         fclose(file);
-        ERROR("read returned %i which is either 0 or less than %li", readCount, length);
+        fprintf(stderr, "read returned %i which is either 0 or less than %li", readCount, length);
         return NULL;
     }
 
     buffer[length] = '\0';
     if (fclose(file))
     {
-        ERROR("fclose failed\n");
+        fprintf(stderr, "fclose failed\n");
         return NULL;
     }
 
@@ -73,7 +73,7 @@ static int shCompiledSuccessfully(unsigned int shader,
 
     char infoLog[infoLogLen];
     glGetShaderInfoLog(shader, infoLogLen, NULL, infoLog);
-    ERROR("failed to compile shader: %s: %s\n", filepath, infoLog);
+    fprintf(stderr, "failed to compile shader: %s: %s\n", filepath, infoLog);
     return 1;
 }
 
@@ -90,7 +90,7 @@ static int shLinkedSuccessfully(unsigned int program)
 
     char infoLog[infoLogLen];
     glGetProgramInfoLog(program, infoLogLen, NULL, infoLog);
-    ERROR("failed to link shader program: %s\n", infoLog);
+    fprintf(stderr, "failed to link shader program: %s\n", infoLog);
     return 1;
 }
 
@@ -105,7 +105,7 @@ struct Shader *shCreate()
     struct Shader *shader = malloc(sizeof(struct Shader));
     if (!shader)
     {
-        ERROR("failed to allocate memory for shader\n");
+        fprintf(stderr, "failed to allocate memory for shader\n");
         return NULL;
     }
 
@@ -151,7 +151,7 @@ int shLoadFromFile(struct Shader *shader,
     unsigned int sprogram = glCreateProgram();
     if (sprogram == 0)
     {
-        ERROR("failed to create shader program\n");
+        fprintf(stderr, "failed to create shader program\n");
         return 1;
     }
 
@@ -187,7 +187,7 @@ int shGetUniformLocation(const struct Shader *shader,
 
     int location = glGetUniformLocation(shader->program, name);
     if (location == -1)
-        ERROR("no uniform named '%s' found in shader->program\n", name)
+        fprintf(stderr, "no uniform named '%s' found in shader->program\n", name);
 
     return location;
 }

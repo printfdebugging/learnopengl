@@ -10,7 +10,7 @@ struct Mesh *meshCreate()
     struct Mesh *mesh = malloc(sizeof(struct Mesh));
     if (!mesh)
     {
-        ERROR("failed to allocate memory for mesh\n");
+        fprintf(stderr, "failed to allocate memory for mesh\n");
         return NULL;
     }
 
