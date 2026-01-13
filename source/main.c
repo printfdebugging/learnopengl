@@ -1,3 +1,4 @@
+#include "cglm/util.h"
 #include "glad/glad.h"
 #include "GLFW/glfw3.h"
 
@@ -22,33 +23,110 @@ int main()
     if (!window)
         return EXIT_FAILURE;
 
+    /* clang-format off */
+    vec3 cubePositions[] = {
+        { 0.0f,  0.0f,  0.0f },
+        { 2.0f,  5.0f, -15.0f },
+        {-1.5f, -2.2f, -2.5f },
+        {-3.8f, -2.0f, -12.3f },
+        { 2.4f, -0.4f, -3.5f },
+        {-1.7f,  3.0f, -7.5f },
+        { 1.3f, -2.0f, -2.5f },
+        { 1.5f,  2.0f, -2.5f },
+        { 1.5f,  0.2f, -1.5f },
+        {-1.3f,  1.0f, -1.5f },
+    };
+    /* clang-format on */
+
     {
         // MESH
         /* clang-format off */
         float vertices[] = {
-            -0.5f,  0.5f, 0.0f,
-            -0.5f, -0.5f, 0.0f,
-            0.5f, -0.5f, 0.0f,
-            0.5f,  0.5f, 0.0f,
-        };
+            -0.5f, -0.5f, -0.5f,
+             0.5f, -0.5f, -0.5f,
+             0.5f,  0.5f, -0.5f,
+             0.5f,  0.5f, -0.5f,
+            -0.5f,  0.5f, -0.5f,
+            -0.5f, -0.5f, -0.5f,
 
-        float colors[] = {
-            1.0f, 0.0f, 0.0f,
-            0.0f, 1.0f, 0.0f,
-            0.0f, 0.0f, 1.0f,
-            1.0f, 1.0f, 0.0f,
+            -0.5f, -0.5f,  0.5f,
+             0.5f, -0.5f,  0.5f,
+             0.5f,  0.5f,  0.5f,
+             0.5f,  0.5f,  0.5f,
+            -0.5f,  0.5f,  0.5f,
+            -0.5f, -0.5f,  0.5f,
+
+            -0.5f,  0.5f,  0.5f,
+            -0.5f,  0.5f, -0.5f,
+            -0.5f, -0.5f, -0.5f,
+            -0.5f, -0.5f, -0.5f,
+            -0.5f, -0.5f,  0.5f,
+            -0.5f,  0.5f,  0.5f,
+
+             0.5f,  0.5f,  0.5f,
+             0.5f,  0.5f, -0.5f,
+             0.5f, -0.5f, -0.5f,
+             0.5f, -0.5f, -0.5f,
+             0.5f, -0.5f,  0.5f,
+             0.5f,  0.5f,  0.5f,
+
+            -0.5f, -0.5f, -0.5f,
+             0.5f, -0.5f, -0.5f,
+             0.5f, -0.5f,  0.5f,
+             0.5f, -0.5f,  0.5f,
+            -0.5f, -0.5f,  0.5f,
+            -0.5f, -0.5f, -0.5f,
+
+            -0.5f,  0.5f, -0.5f,
+             0.5f,  0.5f, -0.5f,
+             0.5f,  0.5f,  0.5f,
+             0.5f,  0.5f,  0.5f,
+            -0.5f,  0.5f,  0.5f,
+            -0.5f,  0.5f, -0.5f,
         };
 
         float uv[] = {
-            0.0f, 1.0f,
             0.0f, 0.0f,
             1.0f, 0.0f,
             1.0f, 1.0f,
-        };
+            1.0f, 1.0f,
+            0.0f, 1.0f,
+            0.0f, 0.0f,
 
-        int indices[] = {
-            0, 1, 2,
-            0, 2, 3,
+            0.0f, 0.0f,
+            1.0f, 0.0f,
+            1.0f, 1.0f,
+            1.0f, 1.0f,
+            0.0f, 1.0f,
+            0.0f, 0.0f,
+
+            1.0f, 0.0f,
+            1.0f, 1.0f,
+            0.0f, 1.0f,
+            0.0f, 1.0f,
+            0.0f, 0.0f,
+            1.0f, 0.0f,
+
+            1.0f, 0.0f,
+            1.0f, 1.0f,
+            0.0f, 1.0f,
+            0.0f, 1.0f,
+            0.0f, 0.0f,
+            1.0f, 0.0f,
+
+            0.0f, 1.0f,
+            1.0f, 1.0f,
+            1.0f, 0.0f,
+            1.0f, 0.0f,
+            0.0f, 0.0f,
+            0.0f, 1.0f,
+
+            0.0f, 1.0f,
+            1.0f, 1.0f,
+            1.0f, 0.0f,
+            1.0f, 0.0f,
+            0.0f, 0.0f,
+            0.0f, 1.0f
         };
         /* clang-format on */
 
@@ -56,10 +134,10 @@ int main()
         if (!mesh)
             return EXIT_FAILURE;
 
-        meshLoadVertices(mesh, vertices, 4, 3 * sizeof(float));
-        meshLoadColors(mesh, colors, 4, 3 * sizeof(float));
-        meshLoadUV(mesh, uv, 4, 2 * sizeof(float));
-        meshLoadIndices(mesh, indices, sizeof(indices), GL_UNSIGNED_INT);
+        meshLoadVertices(mesh, vertices, 36, 3 * sizeof(float));
+        // meshLoadColors(mesh, colors, 4, 3 * sizeof(float));
+        meshLoadUV(mesh, uv, 36, 2 * sizeof(float));
+        // meshLoadIndices(mesh, indices, sizeof(indices), GL_UNSIGNED_INT);
     }
 
     {
@@ -106,17 +184,19 @@ int main()
         winProcessInput(window);
         winClearColor(window);
 
-        {
-            mat4 transform = GLM_MAT4_IDENTITY_INIT;
-            glm_rotate(transform, glm_rad(90.0f), (vec3) { 0.0, 0.0, 1.0 });
-            glm_scale(transform, (vec3) { 1.0, 1.0, 1.0 });
+        mat4 view = GLM_MAT4_IDENTITY_INIT;
+        glm_translate(view, (vec3) { 0.0f, 0.0f, -3.0f });
 
-            {
-                int transformLocation = shGetUniformLocation(shader, "transform");
-                if (transformLocation != -1)
-                    glUniformMatrix4fv(transformLocation, 1, GL_FALSE, (float *) transform);
-            }
-        }
+        mat4 projection;
+        glm_perspective(glm_rad(45.0f), 800.0f / 600.0f, 0.1f, 100.0f, projection);
+
+        int viewLocation = shGetUniformLocation(shader, "view");
+        if (viewLocation != -1)
+            glUniformMatrix4fv(viewLocation, 1, GL_FALSE, view[0]);
+
+        int projectionLocation = shGetUniformLocation(shader, "projection");
+        if (projectionLocation != -1)
+            glUniformMatrix4fv(projectionLocation, 1, GL_FALSE, projection[0]);
 
         glBindVertexArray(mesh->vao);
 
@@ -126,7 +206,22 @@ int main()
         glBindTexture(GL_TEXTURE_2D, faceTexture->texture);
 
         glUseProgram(shader->program);
-        glDrawElements(GL_TRIANGLES, mesh->eboCount, mesh->eboType, 0);
+
+        for (unsigned int i = 0; i < 10; ++i)
+        {
+            {
+                mat4 model = GLM_MAT4_IDENTITY_INIT;
+                glm_translate(model, cubePositions[i]);
+                float angle = 20.0f * (i + 1);
+                glm_rotate(model, (float) glfwGetTime() * glm_rad(angle), (vec3) { 0.5f, 0.3f, 0.5f });
+
+                int modelLocation = shGetUniformLocation(shader, "model");
+                if (modelLocation != -1)
+                    glUniformMatrix4fv(modelLocation, 1, GL_FALSE, model[0]);
+            }
+
+            glDrawArrays(GL_TRIANGLES, 0, 36);
+        }
 
         winSwapBuffers(window);
     }

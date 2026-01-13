@@ -54,10 +54,11 @@ struct Window *winCreate(unsigned int width,
     glEnable(GL_DEPTH_TEST);
 
     // TODO: this is explained in the blending section
+    // TODO: enable them i know what they do
     // https://learnopengl.com/Advanced-OpenGL/Blending.
-    glEnable(GL_CULL_FACE);
-    glEnable(GL_BLEND);
-    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+    // glEnable(GL_CULL_FACE);
+    // glEnable(GL_BLEND);
+    // glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
     struct Window *win = malloc(sizeof(struct Window));
     if (!win)
