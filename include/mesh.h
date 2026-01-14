@@ -58,15 +58,4 @@ void meshLoadUV(
     unsigned int stride
 );
 
-/*
- * returns 0 on success
- * returns 1 on failure.
- */
-int meshLoadTexture(
-    struct Mesh      *mesh,
-    const char       *path,
-    const char       *shVarName,
-    enum TextureIndex txUnitIndex
-);
-
 #endif
