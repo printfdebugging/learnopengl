@@ -83,6 +83,12 @@ int shLoadFromFile(struct Shader *shader,
                    const char    *fpath)
 {
     /* read and compile vertex shader */
+
+    // TODO: instead stringify the part to append first and
+    // then when loading the shader file allocate enough space
+    // for both the stringified options and the shader file's
+    // contents. then printf both the strings to the buffer.
+    // https://gist.github.com/nitrix/386d3acc9a6ef6ea63dac79393ad6163
     struct String *vsource = strCreate(NULL);
     if (!vsource)
         return 1;
@@ -102,6 +108,11 @@ int shLoadFromFile(struct Shader *shader,
         return 1;
 
     /* read and compile fragment shader */
+    // TODO: instead stringify the part to append first and
+    // then when loading the shader file allocate enough space
+    // for both the stringified options and the shader file's
+    // contents. then printf both the strings to the buffer.
+    // https://gist.github.com/nitrix/386d3acc9a6ef6ea63dac79393ad6163
     struct String *fsource = strCreate(NULL);
     if (!fsource)
         return 1;
