@@ -178,14 +178,25 @@ int main()
         }
     }
 
+    vec3 cpos    = { 0.0f, 0.0f, 3.0f };
+    vec3 worigin = { 0.0f, 0.0f, 0.0f };
+    vec3 wup     = { 0.0f, 1.0f, 0.0f };
+
     while (!winClosed(window))
     {
         winPollEvents(window);
         winProcessInput(window);
         winClearColor(window);
 
-        mat4 view = GLM_MAT4_IDENTITY_INIT;
-        glm_translate(view, (vec3) { 0.0f, 0.0f, -3.0f });
+        mat4  view;
+        float radius = 10.0f;
+        float camx   = sin(glfwGetTime()) * radius;
+        float camz   = cos(glfwGetTime()) * radius;
+
+        cpos[0] = camx;
+        cpos[2] = camz;
+
+        glm_lookat(cpos, worigin, wup, view);
 
         mat4 projection;
         glm_perspective(glm_rad(45.0f), 800.0f / 600.0f, 0.1f, 100.0f, projection);
