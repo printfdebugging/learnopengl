@@ -11,14 +11,23 @@
 
 #include <stdlib.h>
 
+struct Window  *window;
+struct Mesh    *mesh;
+struct Shader  *shader;
+struct Texture *faceTexture;
+struct Texture *containerTexture;
+
+vec3 cameraPos   = { 0.0f, 0.0f, 3.0f };
+vec3 cameraFront = { 0.0f, 0.0f, -1.0f };
+vec3 cameraUp    = { 0.0f, 1.0f, 0.0f };
+
+float deltaTime = 0.0f;
+float lastFrame = 0.0f;
+
+void processInput(struct Window *window);
+
 int main()
 {
-    struct Window  *window;
-    struct Mesh    *mesh;
-    struct Shader  *shader;
-    struct Texture *faceTexture;
-    struct Texture *containerTexture;
-
     window = winCreate(800, 600, "OpenGL", (vec4) { 0.156f, 0.172f, 0.203f, 1.0f });
     if (!window)
         return EXIT_FAILURE;
@@ -178,25 +187,23 @@ int main()
         }
     }
 
-    vec3 cpos    = { 0.0f, 0.0f, 3.0f };
-    vec3 worigin = { 0.0f, 0.0f, 0.0f };
-    vec3 wup     = { 0.0f, 1.0f, 0.0f };
-
     while (!winClosed(window))
     {
+        float currentFrame = glfwGetTime();
+        deltaTime          = currentFrame - lastFrame;
+        lastFrame          = currentFrame;
+
         winPollEvents(window);
         winProcessInput(window);
+        processInput(window);
         winClearColor(window);
 
         mat4  view;
         float radius = 10.0f;
-        float camx   = sin(glfwGetTime()) * radius;
-        float camz   = cos(glfwGetTime()) * radius;
 
-        cpos[0] = camx;
-        cpos[2] = camz;
-
-        glm_lookat(cpos, worigin, wup, view);
+        vec3 sum;
+        glm_vec3_add(cameraPos, cameraFront, sum);
+        glm_lookat(cameraPos, sum, cameraUp, view);
 
         mat4 projection;
         glm_perspective(glm_rad(45.0f), 800.0f / 600.0f, 0.1f, 100.0f, projection);
@@ -244,4 +251,44 @@ int main()
     texDestroy(containerTexture);
 
     return 0;
+}
+
+void processInput(struct Window *window)
+{
+    const float cameraSpeed = 2.5f * deltaTime;
+    if (glfwGetKey(window->window, GLFW_KEY_K) == GLFW_PRESS)
+    {
+        vec3 mul;
+        glm_vec3_scale(cameraFront, cameraSpeed, mul);
+        glm_vec3_add(cameraPos, mul, cameraPos);
+    }
+
+    if (glfwGetKey(window->window, GLFW_KEY_J) == GLFW_PRESS)
+    {
+        vec3 mul;
+        glm_vec3_scale(cameraFront, cameraSpeed, mul);
+        glm_vec3_sub(cameraPos, mul, cameraPos);
+    }
+
+    if (glfwGetKey(window->window, GLFW_KEY_H) == GLFW_PRESS)
+    {
+        vec3 cross;
+        vec3 mul;
+
+        glm_cross(cameraFront, cameraUp, cross);
+        glm_normalize(cross);
+        glm_vec3_scale(cross, cameraSpeed, mul);
+        glm_vec3_sub(cameraPos, mul, cameraPos);
+    }
+
+    if (glfwGetKey(window->window, GLFW_KEY_L) == GLFW_PRESS)
+    {
+        vec3 cross;
+        vec3 mul;
+
+        glm_cross(cameraFront, cameraUp, cross);
+        glm_normalize(cross);
+        glm_vec3_scale(cross, cameraSpeed, mul);
+        glm_vec3_add(cameraPos, mul, cameraPos);
+    }
 }
