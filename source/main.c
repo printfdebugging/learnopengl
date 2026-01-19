@@ -28,6 +28,7 @@ float pitch      = 0.0f;
 float lastX      = 400;
 float lastY      = 300;
 bool  firstMouse = true;
+float fov        = 45.0f;
 
 void processInput(struct Window *window);
 
@@ -37,6 +38,12 @@ void mouseCallback(
     double      posY
 );
 
+void scrollCallback(
+    GLFWwindow *window,
+    double      offsetX,
+    double      offsetY
+);
+
 int main()
 {
     window = winCreate(800, 600, "OpenGL", (vec4) { 0.156f, 0.172f, 0.203f, 1.0f });
@@ -44,6 +51,7 @@ int main()
         return EXIT_FAILURE;
 
     glfwSetCursorPosCallback(window->window, mouseCallback);
+    glfwSetScrollCallback(window->window, scrollCallback);
 
     /* clang-format off */
     vec3 cubePositions[] = {
@@ -219,7 +227,7 @@ int main()
         glm_lookat(cameraPos, sum, cameraUp, view);
 
         mat4 projection;
-        glm_perspective(glm_rad(45.0f), 800.0f / 600.0f, 0.1f, 100.0f, projection);
+        glm_perspective(glm_rad(fov), 800.0f / 600.0f, 0.1f, 100.0f, projection);
 
         int viewLocation = shGetUniformLocation(shader, "view");
         if (viewLocation != -1)
@@ -341,4 +349,15 @@ void mouseCallback(GLFWwindow *window,
     direction[2] = sin(glm_rad(yaw)) * cos(glm_rad(pitch));
     glm_normalize(direction);
     glm_vec3_copy(direction, cameraFront);
+}
+
+void scrollCallback(GLFWwindow *window,
+                    double      offsetX,
+                    double      offsetY)
+{
+    fov -= (float) offsetY;
+    if (fov < 1.0)
+        fov = 1.0f;
+    if (fov > 45.0f)
+        fov = 45.0f;
 }
