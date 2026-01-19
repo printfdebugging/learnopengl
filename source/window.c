@@ -50,6 +50,7 @@ struct Window *winCreate(unsigned int width,
     }
 
     glfwSetFramebufferSizeCallback(window, winFrameBufResizeCallback);
+    glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
     glfwSwapInterval(1);
     glEnable(GL_DEPTH_TEST);
 

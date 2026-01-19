@@ -21,16 +21,29 @@ vec3 cameraPos   = { 0.0f, 0.0f, 3.0f };
 vec3 cameraFront = { 0.0f, 0.0f, -1.0f };
 vec3 cameraUp    = { 0.0f, 1.0f, 0.0f };
 
-float deltaTime = 0.0f;
-float lastFrame = 0.0f;
+float deltaTime  = 0.0f;
+float lastFrame  = 0.0f;
+float yaw        = -90.0f;
+float pitch      = 0.0f;
+float lastX      = 400;
+float lastY      = 300;
+bool  firstMouse = true;
 
 void processInput(struct Window *window);
+
+void mouseCallback(
+    GLFWwindow *window,
+    double      posX,
+    double      posY
+);
 
 int main()
 {
     window = winCreate(800, 600, "OpenGL", (vec4) { 0.156f, 0.172f, 0.203f, 1.0f });
     if (!window)
         return EXIT_FAILURE;
+
+    glfwSetCursorPosCallback(window->window, mouseCallback);
 
     /* clang-format off */
     vec3 cubePositions[] = {
@@ -256,21 +269,21 @@ int main()
 void processInput(struct Window *window)
 {
     const float cameraSpeed = 2.5f * deltaTime;
-    if (glfwGetKey(window->window, GLFW_KEY_K) == GLFW_PRESS)
+    if (glfwGetKey(window->window, GLFW_KEY_W) == GLFW_PRESS)
     {
         vec3 mul;
         glm_vec3_scale(cameraFront, cameraSpeed, mul);
         glm_vec3_add(cameraPos, mul, cameraPos);
     }
 
-    if (glfwGetKey(window->window, GLFW_KEY_J) == GLFW_PRESS)
+    if (glfwGetKey(window->window, GLFW_KEY_S) == GLFW_PRESS)
     {
         vec3 mul;
         glm_vec3_scale(cameraFront, cameraSpeed, mul);
         glm_vec3_sub(cameraPos, mul, cameraPos);
     }
 
-    if (glfwGetKey(window->window, GLFW_KEY_H) == GLFW_PRESS)
+    if (glfwGetKey(window->window, GLFW_KEY_A) == GLFW_PRESS)
     {
         vec3 cross;
         vec3 mul;
@@ -281,7 +294,7 @@ void processInput(struct Window *window)
         glm_vec3_sub(cameraPos, mul, cameraPos);
     }
 
-    if (glfwGetKey(window->window, GLFW_KEY_L) == GLFW_PRESS)
+    if (glfwGetKey(window->window, GLFW_KEY_D) == GLFW_PRESS)
     {
         vec3 cross;
         vec3 mul;
@@ -291,4 +304,41 @@ void processInput(struct Window *window)
         glm_vec3_scale(cross, cameraSpeed, mul);
         glm_vec3_add(cameraPos, mul, cameraPos);
     }
+}
+
+void mouseCallback(GLFWwindow *window,
+                   double      posX,
+                   double      posY)
+{
+    if (firstMouse)
+    {
+        lastX      = posX;
+        lastY      = posY;
+        firstMouse = false;
+    }
+
+    float offsetX = posX - lastX;
+    float offsetY = posY - lastY;
+
+    lastX = posX;
+    lastY = posY;
+
+    const float sensitivity = 0.1f;
+    offsetX *= sensitivity;
+    offsetY *= sensitivity;
+
+    yaw += offsetX;
+    pitch += offsetY;
+
+    if (pitch > 89.0f)
+        pitch = 89.0f;
+    if (pitch < -89.0f)
+        pitch = -89.0f;
+
+    vec3 direction;
+    direction[0] = cos(glm_rad(yaw)) * cos(glm_rad(pitch));
+    direction[1] = sin(glm_rad(pitch));
+    direction[2] = sin(glm_rad(yaw)) * cos(glm_rad(pitch));
+    glm_normalize(direction);
+    glm_vec3_copy(direction, cameraFront);
 }

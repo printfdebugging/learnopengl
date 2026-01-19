@@ -13,6 +13,9 @@ struct Window
     const char  *title;
     GLFWwindow  *window;
     vec4         color;
+
+    // TODO: add callbacks and ways to register callbacks
+    // of the form void (*callback)(sturct Window *window, void* data);
 };
 
 struct Window *winCreate(
