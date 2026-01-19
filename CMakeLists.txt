@@ -64,13 +64,13 @@ target_compile_definitions(${APPLICATION} PRIVATE
     ASSETS_DIR="$<BUILD_INTERFACE:${CMAKE_SOURCE_DIR}/assets/>$<INSTALL_INTERFACE:${CMAKE_INSTALL_FULL_DATAROOTDIR}/${PROJECT_ASSETS_DIR}>"
 )
 
-target_compile_options(${APPLICATION} PRIVATE
-    -fPIC
-    -Wpedantic
-    -Werror
-    -Wall
-    -Wextra
-)
+# target_compile_options(${APPLICATION} PRIVATE
+#     -fPIC
+#     -Wpedantic
+#     -Werror
+#     -Wall
+#     -Wextra
+# )
 
 target_include_directories(${APPLICATION}
     PUBLIC include
