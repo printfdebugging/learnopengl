@@ -17,7 +17,7 @@ static void winFrameBufResizeCallback(GLFWwindow *window,
 struct Window *winCreate(unsigned int width,
                          unsigned int height,
                          const char  *title,
-                         vec4         color)
+                         vec4s        color)
 {
     if (!glfwInit())
     {
@@ -72,15 +72,15 @@ struct Window *winCreate(unsigned int width,
     win->width  = width;
     win->height = height;
     win->title  = title;
-    memcpy(win->color, color, sizeof(float) * 4);
+    win->color  = color;
     win->window = window;
     return win;
 }
 
 void winSetClearColor(struct Window *window,
-                      vec4           color)
+                      vec4s          color)
 {
-    memcpy(window->color, color, sizeof(float) * 4);
+    window->color = color;
 }
 
 void winProcessInput(struct Window *window)
@@ -99,10 +99,10 @@ void winClearColor(struct Window *window)
 {
     (void) window;
     glClearColor(
-        window->color[0],
-        window->color[1],
-        window->color[2],
-        window->color[3]
+        window->color.r,
+        window->color.g,
+        window->color.b,
+        window->color.a
     );
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 }
