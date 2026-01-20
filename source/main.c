@@ -4,6 +4,7 @@
 
 #include "utils.h"
 #include "window.h"
+#include "camera.h"
 #include "mesh.h"
 #include "shader.h"
 #include "texture.h"
@@ -16,19 +17,10 @@ struct Mesh    *mesh;
 struct Shader  *shader;
 struct Texture *faceTexture;
 struct Texture *containerTexture;
+struct Camera  *camera;
 
-vec3s cameraPos   = { 0.0f, 0.0f, 3.0f };
-vec3s cameraFront = { 0.0f, 0.0f, -1.0f };
-vec3s cameraUp    = { 0.0f, 1.0f, 0.0f };
-
-float deltaTime  = 0.0f;
-float lastFrame  = 0.0f;
-float yaw        = -90.0f;
-float pitch      = 0.0f;
-float lastX      = 400;
-float lastY      = 300;
-bool  firstMouse = true;
-float fov        = 45.0f;
+float deltaTime = 0.0f;
+float lastFrame = 0.0f;
 
 void processInput(struct Window *window);
 
@@ -48,6 +40,10 @@ int main()
 {
     window = winCreate(800, 600, "OpenGL", (vec4s) { 0.156f, 0.172f, 0.203f, 1.0f });
     if (!window)
+        return EXIT_FAILURE;
+
+    camera = cameraCreate();
+    if (!camera)
         return EXIT_FAILURE;
 
     glfwSetCursorPosCallback(window->window, mouseCallback);
@@ -219,10 +215,10 @@ int main()
         processInput(window);
         winClearColor(window);
 
-        vec3s sum = glms_vec3_add(cameraPos, cameraFront);
+        vec3s sum = glms_vec3_add(camera->position, camera->front);
 
-        mat4s view       = glms_lookat(cameraPos, sum, cameraUp);
-        mat4s projection = glms_perspective(glm_rad(fov), 800.0f / 600.0f, 0.1f, 100.0f);
+        mat4s view       = glms_lookat(camera->position, sum, camera->up);
+        mat4s projection = glms_perspective(glm_rad(camera->fov), 800.0f / 600.0f, 0.1f, 100.0f);
 
         int viewLocation = shGetUniformLocation(shader, "view");
         if (viewLocation != -1)
@@ -272,81 +268,29 @@ int main()
 
 void processInput(struct Window *window)
 {
-    const float cameraSpeed = 2.5f * deltaTime;
     if (glfwGetKey(window->window, GLFW_KEY_W) == GLFW_PRESS)
-    {
-        vec3s mul = glms_vec3_scale(cameraFront, cameraSpeed);
-        cameraPos = glms_vec3_add(cameraPos, mul);
-    }
+        cameraProcessKeyboard(camera, CAMERA_DIRECTION_FORWARD, deltaTime);
 
     if (glfwGetKey(window->window, GLFW_KEY_S) == GLFW_PRESS)
-    {
-        vec3s mul = glms_vec3_scale(cameraFront, cameraSpeed);
-        cameraPos = glms_vec3_sub(cameraPos, mul);
-    }
+        cameraProcessKeyboard(camera, CAMERA_DIRECTION_BACKWARD, deltaTime);
 
     if (glfwGetKey(window->window, GLFW_KEY_A) == GLFW_PRESS)
-    {
-        vec3s cross = glms_cross(cameraFront, cameraUp);
-        cross       = glms_normalize(cross);
-
-        vec3s mul = glms_vec3_scale(cross, cameraSpeed);
-        cameraPos = glms_vec3_sub(cameraPos, mul);
-    }
+        cameraProcessKeyboard(camera, CAMERA_DIRECTION_LEFT, deltaTime);
 
     if (glfwGetKey(window->window, GLFW_KEY_D) == GLFW_PRESS)
-    {
-        vec3s cross = glms_cross(cameraFront, cameraUp);
-        cross       = glms_normalize(cross);
-        vec3s mul   = glms_vec3_scale(cross, cameraSpeed);
-        cameraPos   = glms_vec3_add(cameraPos, mul);
-    }
+        cameraProcessKeyboard(camera, CAMERA_DIRECTION_RIGHT, deltaTime);
 }
 
 void mouseCallback(GLFWwindow *window,
                    double      posX,
                    double      posY)
 {
-    if (firstMouse)
-    {
-        lastX      = posX;
-        lastY      = posY;
-        firstMouse = false;
-    }
-
-    float offsetX = posX - lastX;
-    float offsetY = posY - lastY;
-
-    lastX = posX;
-    lastY = posY;
-
-    const float sensitivity = 0.1f;
-    offsetX *= sensitivity;
-    offsetY *= sensitivity;
-
-    yaw += offsetX;
-    pitch += offsetY;
-
-    if (pitch > 89.0f)
-        pitch = 89.0f;
-    if (pitch < -89.0f)
-        pitch = -89.0f;
-
-    vec3s direction;
-    direction.x = cos(glm_rad(yaw)) * cos(glm_rad(pitch));
-    direction.y = sin(glm_rad(pitch));
-    direction.z = sin(glm_rad(yaw)) * cos(glm_rad(pitch));
-    direction   = glms_normalize(direction);
-    cameraFront = direction;
+    cameraProcessMouseMovement(camera, (float) posX, (float) posY);
 }
 
 void scrollCallback(GLFWwindow *window,
                     double      offsetX,
                     double      offsetY)
 {
-    fov -= (float) offsetY;
-    if (fov < 1.0)
-        fov = 1.0f;
-    if (fov > 45.0f)
-        fov = 45.0f;
+    cameraProcessMouseScroll(camera, (float) offsetY);
 }

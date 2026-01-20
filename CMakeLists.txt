@@ -56,6 +56,7 @@ add_executable(${APPLICATION}
     source/texture.c
     source/window.c
     source/utils.c
+    source/camera.c
 )
 
 target_compile_definitions(${APPLICATION} PRIVATE
