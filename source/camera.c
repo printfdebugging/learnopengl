@@ -1,4 +1,5 @@
 #include "camera.h"
+#include "GLFW/glfw3.h"
 
 struct Camera *cameraCreate()
 {
@@ -9,7 +10,7 @@ struct Camera *cameraCreate()
         return NULL;
     }
 
-    camera->position         = (vec3s) { 0.0f, 0.0f, 3.0f };
+    camera->position         = (vec3s) { 0.0f, 1.0f, 4.0f };
     camera->front            = (vec3s) { 0.0f, 0.0f, -1.0f };
     camera->up               = (vec3s) { 0.0f, 1.0f, 0.0f };
     camera->yaw              = -90.0f;
@@ -89,7 +90,7 @@ void cameraProcessMouseMovement(struct Camera *camera,
     camera->x = x;
     camera->y = y;
     camera->yaw += offsetX;
-    camera->pitch += offsetY;
+    camera->pitch -= offsetY;
 
     if (camera->pitch > 89.0f)
         camera->pitch = 89.0f;

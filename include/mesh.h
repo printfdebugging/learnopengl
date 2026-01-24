@@ -20,6 +20,8 @@ struct Mesh
     unsigned int vboVertex;
     unsigned int vboColor;
     unsigned int vboUV;
+    unsigned int vertexCount;
+    unsigned int vertexStride;
 
     unsigned int ebo;
     unsigned int eboCount;

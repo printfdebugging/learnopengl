@@ -53,6 +53,9 @@ void meshLoadVertices(struct Mesh *mesh,
     glBufferData(GL_ARRAY_BUFFER, count * 3 * sizeof(float), data, GL_STATIC_DRAW);
     glVertexAttribPointer(MESH_ATTRIBUTE_POSITION, 3, GL_FLOAT, GL_FALSE, stride, 0);
     glEnableVertexAttribArray(MESH_ATTRIBUTE_POSITION);
+
+    mesh->vertexCount  = count;
+    mesh->vertexStride = stride;
 }
 
 void meshLoadIndices(struct Mesh *mesh,

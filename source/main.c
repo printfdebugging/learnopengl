@@ -14,13 +14,17 @@
 
 struct Window  *window;
 struct Mesh    *mesh;
+struct Mesh    *lines;
+struct Shader  *linesShader;
 struct Shader  *shader;
 struct Texture *faceTexture;
 struct Texture *containerTexture;
 struct Camera  *camera;
 
-float deltaTime = 0.0f;
-float lastFrame = 0.0f;
+float       deltaTime = 0.0f;
+float       lastFrame = 0.0f;
+const float WIDTH     = 1920.0f;
+const float HEIGHT    = 1080.0f;
 
 void processInput(struct Window *window);
 
@@ -38,7 +42,7 @@ void scrollCallback(
 
 int main()
 {
-    window = winCreate(800, 600, "OpenGL", (vec4s) { 0.156f, 0.172f, 0.203f, 1.0f });
+    window = winCreate(WIDTH, HEIGHT, "OpenGL", (vec4s) { 0.156f, 0.172f, 0.203f, 1.0f });
     if (!window)
         return EXIT_FAILURE;
 
@@ -172,7 +176,53 @@ int main()
         if (!shader)
             return EXIT_FAILURE;
 
-        if (shLoadFromFile(shader, ASSETS_DIR "shaders/shader.vert", ASSETS_DIR "shaders/shader.frag"))
+        if (shLoadFromFile(shader, ASSETS_DIR "shaders/cube.vert", ASSETS_DIR "shaders/cube.frag"))
+            return EXIT_FAILURE;
+    }
+
+    {
+        const int AXES             = 2;
+        const int LINES_PER_AXIS   = 51;
+        const int POINTS_PER_LINE  = 2;
+        const int FLOATS_PER_POINT = 3;
+        const int count            = AXES * LINES_PER_AXIS * POINTS_PER_LINE;
+
+        float vertices[AXES][LINES_PER_AXIS][POINTS_PER_LINE][FLOATS_PER_POINT] = {};
+
+        for (int z = -25; z <= 25; ++z)
+        {
+            vertices[0][z + 25][0][0] = -25.0f;
+            vertices[0][z + 25][0][1] = 0.0f;
+            vertices[0][z + 25][0][2] = (float) z;
+
+            vertices[0][z + 25][1][0] = 25.0f;
+            vertices[0][z + 25][1][1] = 0.0f;
+            vertices[0][z + 25][1][2] = (float) z;
+        }
+
+        for (int x = -25; x <= 25; ++x)
+        {
+            vertices[1][x + 25][0][0] = (float) x;
+            vertices[1][x + 25][0][1] = 0.0f;
+            vertices[1][x + 25][0][2] = -25.0f;
+
+            vertices[1][x + 25][1][0] = (float) x;
+            vertices[1][x + 25][1][1] = 0.0f;
+            vertices[1][x + 25][1][2] = 25.0f;
+        }
+
+        // TODO: create vertices using loops
+
+        lines = meshCreate();
+        meshLoadVertices(lines, &vertices[0][0][0][0], count, 3 * sizeof(float));
+    }
+
+    {
+        linesShader = shCreate();
+        if (!linesShader)
+            return EXIT_FAILURE;
+
+        if (shLoadFromFile(linesShader, ASSETS_DIR "shaders/lines.vert", ASSETS_DIR "shaders/lines.frag"))
             return EXIT_FAILURE;
     }
 
@@ -218,23 +268,37 @@ int main()
         vec3s sum = glms_vec3_add(camera->position, camera->front);
 
         mat4s view       = glms_lookat(camera->position, sum, camera->up);
-        mat4s projection = glms_perspective(glm_rad(camera->fov), 800.0f / 600.0f, 0.1f, 100.0f);
+        mat4s projection = glms_perspective(glm_rad(camera->fov), WIDTH / HEIGHT, 0.1f, 100.0f);
 
-        int viewLocation = shGetUniformLocation(shader, "view");
-        if (viewLocation != -1)
-            glUniformMatrix4fv(viewLocation, 1, GL_FALSE, &view.col[0].raw[0]);
+        {
+            int viewLocation = shGetUniformLocation(linesShader, "view");
+            if (viewLocation != -1)
+                glUniformMatrix4fv(viewLocation, 1, GL_FALSE, &view.col[0].raw[0]);
 
-        int projectionLocation = shGetUniformLocation(shader, "projection");
-        if (projectionLocation != -1)
-            glUniformMatrix4fv(projectionLocation, 1, GL_FALSE, &projection.col[0].raw[0]);
+            int projectionLocation = shGetUniformLocation(linesShader, "projection");
+            if (projectionLocation != -1)
+                glUniformMatrix4fv(projectionLocation, 1, GL_FALSE, &projection.col[0].raw[0]);
+        }
+
+        {
+            int viewLocation = shGetUniformLocation(shader, "view");
+            if (viewLocation != -1)
+                glUniformMatrix4fv(viewLocation, 1, GL_FALSE, &view.col[0].raw[0]);
+
+            int projectionLocation = shGetUniformLocation(shader, "projection");
+            if (projectionLocation != -1)
+                glUniformMatrix4fv(projectionLocation, 1, GL_FALSE, &projection.col[0].raw[0]);
+        }
+
+        glBindVertexArray(lines->vao);
+        glUseProgram(linesShader->program);
+        glDrawArrays(GL_LINES, 0, lines->vertexCount);
 
         glBindVertexArray(mesh->vao);
-
         glActiveTexture(GL_TEXTURE0);
         glBindTexture(GL_TEXTURE_2D, containerTexture->texture);
         glActiveTexture(GL_TEXTURE1);
         glBindTexture(GL_TEXTURE_2D, faceTexture->texture);
-
         glUseProgram(shader->program);
 
         for (unsigned int i = 0; i < 10; ++i)
