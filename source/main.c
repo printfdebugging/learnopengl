@@ -14,6 +14,7 @@
 
 struct Window  *window;
 struct Mesh    *mesh;
+struct Mesh    *lightSource;
 struct Mesh    *lines;
 struct Shader  *linesShader;
 struct Shader  *shader;
@@ -52,21 +53,6 @@ int main()
 
     glfwSetCursorPosCallback(window->window, mouseCallback);
     glfwSetScrollCallback(window->window, scrollCallback);
-
-    /* clang-format off */
-    vec3s cubePositions[] = {
-        { 0.0f,  0.0f,  0.0f },
-        { 2.0f,  5.0f, -15.0f },
-        {-1.5f, -2.2f, -2.5f },
-        {-3.8f, -2.0f, -12.3f },
-        { 2.4f, -0.4f, -3.5f },
-        {-1.7f,  3.0f, -7.5f },
-        { 1.3f, -2.0f, -2.5f },
-        { 1.5f,  2.0f, -2.5f },
-        { 1.5f,  0.2f, -1.5f },
-        {-1.3f,  1.0f, -1.5f },
-    };
-    /* clang-format on */
 
     {
         // MESH
@@ -168,6 +154,13 @@ int main()
         // meshLoadColors(mesh, colors, 4, 3 * sizeof(float));
         meshLoadUV(mesh, uv, 36, 2 * sizeof(float));
         // meshLoadIndices(mesh, indices, sizeof(indices), GL_UNSIGNED_INT);
+
+        lightSource = meshCreate();
+        if (!mesh)
+            return EXIT_FAILURE;
+
+        meshLoadVertices(lightSource, vertices, 36, 3 * sizeof(float));
+        meshLoadUV(lightSource, uv, 36, 2 * sizeof(float));
     }
 
     {
@@ -290,31 +283,65 @@ int main()
                 glUniformMatrix4fv(projectionLocation, 1, GL_FALSE, &projection.col[0].raw[0]);
         }
 
-        glBindVertexArray(lines->vao);
-        glUseProgram(linesShader->program);
-        glDrawArrays(GL_LINES, 0, lines->vertexCount);
+        float angle        = 0.0f;
+        vec3s meshPosition = { 0.0f, 0.0f, 0.0f };
 
-        glBindVertexArray(mesh->vao);
-        glActiveTexture(GL_TEXTURE0);
-        glBindTexture(GL_TEXTURE_2D, containerTexture->texture);
-        glActiveTexture(GL_TEXTURE1);
-        glBindTexture(GL_TEXTURE_2D, faceTexture->texture);
-        glUseProgram(shader->program);
-
-        for (unsigned int i = 0; i < 10; ++i)
         {
-            {
-                float angle = 20.0f * (i + 1);
+            // cube
+            glBindVertexArray(mesh->vao);
+            glActiveTexture(GL_TEXTURE0);
+            glBindTexture(GL_TEXTURE_2D, containerTexture->texture);
+            glActiveTexture(GL_TEXTURE1);
+            glBindTexture(GL_TEXTURE_2D, faceTexture->texture);
+            glUseProgram(shader->program);
 
-                mat4s model = glms_mat4_identity();
-                model       = glms_translate(model, cubePositions[i]);
-                model       = glms_rotate(model, (float) glfwGetTime() * glm_rad(angle), (vec3s) { 0.5f, 0.3f, 0.5f });
+            mat4s model = glms_mat4_identity();
+            model       = glms_translate(model, meshPosition);
+            model       = glms_rotate(model, (float) glfwGetTime() * glm_rad(angle), (vec3s) { 0.5f, 0.3f, 0.5f });
 
-                int modelLocation = shGetUniformLocation(shader, "model");
-                if (modelLocation != -1)
-                    glUniformMatrix4fv(modelLocation, 1, GL_FALSE, &model.col[0].raw[0]);
-            }
+            int modelLocation = shGetUniformLocation(shader, "model");
+            if (modelLocation != -1)
+                glUniformMatrix4fv(modelLocation, 1, GL_FALSE, &model.col[0].raw[0]);
 
+            int texBoolLocation = shGetUniformLocation(shader, "useTextures");
+            if (texBoolLocation != -1)
+                glUniform1i(texBoolLocation, 1);
+
+            glDrawArrays(GL_TRIANGLES, 0, 36);
+        }
+
+        {
+            // axes
+            glBindVertexArray(lines->vao);
+            glUseProgram(linesShader->program);
+            glDrawArrays(GL_LINES, 0, lines->vertexCount);
+        }
+
+        {
+            vec3s lightPosition = { 1.0f, 1.0f, -1.0f };
+            vec3s lightColor    = { 1.0f, 1.0f, 1.0f };
+            vec3s objectColor   = { 1.0f, 0.5f, 0.31f };
+            // light
+            mat4s modelLight  = glms_mat4_identity();
+            modelLight        = glms_translate(modelLight, lightPosition);
+            modelLight        = glms_rotate(modelLight, (float) glfwGetTime() * glm_rad(angle), (vec3s) { 0.5f, 0.3f, 0.5f });
+            int lightLocation = shGetUniformLocation(shader, "model");
+            if (lightLocation != -1)
+                glUniformMatrix4fv(lightLocation, 1, GL_FALSE, &modelLight.col[0].raw[0]);
+
+            int texBoolLocation = shGetUniformLocation(shader, "useTextures");
+            if (texBoolLocation != -1)
+                glUniform1i(texBoolLocation, 0);
+
+            int objectColorLocation = shGetUniformLocation(shader, "objectColor");
+            if (objectColorLocation != -1)
+                glUniform3fv(objectColorLocation, 1, (float *) &objectColor);
+
+            int lightColorLocation = shGetUniformLocation(shader, "lightColor");
+            if (lightColorLocation != -1)
+                glUniform3fv(lightColorLocation, 1, (float *) &lightColor);
+
+            glBindVertexArray(lightSource->vao);
             glDrawArrays(GL_TRIANGLES, 0, 36);
         }
 
