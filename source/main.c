@@ -1,4 +1,5 @@
 #include "cglm/struct.h"
+#include "cglm/struct/affine.h"
 #include "glad/glad.h"
 #include "GLFW/glfw3.h"
 
@@ -12,15 +13,19 @@
 
 #include <stdlib.h>
 
-struct Window  *window;
-struct Mesh    *mesh;
-struct Mesh    *lightSource;
-struct Mesh    *lines;
-struct Shader  *linesShader;
-struct Shader  *shader;
+struct Window *window;
+struct Camera *camera;
+
+struct Mesh *mesh;
+struct Mesh *lines;
+struct Mesh *lightSource;
+
+struct Shader *shader;
+struct Shader *linesShader;
+struct Shader *lightShader;
+
 struct Texture *faceTexture;
 struct Texture *containerTexture;
-struct Camera  *camera;
 
 float       deltaTime = 0.0f;
 float       lastFrame = 0.0f;
@@ -214,37 +219,42 @@ int main()
         linesShader = shCreate();
         if (!linesShader)
             return EXIT_FAILURE;
-
         if (shLoadFromFile(linesShader, ASSETS_DIR "shaders/lines.vert", ASSETS_DIR "shaders/lines.frag"))
             return EXIT_FAILURE;
     }
 
     {
-        {
-            faceTexture = texCreate();
-            if (!faceTexture)
-                return EXIT_FAILURE;
+        lightShader = shCreate();
+        if (!lightShader)
+            return EXIT_FAILURE;
+        if (shLoadFromFile(lightShader, ASSETS_DIR "shaders/light.vert", ASSETS_DIR "shaders/light.frag"))
+            return EXIT_FAILURE;
+    }
 
-            if (texLoadFromFile(faceTexture, ASSETS_DIR "textures/awesomeface.png"))
-                return EXIT_FAILURE;
+    {
+        faceTexture = texCreate();
+        if (!faceTexture)
+            return EXIT_FAILURE;
 
-            int faceTextureLocation = shGetUniformLocation(shader, "faceTexture");
-            if (faceTextureLocation != -1)
-                glUniform1i(faceTextureLocation, 0);
-        }
+        if (texLoadFromFile(faceTexture, ASSETS_DIR "textures/awesomeface.png"))
+            return EXIT_FAILURE;
 
-        {
-            containerTexture = texCreate();
-            if (!containerTexture)
-                return EXIT_FAILURE;
+        int faceTextureLocation = shGetUniformLocation(shader, "faceTexture");
+        if (faceTextureLocation != -1)
+            glUniform1i(faceTextureLocation, 0);
+    }
 
-            if (texLoadFromFile(containerTexture, ASSETS_DIR "textures/container.jpg"))
-                return EXIT_FAILURE;
+    {
+        containerTexture = texCreate();
+        if (!containerTexture)
+            return EXIT_FAILURE;
 
-            int containerTextureLocation = shGetUniformLocation(shader, "containerTexture");
-            if (containerTextureLocation != -1)
-                glUniform1i(containerTextureLocation, 1);
-        }
+        if (texLoadFromFile(containerTexture, ASSETS_DIR "textures/container.jpg"))
+            return EXIT_FAILURE;
+
+        int containerTextureLocation = shGetUniformLocation(shader, "containerTexture");
+        if (containerTextureLocation != -1)
+            glUniform1i(containerTextureLocation, 1);
     }
 
     while (!winClosed(window))
@@ -258,8 +268,7 @@ int main()
         processInput(window);
         winClearColor(window);
 
-        vec3s sum = glms_vec3_add(camera->position, camera->front);
-
+        vec3s sum        = glms_vec3_add(camera->position, camera->front);
         mat4s view       = glms_lookat(camera->position, sum, camera->up);
         mat4s projection = glms_perspective(glm_rad(camera->fov), WIDTH / HEIGHT, 0.1f, 100.0f);
 
@@ -279,6 +288,16 @@ int main()
                 glUniformMatrix4fv(viewLocation, 1, GL_FALSE, &view.col[0].raw[0]);
 
             int projectionLocation = shGetUniformLocation(shader, "projection");
+            if (projectionLocation != -1)
+                glUniformMatrix4fv(projectionLocation, 1, GL_FALSE, &projection.col[0].raw[0]);
+        }
+
+        {
+            int viewLocation = shGetUniformLocation(lightShader, "view");
+            if (viewLocation != -1)
+                glUniformMatrix4fv(viewLocation, 1, GL_FALSE, &view.col[0].raw[0]);
+
+            int projectionLocation = shGetUniformLocation(lightShader, "projection");
             if (projectionLocation != -1)
                 glUniformMatrix4fv(projectionLocation, 1, GL_FALSE, &projection.col[0].raw[0]);
         }
@@ -303,10 +322,6 @@ int main()
             if (modelLocation != -1)
                 glUniformMatrix4fv(modelLocation, 1, GL_FALSE, &model.col[0].raw[0]);
 
-            int texBoolLocation = shGetUniformLocation(shader, "useTextures");
-            if (texBoolLocation != -1)
-                glUniform1i(texBoolLocation, 1);
-
             glDrawArrays(GL_TRIANGLES, 0, 36);
         }
 
@@ -318,30 +333,24 @@ int main()
         }
 
         {
-            vec3s lightPosition = { 1.0f, 1.0f, -1.0f };
-            vec3s lightColor    = { 1.0f, 1.0f, 1.0f };
-            vec3s objectColor   = { 1.0f, 0.5f, 0.31f };
             // light
-            mat4s modelLight  = glms_mat4_identity();
-            modelLight        = glms_translate(modelLight, lightPosition);
-            modelLight        = glms_rotate(modelLight, (float) glfwGetTime() * glm_rad(angle), (vec3s) { 0.5f, 0.3f, 0.5f });
-            int lightLocation = shGetUniformLocation(shader, "model");
+            vec3s lightPosition  = { 1.2f, 1.0f, 2.0f };
+            vec3s lightColor     = { 1.0f, 1.0f, 1.0f };
+            vec3s objectColor    = { 1.0f, 0.5f, 0.31f };
+            vec3s scale          = { 0.2f, 0.2f, 0.2f };
+            vec3s axisOfRotation = { 0.5f, 0.3f, 0.5f };
+
+            mat4s modelLight = glms_mat4_identity();
+            modelLight       = glms_translate(modelLight, lightPosition);
+            modelLight       = glms_rotate(modelLight, (float) glfwGetTime() * glm_rad(angle), axisOfRotation);
+            modelLight       = glms_scale(modelLight, scale);
+
+            int lightLocation = shGetUniformLocation(lightShader, "model");
             if (lightLocation != -1)
                 glUniformMatrix4fv(lightLocation, 1, GL_FALSE, &modelLight.col[0].raw[0]);
 
-            int texBoolLocation = shGetUniformLocation(shader, "useTextures");
-            if (texBoolLocation != -1)
-                glUniform1i(texBoolLocation, 0);
-
-            int objectColorLocation = shGetUniformLocation(shader, "objectColor");
-            if (objectColorLocation != -1)
-                glUniform3fv(objectColorLocation, 1, (float *) &objectColor);
-
-            int lightColorLocation = shGetUniformLocation(shader, "lightColor");
-            if (lightColorLocation != -1)
-                glUniform3fv(lightColorLocation, 1, (float *) &lightColor);
-
             glBindVertexArray(lightSource->vao);
+            glUseProgram(lightShader->program);
             glDrawArrays(GL_TRIANGLES, 0, 36);
         }
 
