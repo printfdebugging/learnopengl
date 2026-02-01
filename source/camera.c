@@ -10,11 +10,11 @@ struct camera *camera_create()
         return NULL;
     }
 
-    camera->position = (vec3s) { 0.0f, 1.0f, 4.0f };
-    camera->front = (vec3s) { 0.0f, 0.0f, -1.0f };
+    camera->position = (vec3s) { 5.0f, 5.0f, 5.0f };
+    camera->front = (vec3s) { 0.0f, 0.0f, -5.0f };
     camera->up = (vec3s) { 0.0f, 1.0f, 0.0f };
-    camera->yaw = -90.0f;
-    camera->pitch = 0.0f;
+    camera->yaw = -135.0f;
+    camera->pitch = -45.0f;
     camera->x = 400;
     camera->y = 300;
     camera->fov = 45.0f;
