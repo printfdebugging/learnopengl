@@ -44,8 +44,7 @@ void scroll_callback(GLFWwindow *window, double offsetX, double offsetY);
 
 int main()
 {
-    window =
-        window_create(WIDTH, HEIGHT, "OpenGL", (vec4s) { 0.156f, 0.172f, 0.203f, 1.0f });
+    window = window_create(WIDTH, HEIGHT, "OpenGL", (vec4s) { 0.156f, 0.172f, 0.203f, 1.0f });
     if (!window)
         return EXIT_FAILURE;
 
@@ -275,9 +274,9 @@ int main()
 
     while (!window_close(window))
     {
-        float currentFrame = glfwGetTime();
-        delta_time = currentFrame - last_frame;
-        last_frame = currentFrame;
+        float current_frame = glfwGetTime();
+        delta_time = current_frame - last_frame;
+        last_frame = current_frame;
 
         window_poll_events(window);
         window_process_input(window);
@@ -290,33 +289,33 @@ int main()
             glms_perspective(glm_rad(camera->fov), WIDTH / HEIGHT, 0.1f, 100.0f);
 
         {
-            int viewLocation = shader_get_uniform_location(lines_shader, "view");
-            if (viewLocation != -1)
-                glUniformMatrix4fv(viewLocation, 1, GL_FALSE, &view.col[0].raw[0]);
+            int view_location = shader_get_uniform_location(lines_shader, "view");
+            if (view_location != -1)
+                glUniformMatrix4fv(view_location, 1, GL_FALSE, &view.col[0].raw[0]);
 
-            int projectionLocation = shader_get_uniform_location(lines_shader, "projection");
-            if (projectionLocation != -1)
-                glUniformMatrix4fv(projectionLocation, 1, GL_FALSE, &projection.col[0].raw[0]);
+            int projection_location = shader_get_uniform_location(lines_shader, "projection");
+            if (projection_location != -1)
+                glUniformMatrix4fv(projection_location, 1, GL_FALSE, &projection.col[0].raw[0]);
         }
 
         {
-            int viewLocation = shader_get_uniform_location(cube_shader, "view");
-            if (viewLocation != -1)
-                glUniformMatrix4fv(viewLocation, 1, GL_FALSE, &view.col[0].raw[0]);
+            int view_location = shader_get_uniform_location(cube_shader, "view");
+            if (view_location != -1)
+                glUniformMatrix4fv(view_location, 1, GL_FALSE, &view.col[0].raw[0]);
 
-            int projectionLocation = shader_get_uniform_location(cube_shader, "projection");
-            if (projectionLocation != -1)
-                glUniformMatrix4fv(projectionLocation, 1, GL_FALSE, &projection.col[0].raw[0]);
+            int projection_location = shader_get_uniform_location(cube_shader, "projection");
+            if (projection_location != -1)
+                glUniformMatrix4fv(projection_location, 1, GL_FALSE, &projection.col[0].raw[0]);
         }
 
         {
-            int viewLocation = shader_get_uniform_location(light_shader, "view");
-            if (viewLocation != -1)
-                glUniformMatrix4fv(viewLocation, 1, GL_FALSE, &view.col[0].raw[0]);
+            int view_location = shader_get_uniform_location(light_shader, "view");
+            if (view_location != -1)
+                glUniformMatrix4fv(view_location, 1, GL_FALSE, &view.col[0].raw[0]);
 
-            int projectionLocation = shader_get_uniform_location(light_shader, "projection");
-            if (projectionLocation != -1)
-                glUniformMatrix4fv(projectionLocation, 1, GL_FALSE, &projection.col[0].raw[0]);
+            int projection_location = shader_get_uniform_location(light_shader, "projection");
+            if (projection_location != -1)
+                glUniformMatrix4fv(projection_location, 1, GL_FALSE, &projection.col[0].raw[0]);
         }
 
         float angle = 0.0f;
@@ -376,14 +375,14 @@ int main()
             light_position.x = 2.0 * cos(glfwGetTime());
             light_position.z = 2.0 * sin(glfwGetTime());
 
-            mat4s modelLight = glms_mat4_identity();
-            modelLight = glms_translate(modelLight, light_position);
-            modelLight = glms_rotate(modelLight, (float) glfwGetTime() * glm_rad(angle), axis_of_rotation);
-            modelLight = glms_scale(modelLight, scale);
+            mat4s model_light = glms_mat4_identity();
+            model_light = glms_translate(model_light, light_position);
+            model_light = glms_rotate(model_light, (float) glfwGetTime() * glm_rad(angle), axis_of_rotation);
+            model_light = glms_scale(model_light, scale);
 
-            int lightLocation = shader_get_uniform_location(light_shader, "model");
-            if (lightLocation != -1)
-                glUniformMatrix4fv(lightLocation, 1, GL_FALSE, &modelLight.col[0].raw[0]);
+            int light_location = shader_get_uniform_location(light_shader, "model");
+            if (light_location != -1)
+                glUniformMatrix4fv(light_location, 1, GL_FALSE, &model_light.col[0].raw[0]);
 
             glBindVertexArray(light_mesh->vao);
             glUseProgram(light_shader->program);
