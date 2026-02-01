@@ -1,7 +1,7 @@
-BasedOnStyle: Chromium
+BasedOnStyle: Google
 AlignAfterOpenBracket: BlockIndent
-AlignConsecutiveAssignments: true
-AlignConsecutiveDeclarations: true
+AlignConsecutiveAssignments: false
+AlignConsecutiveDeclarations: false
 AlignConsecutiveMacros: true
 AllowAllParametersOfDeclarationOnNextLine: true
 AllowShortFunctionsOnASingleLine: false
@@ -10,7 +10,7 @@ AlwaysBreakAfterDefinitionReturnType: None
 AlwaysBreakAfterReturnType: None
 AlwaysBreakTemplateDeclarations: Yes
 BinPackArguments: false
-BinPackParameters: AlwaysOnePerLine
+BinPackParameters: false
 BreakBeforeBraces: Allman
 ColumnLimit: 0
 ExperimentalAutoDetectBinPacking: false

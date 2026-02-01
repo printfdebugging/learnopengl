@@ -9,55 +9,32 @@
 enum MeshAttribute
 {
     MESH_ATTRIBUTE_POSITION = 0,
-    MESH_ATTRIBUTE_COLOR    = 1,
-    MESH_ATTRIBUTE_UV       = 2,
+    MESH_ATTRIBUTE_COLOR = 1,
+    MESH_ATTRIBUTE_UV = 2,
     MESH_ATTRIBUTE_COUNT,
 };
 
-struct Mesh
+struct mesh
 {
     unsigned int vao;
-    unsigned int vboVertex;
-    unsigned int vboColor;
-    unsigned int vboUV;
-    unsigned int vertexCount;
-    unsigned int vertexStride;
+
+    unsigned int vbo_vertex;
+    unsigned int vertex_count;
+    unsigned int vertex_stride;
+
+    unsigned int vbo_color;
+    unsigned int vbo_uv;
 
     unsigned int ebo;
-    unsigned int eboCount;
-    GLenum       eboType;
+    unsigned int ebo_count;
+    GLenum ebo_type;
 };
 
-struct Mesh *meshCreate();
-
-void meshDestroy(struct Mesh *mesh);
-
-void meshLoadVertices(
-    struct Mesh *mesh,
-    float       *data,
-    unsigned int count,
-    unsigned int stride
-);
-
-void meshLoadIndices(
-    struct Mesh *mesh,
-    int         *data,
-    unsigned int count,
-    GLenum       type
-);
-
-void meshLoadColors(
-    struct Mesh *mesh,
-    float       *data,
-    unsigned int count,
-    unsigned int stride
-);
-
-void meshLoadUV(
-    struct Mesh *mesh,
-    float       *data,
-    unsigned int count,
-    unsigned int stride
-);
+struct mesh *mesh_create();
+void mesh_destroy(struct mesh *mesh);
+void mesh_load_vertices(struct mesh *mesh, float *data, unsigned int count, unsigned int stride);
+void mesh_load_indices(struct mesh *mesh, int *data, unsigned int count, GLenum type);
+void mesh_load_colors(struct mesh *mesh, float *data, unsigned int count, unsigned int stride);
+void mesh_load_uv(struct mesh *mesh, float *data, unsigned int count, unsigned int stride);
 
 #endif

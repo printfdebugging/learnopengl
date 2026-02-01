@@ -1,65 +1,63 @@
 #include "camera.h"
 #include "GLFW/glfw3.h"
 
-struct Camera *cameraCreate()
+struct camera *camera_create()
 {
-    struct Camera *camera = malloc(sizeof(struct Camera));
+    struct camera *camera = malloc(sizeof(struct camera));
     if (!camera)
     {
         fprintf(stderr, "failed to allocate memory for camera\n");
         return NULL;
     }
 
-    camera->position         = (vec3s) { 0.0f, 1.0f, 4.0f };
-    camera->front            = (vec3s) { 0.0f, 0.0f, -1.0f };
-    camera->up               = (vec3s) { 0.0f, 1.0f, 0.0f };
-    camera->yaw              = -90.0f;
-    camera->pitch            = 0.0f;
-    camera->x                = 400;
-    camera->y                = 300;
-    camera->fov              = 45.0f;
-    camera->movementSpeed    = 2.5f;
-    camera->mouseSensitivity = 0.1f;
+    camera->position = (vec3s) { 0.0f, 1.0f, 4.0f };
+    camera->front = (vec3s) { 0.0f, 0.0f, -1.0f };
+    camera->up = (vec3s) { 0.0f, 1.0f, 0.0f };
+    camera->yaw = -90.0f;
+    camera->pitch = 0.0f;
+    camera->x = 400;
+    camera->y = 300;
+    camera->fov = 45.0f;
+    camera->movement_speed = 2.5f;
+    camera->mouse_sensitivity = 0.1f;
 
     return camera;
 }
 
-void cameraProcessKeyboard(struct Camera       *camera,
-                           enum CameraDirection direction,
-                           float                deltaTime)
+void camera_process_keyboard(struct camera *camera, enum camera_direction direction, float deltaTime)
 {
-    const float cameraSpeed = camera->movementSpeed * deltaTime;
+    const float camera_speed = camera->movement_speed * deltaTime;
 
     switch (direction)
     {
         case CAMERA_DIRECTION_FORWARD:
         {
-            vec3s mul        = glms_vec3_scale(camera->front, cameraSpeed);
+            vec3s mul = glms_vec3_scale(camera->front, camera_speed);
             camera->position = glms_vec3_add(camera->position, mul);
             break;
         }
 
         case CAMERA_DIRECTION_BACKWARD:
         {
-            vec3s mul        = glms_vec3_scale(camera->front, cameraSpeed);
+            vec3s mul = glms_vec3_scale(camera->front, camera_speed);
             camera->position = glms_vec3_sub(camera->position, mul);
             break;
         }
         case CAMERA_DIRECTION_LEFT:
         {
             vec3s cross = glms_cross(camera->front, camera->up);
-            cross       = glms_normalize(cross);
+            cross = glms_normalize(cross);
 
-            vec3s mul        = glms_vec3_scale(cross, cameraSpeed);
+            vec3s mul = glms_vec3_scale(cross, camera_speed);
             camera->position = glms_vec3_sub(camera->position, mul);
             break;
         }
         case CAMERA_DIRECTION_RIGHT:
         {
             vec3s cross = glms_cross(camera->front, camera->up);
-            cross       = glms_normalize(cross);
+            cross = glms_normalize(cross);
 
-            vec3s mul        = glms_vec3_scale(cross, cameraSpeed);
+            vec3s mul = glms_vec3_scale(cross, camera_speed);
             camera->position = glms_vec3_add(camera->position, mul);
             break;
         }
@@ -70,22 +68,20 @@ void cameraProcessKeyboard(struct Camera       *camera,
     }
 }
 
-void cameraProcessMouseMovement(struct Camera *camera,
-                                float          x,
-                                float          y)
+void camera_process_mouse_movement(struct camera *camera, float x, float y)
 {
-    static bool firstMouse = true;
-    if (firstMouse)
+    static bool first_mouse = true;
+    if (first_mouse)
     {
-        camera->x  = x;
-        camera->y  = y;
-        firstMouse = false;
+        camera->x = x;
+        camera->y = y;
+        first_mouse = false;
     }
 
     float offsetX = x - camera->x;
     float offsetY = y - camera->y;
-    offsetX *= camera->mouseSensitivity;
-    offsetY *= camera->mouseSensitivity;
+    offsetX *= camera->mouse_sensitivity;
+    offsetY *= camera->mouse_sensitivity;
 
     camera->x = x;
     camera->y = y;
@@ -103,12 +99,11 @@ void cameraProcessMouseMovement(struct Camera *camera,
         .z = sin(glm_rad(camera->yaw)) * cos(glm_rad(camera->pitch)),
     };
 
-    direction     = glms_normalize(direction);
+    direction = glms_normalize(direction);
     camera->front = direction;
 }
 
-void cameraProcessMouseScroll(struct Camera *camera,
-                              float          offsetY)
+void camera_process_mouse_scroll(struct camera *camera, float offsetY)
 {
     camera->fov -= (float) offsetY;
     if (camera->fov < 1.0)
@@ -117,13 +112,13 @@ void cameraProcessMouseScroll(struct Camera *camera,
         camera->fov = 45.0f;
 }
 
-mat4s cameraGetViewMatrix(struct Camera *camera)
+mat4s camera_get_view_matrix(struct camera *camera)
 {
     vec3s sum = glms_vec3_add(camera->position, camera->front);
     return glms_lookat(camera->position, sum, camera->up);
 }
 
-void cameraDestroy(struct Camera *camera)
+void camera_destroy(struct camera *camera)
 {
     free(camera);
 }

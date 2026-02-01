@@ -19,9 +19,9 @@ struct String *strCreate(const char *data)
     if (!data)
         return string;
 
-    string->length   = strlen(data);
+    string->length = strlen(data);
     string->capacity = ceil((string->length + 1) / DEFAULT_STRING_CAPACITY) * DEFAULT_STRING_CAPACITY;
-    string->data     = malloc(string->capacity);
+    string->data = malloc(string->capacity);
 
     if (!string->data)
     {
@@ -54,9 +54,9 @@ struct String *strCreateForFile(const char *path)
     }
 
     struct String *string = strCreate(NULL);
-    string->length        = length;
-    string->capacity      = ceil((string->length + 1) / DEFAULT_STRING_CAPACITY) * DEFAULT_STRING_CAPACITY;
-    string->data          = malloc(string->capacity);
+    string->length = length;
+    string->capacity = ceil((string->length + 1) / DEFAULT_STRING_CAPACITY) * DEFAULT_STRING_CAPACITY;
+    string->data = malloc(string->capacity);
 
     if (!string->data)
     {
@@ -85,8 +85,7 @@ struct String *strCreateForFile(const char *path)
     return string;
 }
 
-int strAppend(struct String *string,
-              const char    *part)
+int strAppend(struct String *string, const char *part)
 {
     if (!part)
     {
@@ -94,15 +93,15 @@ int strAppend(struct String *string,
         return 1;
     }
 
-    int  length         = strlen(part);
-    int  emptySpace     = string->capacity - (string->length + 1);
+    int length = strlen(part);
+    int emptySpace = string->capacity - (string->length + 1);
     bool notEnoughSpace = emptySpace < length + 1;
 
     if (notEnoughSpace)
     {
         /* expand the buffer in multiples of `DEFAULT_STRING_CAPACITY` */
-        int   newCapacity = ceil((string->length + 1 + length + 1) / DEFAULT_STRING_CAPACITY) * DEFAULT_STRING_CAPACITY;
-        char *buffer      = malloc(newCapacity);
+        int newCapacity = ceil((string->length + 1 + length + 1) / DEFAULT_STRING_CAPACITY) * DEFAULT_STRING_CAPACITY;
+        char *buffer = malloc(newCapacity);
         if (!buffer)
         {
             fprintf(stderr, "failed to allocate larger buffer for string to append");
@@ -114,7 +113,7 @@ int strAppend(struct String *string,
 
         /* free the old memory and point to the new larger buffer */
         free(string->data);
-        string->data     = buffer;
+        string->data = buffer;
         string->capacity = newCapacity;
     }
 
@@ -126,8 +125,7 @@ int strAppend(struct String *string,
     return 0;
 }
 
-int strAppendFile(struct String *string,
-                  const char    *path)
+int strAppendFile(struct String *string, const char *path)
 {
     struct String *fileContents = strCreateForFile(path);
     if (!fileContents)

@@ -4,12 +4,11 @@
 
 #include "stb_image.h"
 
-int texLoadFromFile(struct Texture *texture,
-                    const char     *path)
+int texture_load_from_file(struct texture *texture, const char *path)
 {
-    int            imgWidth;
-    int            imgHeight;
-    int            imgChanCount;
+    int imgWidth;
+    int imgHeight;
+    int imgChanCount;
     unsigned char *imgData;
 
     stbi_set_flip_vertically_on_load(true);
@@ -30,34 +29,27 @@ int texLoadFromFile(struct Texture *texture,
         return 1;
     }
 
-    if (texLoad(texture, imgData, imgWidth, imgHeight, imgFormat, GL_UNSIGNED_BYTE, imgFormat, GL_TRUE))
+    if (texture_load(texture, imgData, imgWidth, imgHeight, imgFormat, GL_UNSIGNED_BYTE, imgFormat, GL_TRUE))
         return 1;
 
     stbi_image_free(imgData);
     return 0;
 }
 
-struct Texture *texCreate()
+struct texture *texture_create()
 {
-    struct Texture *texture = malloc(sizeof(struct Texture));
+    struct texture *texture = malloc(sizeof(struct texture));
     if (!texture)
     {
         fprintf(stderr, "Failed to allocate memory for texture\n");
         return NULL;
     }
 
-    *texture = (struct Texture) { 0 };
+    *texture = (struct texture) { 0 };
     return texture;
 }
 
-int texLoad(struct Texture *texture,
-            void           *txData,
-            unsigned int    txWidth,
-            unsigned int    txHeight,
-            GLenum          txFormat,
-            GLenum          txDataType,
-            GLenum          txInternalFormat,
-            GLboolean       txGenMipmaps)
+int texture_load(struct texture *texture, void *txData, unsigned int txWidth, unsigned int txHeight, GLenum txFormat, GLenum txDataType, GLenum txInternalFormat, GLboolean txGenMipmaps)
 {
     glGenTextures(1, &texture->texture);
     glBindTexture(GL_TEXTURE_2D, texture->texture);
@@ -74,7 +66,7 @@ int texLoad(struct Texture *texture,
     return 0;
 }
 
-void texDestroy(struct Texture *texture)
+void texture_destroy(struct texture *texture)
 {
     glDeleteTextures(1, &texture->texture);
     free(texture);

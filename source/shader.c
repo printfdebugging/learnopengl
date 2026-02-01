@@ -10,8 +10,8 @@
 
 static const char *shVariableNames[] = {
     [MESH_ATTRIBUTE_POSITION] = "inPosition",
-    [MESH_ATTRIBUTE_COLOR]    = "inColor",
-    [MESH_ATTRIBUTE_UV]       = "inUV",
+    [MESH_ATTRIBUTE_COLOR] = "inColor",
+    [MESH_ATTRIBUTE_UV] = "inUV",
 };
 
 #if defined(EMSCRIPTEN)
@@ -24,8 +24,7 @@ static const char *floatPrecision = "#ifdef GL_ES\n"
                                     "precision mediump float;\n"
                                     "#endif\n";
 
-static int shCompiledSuccessfully(unsigned int shader,
-                                  const char  *filepath)
+static int shCompiledSuccessfully(unsigned int shader, const char *filepath)
 {
     int success;
     glGetShaderiv(shader, GL_COMPILE_STATUS, &success);
@@ -65,22 +64,20 @@ static void shBindVariableNames(unsigned int program)
         glBindAttribLocation(program, i, shVariableNames[i]);
 }
 
-struct Shader *shCreate()
+struct shader *shader_create()
 {
-    struct Shader *shader = malloc(sizeof(struct Shader));
+    struct shader *shader = malloc(sizeof(struct shader));
     if (!shader)
     {
         fprintf(stderr, "failed to allocate memory for shader\n");
         return NULL;
     }
 
-    *shader = (struct Shader) { 0 };
+    *shader = (struct shader) { 0 };
     return shader;
 }
 
-int shLoadFromFile(struct Shader *shader,
-                   const char    *vpath,
-                   const char    *fpath)
+int shader_load_from_file(struct shader *shader, const char *vpath, const char *fpath)
 {
     /* read and compile vertex shader */
 
@@ -158,14 +155,13 @@ int shLoadFromFile(struct Shader *shader,
     return 0;
 }
 
-void shDestroy(struct Shader *shader)
+void shader_destroy(struct shader *shader)
 {
     glDeleteProgram(shader->program);
     free(shader);
 }
 
-int shGetUniformLocation(const struct Shader *shader,
-                         const char          *name)
+int shader_get_uniform_location(const struct shader *shader, const char *name)
 {
     glUseProgram(shader->program);
 

@@ -3,15 +3,15 @@
 
 #include "cglm/struct.h"
 
-enum CameraDirection
+enum camera_direction
 {
-    CAMERA_DIRECTION_FORWARD  = 0,
+    CAMERA_DIRECTION_FORWARD = 0,
     CAMERA_DIRECTION_BACKWARD = 1,
-    CAMERA_DIRECTION_LEFT     = 2,
-    CAMERA_DIRECTION_RIGHT    = 3
+    CAMERA_DIRECTION_LEFT = 2,
+    CAMERA_DIRECTION_RIGHT = 3
 };
 
-struct Camera
+struct camera
 {
     vec3s position;
     vec3s front;
@@ -22,30 +22,16 @@ struct Camera
     float x;
     float y;
     float fov;
-    float movementSpeed;
-    float mouseSensitivity;
+    float movement_speed;
+    float mouse_sensitivity;
 };
 
-struct Camera *cameraCreate();
+struct camera *camera_create();
 
-void cameraProcessKeyboard(
-    struct Camera       *camera,
-    enum CameraDirection direction,
-    float                deltaTime
-);
-
-void cameraProcessMouseMovement(
-    struct Camera *camera,
-    float          x,
-    float          y
-);
-
-void cameraProcessMouseScroll(
-    struct Camera *camera,
-    float          offsetY
-);
-
-mat4s cameraGetViewMatrix(struct Camera *camera);
-void  cameraDestroy(struct Camera *camera);
+void camera_process_keyboard(struct camera *camera, enum camera_direction direction, float deltaTime);
+void camera_process_mouse_movement(struct camera *camera, float x, float y);
+void camera_process_mouse_scroll(struct camera *camera, float offsetY);
+mat4s camera_get_view_matrix(struct camera *camera);
+void camera_destroy(struct camera *camera);
 
 #endif

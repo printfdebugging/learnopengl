@@ -31,15 +31,9 @@ struct String *strCreateForFile(const char *path);
  * this function doesn't free part (infact it assumes part
  * to be stack allocated).
  */
-int strAppend(
-    struct String *string,
-    const char    *part
-);
+int strAppend(struct String *string, const char *part);
 
-int strAppendFile(
-    struct String *string,
-    const char    *path
-);
+int strAppendFile(struct String *string, const char *path);
 
 void strDestroy(struct String *string);
 
