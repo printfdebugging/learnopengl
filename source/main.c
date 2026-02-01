@@ -24,7 +24,7 @@ struct shader *cube_shader;
 struct shader *lines_shader;
 struct shader *light_shader;
 
-vec3s light_position = { 0.2f, 2.0f, 0.0f };
+vec3s light_position = { 2.0f, 0.0f, 0.0f };
 vec3s light_color = { 1.0f, 1.0f, 1.0f };
 
 vec3s object_color = { 1.0f, 0.5f, 0.31f };
@@ -372,6 +372,10 @@ int main()
 
         {
             // light
+
+            light_position.x = 2.0 * cos(glfwGetTime());
+            light_position.z = 2.0 * sin(glfwGetTime());
+
             mat4s modelLight = glms_mat4_identity();
             modelLight = glms_translate(modelLight, light_position);
             modelLight = glms_rotate(modelLight, (float) glfwGetTime() * glm_rad(angle), axis_of_rotation);
