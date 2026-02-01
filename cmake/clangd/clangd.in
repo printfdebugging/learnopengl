@@ -1,5 +1,6 @@
 Diagnostics:
-  Suppress: '*'
+  Suppress:
+    - 'unused-includes'
 
 CompileFlags:
   Add: [${CLANGD_FLAGS_TO_ADD}]
