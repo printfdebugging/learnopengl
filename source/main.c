@@ -24,13 +24,16 @@ struct shader *cube_shader;
 struct shader *lines_shader;
 struct shader *light_shader;
 
-struct texture *face_texture;
-struct texture *container_texture;
+vec3s light_position = { 1.2f, 1.0f, 2.0f };
+vec3s light_color = { 1.0f, 1.0f, 1.0f };
+vec3s object_position = { 1.0f, 0.5f, 0.31f };
+vec3s scale = { 0.2f, 0.2f, 0.2f };
+vec3s axis_of_rotation = { 0.5f, 0.3f, 0.5f };
 
 float delta_time = 0.0f;
 float last_frame = 0.0f;
-const float WIDTH = 1920.0f;
-const float HEIGHT = 1080.0f;
+const float WIDTH = 900.0f;
+const float HEIGHT = 600.0f;
 
 void process_input(struct window *window);
 
@@ -99,6 +102,50 @@ int main()
             -0.5f,  0.5f, -0.5f,
         };
 
+        float normals[] = {
+            0.0f,  0.0f, -1.0f,
+            0.0f,  0.0f, -1.0f, 
+            0.0f,  0.0f, -1.0f, 
+            0.0f,  0.0f, -1.0f, 
+            0.0f,  0.0f, -1.0f, 
+            0.0f,  0.0f, -1.0f, 
+
+            0.0f,  0.0f, 1.0f,
+            0.0f,  0.0f, 1.0f,
+            0.0f,  0.0f, 1.0f,
+            0.0f,  0.0f, 1.0f,
+            0.0f,  0.0f, 1.0f,
+            0.0f,  0.0f, 1.0f,
+
+            -1.0f,  0.0f,  0.0f,
+            -1.0f,  0.0f,  0.0f,
+            -1.0f,  0.0f,  0.0f,
+            -1.0f,  0.0f,  0.0f,
+            -1.0f,  0.0f,  0.0f,
+            -1.0f,  0.0f,  0.0f,
+
+            1.0f,  0.0f,  0.0f,
+            1.0f,  0.0f,  0.0f,
+            1.0f,  0.0f,  0.0f,
+            1.0f,  0.0f,  0.0f,
+            1.0f,  0.0f,  0.0f,
+            1.0f,  0.0f,  0.0f,
+
+            0.0f, -1.0f,  0.0f,
+            0.0f, -1.0f,  0.0f,
+            0.0f, -1.0f,  0.0f,
+            0.0f, -1.0f,  0.0f,
+            0.0f, -1.0f,  0.0f,
+            0.0f, -1.0f,  0.0f,
+
+            0.0f,  1.0f,  0.0f,
+            0.0f,  1.0f,  0.0f,
+            0.0f,  1.0f,  0.0f,
+            0.0f,  1.0f,  0.0f,
+            0.0f,  1.0f,  0.0f,
+            0.0f,  1.0f,  0.0f
+        };
+
         float uv[] = {
             0.0f, 0.0f,
             1.0f, 0.0f,
@@ -151,6 +198,7 @@ int main()
         mesh_load_vertices(cube_mesh, vertices, 36, 3 * sizeof(float));
         // mesh_load_colors(mesh, colors, 4, 3 * sizeof(float));
         mesh_load_uv(cube_mesh, uv, 36, 2 * sizeof(float));
+        mesh_load_normals(cube_mesh, normals, 36, 3 * sizeof(float));
         // mesh_load_indices(mesh, indices, sizeof(indices), GL_UNSIGNED_INT);
 
         light_mesh = mesh_create();
@@ -178,7 +226,7 @@ int main()
         const int FLOATS_PER_POINT = 3;
         const int count = AXES * LINES_PER_AXIS * POINTS_PER_LINE;
 
-        float vertices[AXES][LINES_PER_AXIS][POINTS_PER_LINE][FLOATS_PER_POINT] = {};
+        float vertices[AXES][LINES_PER_AXIS][POINTS_PER_LINE][FLOATS_PER_POINT];
 
         for (int z = -25; z <= 25; ++z)
         {
@@ -222,33 +270,6 @@ int main()
             return EXIT_FAILURE;
         if (shader_load_from_file(light_shader, ASSETS_DIR "shaders/light.vert", ASSETS_DIR "shaders/light.frag"))
             return EXIT_FAILURE;
-    }
-
-    {
-        face_texture = texture_create();
-        if (!face_texture)
-            return EXIT_FAILURE;
-
-        if (texture_load_from_file(face_texture, ASSETS_DIR "textures/awesomeface.png"))
-            return EXIT_FAILURE;
-
-        int faceTextureLocation = shader_get_uniform_location(cube_shader, "faceTexture");
-        if (faceTextureLocation != -1)
-            glUniform1i(faceTextureLocation, 0);
-    }
-
-    {
-        container_texture = texture_create();
-        if (!container_texture)
-            return EXIT_FAILURE;
-
-        if (texture_load_from_file(container_texture, ASSETS_DIR "textures/container.jpg"))
-            return EXIT_FAILURE;
-
-        int containerTextureLocation =
-            shader_get_uniform_location(cube_shader, "containerTexture");
-        if (containerTextureLocation != -1)
-            glUniform1i(containerTextureLocation, 1);
     }
 
     while (!window_close(window))
@@ -303,11 +324,25 @@ int main()
         {
             // cube
             glBindVertexArray(cube_mesh->vao);
-            glActiveTexture(GL_TEXTURE0);
-            glBindTexture(GL_TEXTURE_2D, container_texture->texture);
-            glActiveTexture(GL_TEXTURE1);
-            glBindTexture(GL_TEXTURE_2D, face_texture->texture);
-            glUseProgram(cube_shader->program);
+            glUseProgram(light_shader->program);
+
+            {
+                int object_color_location = shader_get_uniform_location(cube_shader, "object_color");
+                if (object_color_location != -1)
+                    glUniform3fv(object_color_location, 1, &object_position.raw[0]);
+            }
+
+            {
+                int light_color_location = shader_get_uniform_location(cube_shader, "light_color");
+                if (light_color_location != -1)
+                    glUniform3fv(light_color_location, 1, &light_color.raw[0]);
+            }
+
+            {
+                int light_position_location = shader_get_uniform_location(cube_shader, "light_position");
+                if (light_position_location != -1)
+                    glUniform3fv(light_position_location, 1, &light_position.raw[0]);
+            }
 
             mat4s model = glms_mat4_identity();
             model = glms_translate(model, meshPosition);
@@ -329,17 +364,9 @@ int main()
 
         {
             // light
-            vec3s lightPosition = { 1.2f, 1.0f, 2.0f };
-            vec3s lightColor = { 1.0f, 1.0f, 1.0f };
-            vec3s objectColor = { 1.0f, 0.5f, 0.31f };
-            vec3s scale = { 0.2f, 0.2f, 0.2f };
-            vec3s axisOfRotation = { 0.5f, 0.3f, 0.5f };
-
             mat4s modelLight = glms_mat4_identity();
-            modelLight = glms_translate(modelLight, lightPosition);
-            modelLight = glms_rotate(
-                modelLight, (float) glfwGetTime() * glm_rad(angle), axisOfRotation
-            );
+            modelLight = glms_translate(modelLight, light_position);
+            modelLight = glms_rotate(modelLight, (float) glfwGetTime() * glm_rad(angle), axis_of_rotation);
             modelLight = glms_scale(modelLight, scale);
 
             int lightLocation = shader_get_uniform_location(light_shader, "model");
@@ -355,10 +382,15 @@ int main()
     }
 
     window_destroy(window);
+    camera_destroy(camera);
+
     mesh_destroy(cube_mesh);
+    mesh_destroy(light_mesh);
+    mesh_destroy(lines_mesh);
+
     shader_destroy(cube_shader);
-    texture_destroy(face_texture);
-    texture_destroy(container_texture);
+    shader_destroy(light_shader);
+    shader_destroy(lines_shader);
 
     return 0;
 }

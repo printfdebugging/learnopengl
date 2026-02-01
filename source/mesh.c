@@ -85,3 +85,13 @@ void mesh_load_uv(struct mesh *mesh, float *data, unsigned int count, unsigned i
     glVertexAttribPointer(MESH_ATTRIBUTE_UV, 2, GL_FLOAT, GL_FALSE, stride, 0);
     glEnableVertexAttribArray(MESH_ATTRIBUTE_UV);
 }
+
+void mesh_load_normals(struct mesh *mesh, float *data, unsigned int count, unsigned int stride)
+{
+    glBindVertexArray(mesh->vao);
+    glGenBuffers(1, &mesh->vbo_normals);
+    glBindBuffer(GL_ARRAY_BUFFER, mesh->vbo_normals);
+    glBufferData(GL_ARRAY_BUFFER, count * 3 * sizeof(float), data, GL_STATIC_DRAW);
+    glVertexAttribPointer(MESH_ATTRIBUTE_NORMAL, 3, GL_FLOAT, GL_FALSE, stride, 0);
+    glEnableVertexAttribArray(MESH_ATTRIBUTE_NORMAL);
+}

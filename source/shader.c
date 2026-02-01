@@ -9,9 +9,10 @@
 #include <stdlib.h>
 
 static const char *shVariableNames[] = {
-    [MESH_ATTRIBUTE_POSITION] = "inPosition",
-    [MESH_ATTRIBUTE_COLOR] = "inColor",
-    [MESH_ATTRIBUTE_UV] = "inUV",
+    [MESH_ATTRIBUTE_POSITION] = "in_position",
+    [MESH_ATTRIBUTE_COLOR] = "in_color",
+    [MESH_ATTRIBUTE_UV] = "in_uv",
+    [MESH_ATTRIBUTE_NORMAL] = "in_normal",
 };
 
 #if defined(EMSCRIPTEN)
