@@ -19,5 +19,8 @@ void main()
     position = vec3(model * vec4(in_position, 1.0));
     color = in_color;
     uv = in_uv;
-    normal = in_normal;
+    // NOTE: this is a costly operation for the shaders, therefore
+    // it should be done on the CPU and then should be sent via
+    // a uniform.
+    normal = mat3(transpose(inverse(model))) * in_normal;
 }

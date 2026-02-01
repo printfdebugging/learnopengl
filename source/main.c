@@ -24,9 +24,10 @@ struct shader *cube_shader;
 struct shader *lines_shader;
 struct shader *light_shader;
 
-vec3s light_position = { 1.2f, 1.0f, 2.0f };
+vec3s light_position = { 0.2f, 2.0f, 0.0f };
 vec3s light_color = { 1.0f, 1.0f, 1.0f };
-vec3s object_position = { 1.0f, 0.5f, 0.31f };
+
+vec3s object_color = { 1.0f, 0.5f, 0.31f };
 vec3s scale = { 0.2f, 0.2f, 0.2f };
 vec3s axis_of_rotation = { 0.5f, 0.3f, 0.5f };
 
@@ -329,7 +330,7 @@ int main()
             {
                 int object_color_location = shader_get_uniform_location(cube_shader, "object_color");
                 if (object_color_location != -1)
-                    glUniform3fv(object_color_location, 1, &object_position.raw[0]);
+                    glUniform3fv(object_color_location, 1, &object_color.raw[0]);
             }
 
             {
@@ -344,9 +345,16 @@ int main()
                     glUniform3fv(light_position_location, 1, &light_position.raw[0]);
             }
 
+            {
+                int camera_position = shader_get_uniform_location(cube_shader, "camera_position");
+                if (camera_position != -1)
+                    glUniform3fv(camera_position, 1, &camera->position.raw[0]);
+            }
+
             mat4s model = glms_mat4_identity();
             model = glms_translate(model, meshPosition);
             model = glms_rotate(model, (float) glfwGetTime() * glm_rad(angle), (vec3s) { 0.5f, 0.3f, 0.5f });
+            model = glms_scale(model, (vec3s) { 2.0f, 2.0f, 2.0f });
 
             int modelLocation = shader_get_uniform_location(cube_shader, "model");
             if (modelLocation != -1)
