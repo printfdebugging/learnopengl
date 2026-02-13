@@ -88,6 +88,7 @@ target_link_libraries(${APPLICATION} PUBLIC
     stb
     freetype
     miniaudio
+    pthread
     m
 )
 

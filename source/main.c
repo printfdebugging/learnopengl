@@ -15,18 +15,15 @@
 
 struct window *window;
 struct camera *camera;
-
 struct mesh *cube_mesh;
 struct mesh *lines_mesh;
 struct mesh *light_mesh;
-
 struct shader *cube_shader;
 struct shader *lines_shader;
 struct shader *light_shader;
 
 vec3s light_position = { 2.0f, 0.0f, 0.0f };
 vec3s light_color = { 1.0f, 1.0f, 1.0f };
-
 vec3s object_color = { 1.0f, 0.5f, 0.31f };
 vec3s scale = { 0.2f, 0.2f, 0.2f };
 vec3s axis_of_rotation = { 0.5f, 0.3f, 0.5f };
@@ -37,9 +34,7 @@ const float WIDTH = 900.0f;
 const float HEIGHT = 600.0f;
 
 void process_input(struct window *window);
-
 void mouse_callback(GLFWwindow *window, double posX, double posY);
-
 void scroll_callback(GLFWwindow *window, double offsetX, double offsetY);
 
 int main()
