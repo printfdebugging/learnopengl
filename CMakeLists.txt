@@ -37,6 +37,7 @@ add_subdirectory(libs/freetype2)
 add_subdirectory(cmake/stb)
 add_subdirectory(cmake/cgltf)
 add_subdirectory(libs/glfw)
+add_subdirectory(libs/miniaudio)
 
 # misc
 add_subdirectory(cmake/graphviz)        # dependency graphs
@@ -86,6 +87,7 @@ target_link_libraries(${APPLICATION} PUBLIC
     cglm
     stb
     freetype
+    miniaudio
     m
 )
 

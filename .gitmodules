@@ -22,3 +22,6 @@
 [submodule "docs/gltf-tutorials"]
 	path = docs/gltf-tutorials
 	url = https://github.com/KhronosGroup/glTF-Tutorials
+[submodule "libs/miniaudio"]
+	path = libs/miniaudio
+	url = https://github.com/mackron/miniaudio
