@@ -10,6 +10,7 @@
 #include "texture.h"
 #include "utils.h"
 #include "window.h"
+#include "material.h"
 
 #include <stdlib.h>
 
@@ -23,7 +24,6 @@ struct shader *lines_shader;
 struct shader *light_shader;
 
 vec3s light_position   = { 2.0f, 0.0f, 0.0f };
-vec3s light_color      = { 1.0f, 1.0f, 1.0f };
 vec3s object_color     = { 1.0f, 0.5f, 0.31f };
 vec3s object_position  = { 0.0f, 0.0f, 0.0f };
 vec3s scale            = { 0.2f, 0.2f, 0.2f };
@@ -272,6 +272,27 @@ int main()
             return EXIT_FAILURE;
     }
 
+    shader_set_uniform(cube_shader, "material_ambient", 3fv, 1, &MATERIALS[EMERALD].ambient.raw[0]);
+    shader_set_uniform(cube_shader, "material_diffuse", 3fv, 1, &MATERIALS[EMERALD].diffuse.raw[0]);
+    shader_set_uniform(cube_shader, "material_specular", 3fv, 1, &MATERIALS[EMERALD].specular.raw[0]);
+    shader_set_uniform(cube_shader, "material_shininess", 1f, MATERIALS[EMERALD].shininess);
+
+    /*
+     * TODO: create variables out of these values and play around with different values
+     * to see how the effects change.
+     */
+
+    // shader_set_uniform(cube_shader, "material_ambient", 3fv, 1, (float *) &(vec3s) { 1.0, 0.5f, 0.31f });
+    // shader_set_uniform(cube_shader, "material_diffuse", 3fv, 1, (float *) &(vec3s) { 1.0f, 0.5f, 0.31f });
+    // shader_set_uniform(cube_shader, "material_specular", 3fv, 1, (float *) &(vec3s) { 0.5f, 0.5f, 0.5f });
+    // shader_set_uniform(cube_shader, "material_shininess", 1f, 32.0f);
+
+    // what do these properties really mean when it comes to the colors?
+    // like what does ambient mean for the light, or in this entire context.
+    shader_set_uniform(cube_shader, "light_ambient", 3fv, 1, (float *) &(vec3s) { 0.2f, 0.2f, 0.2f });
+    shader_set_uniform(cube_shader, "light_diffuse", 3fv, 1, (float *) &(vec3s) { 0.5f, 0.5f, 0.5f });
+    shader_set_uniform(cube_shader, "light_specular", 3fv, 1, (float *) &(vec3s) { 1.0f, 1.0f, 1.0f });
+
     while (!window_close(window)) {
         float current_frame = glfwGetTime();
         delta_time          = current_frame - last_frame;
@@ -304,8 +325,6 @@ int main()
             model       = glms_rotate(model, (float) glfwGetTime() * glm_rad(angle), (vec3s) { 0.5f, 0.3f, 0.5f });
             model       = glms_scale(model, (vec3s) { 2.0f, 2.0f, 2.0f });
 
-            shader_set_uniform(cube_shader, "object_color", 3fv, 1, &object_color.raw[0]);
-            shader_set_uniform(cube_shader, "light_color", 3fv, 1, &light_color.raw[0]);
             shader_set_uniform(cube_shader, "light_position", 3fv, 1, &light_position.raw[0]);
             shader_set_uniform(cube_shader, "camera_position", 3fv, 1, &camera->position.raw[0]);
             shader_set_uniform(cube_shader, "model", Matrix4fv, 1, GL_FALSE, &model.col[0].raw[0]);
