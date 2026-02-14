@@ -279,8 +279,7 @@ int main()
         process_input(window);
         window_clear_color(window);
 
-        vec3s sum = glms_vec3_add(camera->position, camera->front);
-        mat4s view = glms_lookat(camera->position, sum, camera->up);
+        mat4s view = camera_get_view_matrix(camera);
         mat4s projection = glms_perspective(glm_rad(camera->fov), WIDTH / HEIGHT, 0.1f, 100.0f);
 
         shader_set_uniform(lines_shader, "view", Matrix4fv, 1, GL_FALSE, &view.col[0].raw[0]);
