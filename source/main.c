@@ -283,35 +283,12 @@ int main()
         mat4s projection =
             glms_perspective(glm_rad(camera->fov), WIDTH / HEIGHT, 0.1f, 100.0f);
 
-        {
-            int view_location = shader_get_uniform_location(lines_shader, "view");
-            if (view_location != -1)
-                glUniformMatrix4fv(view_location, 1, GL_FALSE, &view.col[0].raw[0]);
-
-            int projection_location = shader_get_uniform_location(lines_shader, "projection");
-            if (projection_location != -1)
-                glUniformMatrix4fv(projection_location, 1, GL_FALSE, &projection.col[0].raw[0]);
-        }
-
-        {
-            int view_location = shader_get_uniform_location(cube_shader, "view");
-            if (view_location != -1)
-                glUniformMatrix4fv(view_location, 1, GL_FALSE, &view.col[0].raw[0]);
-
-            int projection_location = shader_get_uniform_location(cube_shader, "projection");
-            if (projection_location != -1)
-                glUniformMatrix4fv(projection_location, 1, GL_FALSE, &projection.col[0].raw[0]);
-        }
-
-        {
-            int view_location = shader_get_uniform_location(light_shader, "view");
-            if (view_location != -1)
-                glUniformMatrix4fv(view_location, 1, GL_FALSE, &view.col[0].raw[0]);
-
-            int projection_location = shader_get_uniform_location(light_shader, "projection");
-            if (projection_location != -1)
-                glUniformMatrix4fv(projection_location, 1, GL_FALSE, &projection.col[0].raw[0]);
-        }
+        shader_set_uniform(lines_shader, "view", Matrix4fv, 1, GL_FALSE, &view.col[0].raw[0]);
+        shader_set_uniform(lines_shader, "projection", Matrix4fv, 1, GL_FALSE, &projection.col[0].raw[0]);
+        shader_set_uniform(cube_shader, "view", Matrix4fv, 1, GL_FALSE, &view.col[0].raw[0]);
+        shader_set_uniform(cube_shader, "projection", Matrix4fv, 1, GL_FALSE, &projection.col[0].raw[0]);
+        shader_set_uniform(light_shader, "view", Matrix4fv, 1, GL_FALSE, &view.col[0].raw[0]);
+        shader_set_uniform(light_shader, "projection", Matrix4fv, 1, GL_FALSE, &projection.col[0].raw[0]);
 
         float angle = 0.0f;
         vec3s meshPosition = { 0.0f, 0.0f, 0.0f };
@@ -321,38 +298,16 @@ int main()
             glBindVertexArray(cube_mesh->vao);
             glUseProgram(light_shader->program);
 
-            {
-                int object_color_location = shader_get_uniform_location(cube_shader, "object_color");
-                if (object_color_location != -1)
-                    glUniform3fv(object_color_location, 1, &object_color.raw[0]);
-            }
-
-            {
-                int light_color_location = shader_get_uniform_location(cube_shader, "light_color");
-                if (light_color_location != -1)
-                    glUniform3fv(light_color_location, 1, &light_color.raw[0]);
-            }
-
-            {
-                int light_position_location = shader_get_uniform_location(cube_shader, "light_position");
-                if (light_position_location != -1)
-                    glUniform3fv(light_position_location, 1, &light_position.raw[0]);
-            }
-
-            {
-                int camera_position = shader_get_uniform_location(cube_shader, "camera_position");
-                if (camera_position != -1)
-                    glUniform3fv(camera_position, 1, &camera->position.raw[0]);
-            }
-
             mat4s model = glms_mat4_identity();
             model = glms_translate(model, meshPosition);
             model = glms_rotate(model, (float) glfwGetTime() * glm_rad(angle), (vec3s) { 0.5f, 0.3f, 0.5f });
             model = glms_scale(model, (vec3s) { 2.0f, 2.0f, 2.0f });
 
-            int modelLocation = shader_get_uniform_location(cube_shader, "model");
-            if (modelLocation != -1)
-                glUniformMatrix4fv(modelLocation, 1, GL_FALSE, &model.col[0].raw[0]);
+            shader_set_uniform(cube_shader, "object_color", 3fv, 1, &object_color.raw[0]);
+            shader_set_uniform(cube_shader, "light_color", 3fv, 1, &light_color.raw[0]);
+            shader_set_uniform(cube_shader, "light_position", 3fv, 1, &light_position.raw[0]);
+            shader_set_uniform(cube_shader, "camera_position", 3fv, 1, &camera->position.raw[0]);
+            shader_set_uniform(cube_shader, "model", Matrix4fv, 1, GL_FALSE, &model.col[0].raw[0]);
 
             glDrawArrays(GL_TRIANGLES, 0, 36);
         }
@@ -374,10 +329,7 @@ int main()
             model_light = glms_translate(model_light, light_position);
             model_light = glms_rotate(model_light, (float) glfwGetTime() * glm_rad(angle), axis_of_rotation);
             model_light = glms_scale(model_light, scale);
-
-            int light_location = shader_get_uniform_location(light_shader, "model");
-            if (light_location != -1)
-                glUniformMatrix4fv(light_location, 1, GL_FALSE, &model_light.col[0].raw[0]);
+            shader_set_uniform(light_shader, "model", Matrix4fv, 1, GL_FALSE, &model_light.col[0].raw[0]);
 
             glBindVertexArray(light_mesh->vao);
             glUseProgram(light_shader->program);
