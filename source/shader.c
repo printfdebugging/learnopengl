@@ -10,9 +10,9 @@
 
 static const char *shVariableNames[] = {
     [MESH_ATTRIBUTE_POSITION] = "in_position",
-    [MESH_ATTRIBUTE_COLOR] = "in_color",
-    [MESH_ATTRIBUTE_UV] = "in_uv",
-    [MESH_ATTRIBUTE_NORMAL] = "in_normal",
+    [MESH_ATTRIBUTE_COLOR]    = "in_color",
+    [MESH_ATTRIBUTE_UV]       = "in_uv",
+    [MESH_ATTRIBUTE_NORMAL]   = "in_normal",
 };
 
 #if defined(EMSCRIPTEN)
@@ -25,7 +25,8 @@ static const char *floatPrecision = "#ifdef GL_ES\n"
                                     "precision mediump float;\n"
                                     "#endif\n";
 
-static int shCompiledSuccessfully(unsigned int shader, const char *filepath)
+static int shCompiledSuccessfully(unsigned int shader,
+                                  const char  *filepath)
 {
     int success;
     glGetShaderiv(shader, GL_COMPILE_STATUS, &success);
@@ -68,8 +69,7 @@ static void shBindVariableNames(unsigned int program)
 struct shader *shader_create()
 {
     struct shader *shader = malloc(sizeof(struct shader));
-    if (!shader)
-    {
+    if (!shader) {
         fprintf(stderr, "failed to allocate memory for shader\n");
         return NULL;
     }
@@ -78,7 +78,9 @@ struct shader *shader_create()
     return shader;
 }
 
-int shader_load_from_file(struct shader *shader, const char *vpath, const char *fpath)
+int shader_load_from_file(struct shader *shader,
+                          const char    *vpath,
+                          const char    *fpath)
 {
     /* read and compile vertex shader */
 
@@ -131,8 +133,7 @@ int shader_load_from_file(struct shader *shader, const char *vpath, const char *
 
     /* create shader program */
     unsigned int sprogram = glCreateProgram();
-    if (sprogram == 0)
-    {
+    if (sprogram == 0) {
         fprintf(stderr, "failed to create shader program\n");
         return 1;
     }
@@ -162,7 +163,8 @@ void shader_destroy(struct shader *shader)
     free(shader);
 }
 
-int shader_get_uniform_location(const struct shader *shader, const char *name)
+int shader_get_uniform_location(const struct shader *shader,
+                                const char          *name)
 {
     glUseProgram(shader->program);
 

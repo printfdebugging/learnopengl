@@ -8,8 +8,7 @@
 struct mesh *mesh_create()
 {
     struct mesh *mesh = malloc(sizeof(struct mesh));
-    if (!mesh)
-    {
+    if (!mesh) {
         fprintf(stderr, "failed to allocate memory for mesh\n");
         return NULL;
     }
@@ -42,7 +41,10 @@ void mesh_destroy(struct mesh *mesh)
  *       that means that we are going to pass the pointer to the first data entry,
  *       not the start of the chunk.
  */
-void mesh_load_vertices(struct mesh *mesh, float *data, unsigned int count, unsigned int stride)
+void mesh_load_vertices(struct mesh *mesh,
+                        float       *data,
+                        unsigned int count,
+                        unsigned int stride)
 {
     glBindVertexArray(mesh->vao);
     glGenBuffers(1, &mesh->vbo_vertex);
@@ -51,11 +53,14 @@ void mesh_load_vertices(struct mesh *mesh, float *data, unsigned int count, unsi
     glVertexAttribPointer(MESH_ATTRIBUTE_POSITION, 3, GL_FLOAT, GL_FALSE, stride, 0);
     glEnableVertexAttribArray(MESH_ATTRIBUTE_POSITION);
 
-    mesh->vertex_count = count;
+    mesh->vertex_count  = count;
     mesh->vertex_stride = stride;
 }
 
-void mesh_load_indices(struct mesh *mesh, int *data, unsigned int count, GLenum type)
+void mesh_load_indices(struct mesh *mesh,
+                       int         *data,
+                       unsigned int count,
+                       GLenum       type)
 {
     glBindVertexArray(mesh->vao);
     glGenBuffers(1, &mesh->ebo);
@@ -63,10 +68,13 @@ void mesh_load_indices(struct mesh *mesh, int *data, unsigned int count, GLenum 
     glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(float) * count, data, GL_STATIC_DRAW);
 
     mesh->ebo_count = count;
-    mesh->ebo_type = type;
+    mesh->ebo_type  = type;
 }
 
-void mesh_load_colors(struct mesh *mesh, float *data, unsigned int count, unsigned int stride)
+void mesh_load_colors(struct mesh *mesh,
+                      float       *data,
+                      unsigned int count,
+                      unsigned int stride)
 {
     glBindVertexArray(mesh->vao);
     glGenBuffers(1, &mesh->vbo_color);
@@ -76,7 +84,10 @@ void mesh_load_colors(struct mesh *mesh, float *data, unsigned int count, unsign
     glEnableVertexAttribArray(MESH_ATTRIBUTE_COLOR);
 }
 
-void mesh_load_uv(struct mesh *mesh, float *data, unsigned int count, unsigned int stride)
+void mesh_load_uv(struct mesh *mesh,
+                  float       *data,
+                  unsigned int count,
+                  unsigned int stride)
 {
     glBindVertexArray(mesh->vao);
     glGenBuffers(1, &mesh->vbo_uv);
@@ -86,7 +97,10 @@ void mesh_load_uv(struct mesh *mesh, float *data, unsigned int count, unsigned i
     glEnableVertexAttribArray(MESH_ATTRIBUTE_UV);
 }
 
-void mesh_load_normals(struct mesh *mesh, float *data, unsigned int count, unsigned int stride)
+void mesh_load_normals(struct mesh *mesh,
+                       float       *data,
+                       unsigned int count,
+                       unsigned int stride)
 {
     glBindVertexArray(mesh->vao);
     glGenBuffers(1, &mesh->vbo_normals);

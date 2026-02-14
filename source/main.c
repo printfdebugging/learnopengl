@@ -15,28 +15,34 @@
 
 struct window *window;
 struct camera *camera;
-struct mesh *cube_mesh;
-struct mesh *lines_mesh;
-struct mesh *light_mesh;
+struct mesh   *cube_mesh;
+struct mesh   *lines_mesh;
+struct mesh   *light_mesh;
 struct shader *cube_shader;
 struct shader *lines_shader;
 struct shader *light_shader;
 
-vec3s light_position = { 2.0f, 0.0f, 0.0f };
-vec3s light_color = { 1.0f, 1.0f, 1.0f };
-vec3s object_color = { 1.0f, 0.5f, 0.31f };
-vec3s object_position = { 0.0f, 0.0f, 0.0f };
-vec3s scale = { 0.2f, 0.2f, 0.2f };
+vec3s light_position   = { 2.0f, 0.0f, 0.0f };
+vec3s light_color      = { 1.0f, 1.0f, 1.0f };
+vec3s object_color     = { 1.0f, 0.5f, 0.31f };
+vec3s object_position  = { 0.0f, 0.0f, 0.0f };
+vec3s scale            = { 0.2f, 0.2f, 0.2f };
 vec3s axis_of_rotation = { 0.5f, 0.3f, 0.5f };
 
-float delta_time = 0.0f;
-float last_frame = 0.0f;
-const float WIDTH = 1400.0f;
-const float HEIGHT = 800.0f;
+float       delta_time = 0.0f;
+float       last_frame = 0.0f;
+const float WIDTH      = 1400.0f;
+const float HEIGHT     = 800.0f;
 
 void process_input(struct window *window);
-void mouse_callback(GLFWwindow *window, double posX, double posY);
-void scroll_callback(GLFWwindow *window, double offsetX, double offsetY);
+
+void mouse_callback(GLFWwindow *window,
+                    double      posX,
+                    double      posY);
+
+void scroll_callback(GLFWwindow *window,
+                     double      offsetX,
+                     double      offsetY);
 
 int main()
 {
@@ -216,16 +222,15 @@ int main()
     }
 
     {
-        const int AXES = 2;
-        const int LINES_PER_AXIS = 51;
-        const int POINTS_PER_LINE = 2;
+        const int AXES             = 2;
+        const int LINES_PER_AXIS   = 51;
+        const int POINTS_PER_LINE  = 2;
         const int FLOATS_PER_POINT = 3;
-        const int count = AXES * LINES_PER_AXIS * POINTS_PER_LINE;
+        const int count            = AXES * LINES_PER_AXIS * POINTS_PER_LINE;
 
         float vertices[AXES][LINES_PER_AXIS][POINTS_PER_LINE][FLOATS_PER_POINT];
 
-        for (int z = -25; z <= 25; ++z)
-        {
+        for (int z = -25; z <= 25; ++z) {
             vertices[0][z + 25][0][0] = -25.0f;
             vertices[0][z + 25][0][1] = 0.0f;
             vertices[0][z + 25][0][2] = (float) z;
@@ -235,8 +240,7 @@ int main()
             vertices[0][z + 25][1][2] = (float) z;
         }
 
-        for (int x = -25; x <= 25; ++x)
-        {
+        for (int x = -25; x <= 25; ++x) {
             vertices[1][x + 25][0][0] = (float) x;
             vertices[1][x + 25][0][1] = 0.0f;
             vertices[1][x + 25][0][2] = -25.0f;
@@ -268,18 +272,17 @@ int main()
             return EXIT_FAILURE;
     }
 
-    while (!window_close(window))
-    {
+    while (!window_close(window)) {
         float current_frame = glfwGetTime();
-        delta_time = current_frame - last_frame;
-        last_frame = current_frame;
+        delta_time          = current_frame - last_frame;
+        last_frame          = current_frame;
 
         window_poll_events(window);
         window_process_input(window);
         process_input(window);
         window_clear_color(window);
 
-        mat4s view = camera_get_view_matrix(camera);
+        mat4s view       = camera_get_view_matrix(camera);
         mat4s projection = glms_perspective(glm_rad(camera->fov), WIDTH / HEIGHT, 0.1f, 100.0f);
 
         shader_set_uniform(lines_shader, "view", Matrix4fv, 1, GL_FALSE, &view.col[0].raw[0]);
@@ -297,9 +300,9 @@ int main()
             glUseProgram(light_shader->program);
 
             mat4s model = glms_mat4_identity();
-            model = glms_translate(model, object_position);
-            model = glms_rotate(model, (float) glfwGetTime() * glm_rad(angle), (vec3s) { 0.5f, 0.3f, 0.5f });
-            model = glms_scale(model, (vec3s) { 2.0f, 2.0f, 2.0f });
+            model       = glms_translate(model, object_position);
+            model       = glms_rotate(model, (float) glfwGetTime() * glm_rad(angle), (vec3s) { 0.5f, 0.3f, 0.5f });
+            model       = glms_scale(model, (vec3s) { 2.0f, 2.0f, 2.0f });
 
             shader_set_uniform(cube_shader, "object_color", 3fv, 1, &object_color.raw[0]);
             shader_set_uniform(cube_shader, "light_color", 3fv, 1, &light_color.raw[0]);
@@ -323,9 +326,9 @@ int main()
             light_position.z = 2.0 * sin(glfwGetTime());
 
             mat4s model_light = glms_mat4_identity();
-            model_light = glms_translate(model_light, light_position);
-            model_light = glms_rotate(model_light, (float) glfwGetTime() * glm_rad(angle), axis_of_rotation);
-            model_light = glms_scale(model_light, scale);
+            model_light       = glms_translate(model_light, light_position);
+            model_light       = glms_rotate(model_light, (float) glfwGetTime() * glm_rad(angle), axis_of_rotation);
+            model_light       = glms_scale(model_light, scale);
             shader_set_uniform(light_shader, "model", Matrix4fv, 1, GL_FALSE, &model_light.col[0].raw[0]);
 
             glBindVertexArray(light_mesh->vao);
@@ -365,12 +368,16 @@ void process_input(struct window *window)
         camera_process_keyboard(camera, CAMERA_DIRECTION_RIGHT, delta_time);
 }
 
-void mouse_callback(GLFWwindow *window, double posX, double posY)
+void mouse_callback(GLFWwindow *window,
+                    double      posX,
+                    double      posY)
 {
     camera_process_mouse_movement(camera, (float) posX, (float) posY);
 }
 
-void scroll_callback(GLFWwindow *window, double offsetX, double offsetY)
+void scroll_callback(GLFWwindow *window,
+                     double      offsetX,
+                     double      offsetY)
 {
     camera_process_mouse_scroll(camera, (float) offsetY);
 }

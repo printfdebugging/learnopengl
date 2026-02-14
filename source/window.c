@@ -6,16 +6,20 @@
 #include <stdlib.h>
 #include <string.h>
 
-static void winFrameBufResizeCallback(GLFWwindow *window, int width, int height)
+static void winFrameBufResizeCallback(GLFWwindow *window,
+                                      int         width,
+                                      int         height)
 {
     (void) window;
     glViewport(0, 0, width, height);
 }
 
-struct window *window_create(unsigned int width, unsigned int height, const char *title, vec4s color)
+struct window *window_create(unsigned int width,
+                             unsigned int height,
+                             const char  *title,
+                             vec4s        color)
 {
-    if (!glfwInit())
-    {
+    if (!glfwInit()) {
         fprintf(stderr, "failed to initialize glfw");
         return NULL;
     }
@@ -29,16 +33,14 @@ struct window *window_create(unsigned int width, unsigned int height, const char
 #endif
 
     GLFWwindow *window = glfwCreateWindow((int) width, (int) height, title, NULL, NULL);
-    if (!window)
-    {
+    if (!window) {
         fprintf(stderr, "failed to create glfw winodw\n");
         glfwTerminate();
         return NULL;
     }
 
     glfwMakeContextCurrent(window);
-    if (!gladLoadGLLoader((GLADloadproc) glfwGetProcAddress))
-    {
+    if (!gladLoadGLLoader((GLADloadproc) glfwGetProcAddress)) {
         fprintf(stderr, "failed to initialize glad\n");
         glfwTerminate();
         return NULL;
@@ -57,22 +59,22 @@ struct window *window_create(unsigned int width, unsigned int height, const char
     // glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
     struct window *win = malloc(sizeof(struct window));
-    if (!win)
-    {
+    if (!win) {
         fprintf(stderr, "failed to initialize glad\n");
         glfwTerminate();
         return NULL;
     }
 
-    win->width = width;
+    win->width  = width;
     win->height = height;
-    win->title = title;
-    win->color = color;
+    win->title  = title;
+    win->color  = color;
     win->window = window;
     return win;
 }
 
-void window_set_clear_color(struct window *window, vec4s color)
+void window_set_clear_color(struct window *window,
+                            vec4s          color)
 {
     window->color = color;
 }

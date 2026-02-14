@@ -9,8 +9,7 @@
 struct String *strCreate(const char *data)
 {
     struct String *string = malloc(sizeof(struct String));
-    if (!string)
-    {
+    if (!string) {
         fprintf(stderr, "failed to allocate memory for struct String");
         return NULL;
     }
@@ -19,12 +18,11 @@ struct String *strCreate(const char *data)
     if (!data)
         return string;
 
-    string->length = strlen(data);
+    string->length   = strlen(data);
     string->capacity = ceil((string->length + 1) / DEFAULT_STRING_CAPACITY) * DEFAULT_STRING_CAPACITY;
-    string->data = malloc(string->capacity);
+    string->data     = malloc(string->capacity);
 
-    if (!string->data)
-    {
+    if (!string->data) {
         fprintf(stderr, "failed to allocate memory for string->data\n");
         return NULL;
     }
@@ -36,8 +34,7 @@ struct String *strCreate(const char *data)
 struct String *strCreateForFile(const char *path)
 {
     FILE *file = fopen(path, "rb");
-    if (!file)
-    {
+    if (!file) {
         fprintf(stderr, "failed to read shader file: %s\n", path);
         return NULL;
     }
@@ -46,28 +43,25 @@ struct String *strCreateForFile(const char *path)
     long length = ftell(file);
     fseek(file, 0, SEEK_SET);
 
-    if (length < 0)
-    {
+    if (length < 0) {
         fprintf(stderr, "failed to get the shader file's length: %s\n", path);
         fclose(file);
         return NULL;
     }
 
     struct String *string = strCreate(NULL);
-    string->length = length;
-    string->capacity = ceil((string->length + 1) / DEFAULT_STRING_CAPACITY) * DEFAULT_STRING_CAPACITY;
-    string->data = malloc(string->capacity);
+    string->length        = length;
+    string->capacity      = ceil((string->length + 1) / DEFAULT_STRING_CAPACITY) * DEFAULT_STRING_CAPACITY;
+    string->data          = malloc(string->capacity);
 
-    if (!string->data)
-    {
+    if (!string->data) {
         fprintf(stderr, "failed to allocate memory for string->data to store file %s\n", path);
         fclose(file);
         return NULL;
     }
 
     int readCount = fread(string->data, 1, string->length, file);
-    if (readCount < string->length || readCount == 0)
-    {
+    if (readCount < string->length || readCount == 0) {
         fprintf(stderr, "read returned %i which is either 0 or less than %li", readCount, length);
         fclose(file);
         strDestroy(string);
@@ -75,8 +69,7 @@ struct String *strCreateForFile(const char *path)
     }
 
     string->data[string->length] = '\0';
-    if (fclose(file))
-    {
+    if (fclose(file)) {
         fprintf(stderr, "fclose failed\n");
         strDestroy(string);
         return NULL;
@@ -85,25 +78,23 @@ struct String *strCreateForFile(const char *path)
     return string;
 }
 
-int strAppend(struct String *string, const char *part)
+int strAppend(struct String *string,
+              const char    *part)
 {
-    if (!part)
-    {
+    if (!part) {
         fprintf(stderr, "cannot append NULL to string\n");
         return 1;
     }
 
-    int length = strlen(part);
-    int emptySpace = string->capacity - (string->length + 1);
+    int  length         = strlen(part);
+    int  emptySpace     = string->capacity - (string->length + 1);
     bool notEnoughSpace = emptySpace < length + 1;
 
-    if (notEnoughSpace)
-    {
+    if (notEnoughSpace) {
         /* expand the buffer in multiples of `DEFAULT_STRING_CAPACITY` */
-        int newCapacity = ceil((string->length + 1 + length + 1) / DEFAULT_STRING_CAPACITY) * DEFAULT_STRING_CAPACITY;
-        char *buffer = malloc(newCapacity);
-        if (!buffer)
-        {
+        int   newCapacity = ceil((string->length + 1 + length + 1) / DEFAULT_STRING_CAPACITY) * DEFAULT_STRING_CAPACITY;
+        char *buffer      = malloc(newCapacity);
+        if (!buffer) {
             fprintf(stderr, "failed to allocate larger buffer for string to append");
             return 1;
         }
@@ -113,7 +104,7 @@ int strAppend(struct String *string, const char *part)
 
         /* free the old memory and point to the new larger buffer */
         free(string->data);
-        string->data = buffer;
+        string->data     = buffer;
         string->capacity = newCapacity;
     }
 
@@ -125,7 +116,8 @@ int strAppend(struct String *string, const char *part)
     return 0;
 }
 
-int strAppendFile(struct String *string, const char *path)
+int strAppendFile(struct String *string,
+                  const char    *path)
 {
     struct String *fileContents = strCreateForFile(path);
     if (!fileContents)
