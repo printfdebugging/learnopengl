@@ -320,7 +320,6 @@ int main()
 
         {
             // light
-
             light_position.x = 2.0 * cos(glfwGetTime());
             light_position.z = 2.0 * sin(glfwGetTime());
 
