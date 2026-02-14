@@ -25,13 +25,14 @@ struct shader *light_shader;
 vec3s light_position = { 2.0f, 0.0f, 0.0f };
 vec3s light_color = { 1.0f, 1.0f, 1.0f };
 vec3s object_color = { 1.0f, 0.5f, 0.31f };
+vec3s object_position = { 0.0f, 0.0f, 0.0f };
 vec3s scale = { 0.2f, 0.2f, 0.2f };
 vec3s axis_of_rotation = { 0.5f, 0.3f, 0.5f };
 
 float delta_time = 0.0f;
 float last_frame = 0.0f;
-const float WIDTH = 900.0f;
-const float HEIGHT = 600.0f;
+const float WIDTH = 1400.0f;
+const float HEIGHT = 800.0f;
 
 void process_input(struct window *window);
 void mouse_callback(GLFWwindow *window, double posX, double posY);
@@ -280,8 +281,7 @@ int main()
 
         vec3s sum = glms_vec3_add(camera->position, camera->front);
         mat4s view = glms_lookat(camera->position, sum, camera->up);
-        mat4s projection =
-            glms_perspective(glm_rad(camera->fov), WIDTH / HEIGHT, 0.1f, 100.0f);
+        mat4s projection = glms_perspective(glm_rad(camera->fov), WIDTH / HEIGHT, 0.1f, 100.0f);
 
         shader_set_uniform(lines_shader, "view", Matrix4fv, 1, GL_FALSE, &view.col[0].raw[0]);
         shader_set_uniform(lines_shader, "projection", Matrix4fv, 1, GL_FALSE, &projection.col[0].raw[0]);
@@ -291,7 +291,6 @@ int main()
         shader_set_uniform(light_shader, "projection", Matrix4fv, 1, GL_FALSE, &projection.col[0].raw[0]);
 
         float angle = 0.0f;
-        vec3s meshPosition = { 0.0f, 0.0f, 0.0f };
 
         {
             // cube
@@ -299,7 +298,7 @@ int main()
             glUseProgram(light_shader->program);
 
             mat4s model = glms_mat4_identity();
-            model = glms_translate(model, meshPosition);
+            model = glms_translate(model, object_position);
             model = glms_rotate(model, (float) glfwGetTime() * glm_rad(angle), (vec3s) { 0.5f, 0.3f, 0.5f });
             model = glms_scale(model, (vec3s) { 2.0f, 2.0f, 2.0f });
 
