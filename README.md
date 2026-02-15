@@ -1,17 +1,21 @@
 # LearnOpenGL
+
+- [ ] hot-reloading
+- [ ] add widget controls to allow live-tweeking (imgui, clay or something custom)
+
 <!-- - The tutorials are deployed at [printfdebugging.in](https://printfdebugging.in/) (check out the graphics section) -->
 <!-- - Following [Learn OpenGL](https://learnopengl.com/) tutorials -->
 
 
-2025-12-31
-    - [ ] Implement an fps counter
-    - [ ] Performance Metrics using Timer Queries (https://wikis.khronos.org/opengl/Query_Object#Timer_queries)
-    - [ ] Load a simple glTF model with a few textures
+<!-- # 2025-12-31 -->
+<!--     - [ ] Implement an fps counter -->
+<!--     - [ ] Performance Metrics using Timer Queries (https://wikis.khronos.org/opengl/Query_Object#Timer_queries) -->
+<!--     - [ ] Load a simple glTF model with a few textures -->
 
-TODO: 
-    - create docs/cmake.md to explain the cmake lessons
-    - purge the modules and unnecessary wrappers
-    - just have one executable.
+<!-- TODO:  -->
+<!--     - create docs/cmake.md to explain the cmake lessons -->
+<!--     - purge the modules and unnecessary wrappers -->
+<!--     - just have one executable. -->
 
 ## Project Structure
 
