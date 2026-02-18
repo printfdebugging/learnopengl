@@ -4,13 +4,13 @@
 #include "glad/glad.h"
 
 #include "camera.h"
+#include "material.h"
 #include "mesh.h"
 #include "renderer.h"
 #include "shader.h"
 #include "texture.h"
 #include "utils.h"
 #include "window.h"
-#include "material.h"
 
 #include <stdlib.h>
 
@@ -35,17 +35,10 @@ const float WIDTH      = 1400.0f;
 const float HEIGHT     = 800.0f;
 
 void process_input(struct window *window);
+void mouse_callback(GLFWwindow *window, double xpos, double ypos);
+void scroll_callback(GLFWwindow *window, double xoffset, double yoffset);
 
-void mouse_callback(GLFWwindow *window,
-                    double      posX,
-                    double      posY);
-
-void scroll_callback(GLFWwindow *window,
-                     double      offsetX,
-                     double      offsetY);
-
-int main()
-{
+int main() {
     window = window_create(WIDTH, HEIGHT, "OpenGL", (vec4s) { 0.156f, 0.172f, 0.203f, 1.0f });
     if (!window)
         return EXIT_FAILURE;
@@ -278,14 +271,16 @@ int main()
     shader_set_uniform(cube_shader, "material_shininess", 1f, MATERIALS[EMERALD].shininess);
 
     /*
-     * TODO: create variables out of these values and play around with different values
-     * to see how the effects change.
+     * TODO: create variables out of these values and play around with different
+     * values to see how the effects change.
      */
 
-    // shader_set_uniform(cube_shader, "material_ambient", 3fv, 1, (float *) &(vec3s) { 1.0, 0.5f, 0.31f });
-    // shader_set_uniform(cube_shader, "material_diffuse", 3fv, 1, (float *) &(vec3s) { 1.0f, 0.5f, 0.31f });
-    // shader_set_uniform(cube_shader, "material_specular", 3fv, 1, (float *) &(vec3s) { 0.5f, 0.5f, 0.5f });
-    // shader_set_uniform(cube_shader, "material_shininess", 1f, 32.0f);
+    // shader_set_uniform(cube_shader, "material_ambient", 3fv, 1, (float *)
+    // &(vec3s) { 1.0, 0.5f, 0.31f }); shader_set_uniform(cube_shader,
+    // "material_diffuse", 3fv, 1, (float *) &(vec3s) { 1.0f, 0.5f, 0.31f });
+    // shader_set_uniform(cube_shader, "material_specular", 3fv, 1, (float *)
+    // &(vec3s) { 0.5f, 0.5f, 0.5f }); shader_set_uniform(cube_shader,
+    // "material_shininess", 1f, 32.0f);
 
     // what do these properties really mean when it comes to the colors?
     // like what does ambient mean for the light, or in this entire context.
@@ -303,8 +298,9 @@ int main()
         process_input(window);
         window_clear_color(window);
 
-        mat4s view       = camera_get_view_matrix(camera);
-        mat4s projection = glms_perspective(glm_rad(camera->fov), WIDTH / HEIGHT, 0.1f, 100.0f);
+        mat4s view = camera_get_view_matrix(camera);
+        mat4s projection =
+            glms_perspective(glm_rad(camera->fov), WIDTH / HEIGHT, 0.1f, 100.0f);
 
         shader_set_uniform(lines_shader, "view", Matrix4fv, 1, GL_FALSE, &view.col[0].raw[0]);
         shader_set_uniform(lines_shader, "projection", Matrix4fv, 1, GL_FALSE, &projection.col[0].raw[0]);
@@ -346,8 +342,10 @@ int main()
 
             mat4s model_light = glms_mat4_identity();
             model_light       = glms_translate(model_light, light_position);
-            model_light       = glms_rotate(model_light, (float) glfwGetTime() * glm_rad(angle), axis_of_rotation);
-            model_light       = glms_scale(model_light, scale);
+            model_light       = glms_rotate(
+                model_light, (float) glfwGetTime() * glm_rad(angle), axis_of_rotation
+            );
+            model_light = glms_scale(model_light, scale);
             shader_set_uniform(light_shader, "model", Matrix4fv, 1, GL_FALSE, &model_light.col[0].raw[0]);
 
             glBindVertexArray(light_mesh->vao);
@@ -372,8 +370,7 @@ int main()
     return 0;
 }
 
-void process_input(struct window *window)
-{
+void process_input(struct window *window) {
     if (glfwGetKey(window->window, GLFW_KEY_W) == GLFW_PRESS)
         camera_process_keyboard(camera, CAMERA_DIRECTION_FORWARD, delta_time);
 
@@ -387,16 +384,10 @@ void process_input(struct window *window)
         camera_process_keyboard(camera, CAMERA_DIRECTION_RIGHT, delta_time);
 }
 
-void mouse_callback(GLFWwindow *window,
-                    double      posX,
-                    double      posY)
-{
-    camera_process_mouse_movement(camera, (float) posX, (float) posY);
+void mouse_callback(GLFWwindow *window, double xpos, double ypos) {
+    camera_process_mouse_movement(camera, (float) xpos, (float) ypos);
 }
 
-void scroll_callback(GLFWwindow *window,
-                     double      offsetX,
-                     double      offsetY)
-{
-    camera_process_mouse_scroll(camera, (float) offsetY);
+void scroll_callback(GLFWwindow *window, double xoffset, double yoffset) {
+    camera_process_mouse_scroll(camera, (float) yoffset);
 }

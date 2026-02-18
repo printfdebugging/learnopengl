@@ -17,14 +17,9 @@ struct window {
     // of the form void (*callback)(sturct Window *window, void* data);
 };
 
-struct window *window_create(unsigned int width,
-                             unsigned int height,
-                             const char  *title,
-                             vec4s        color);
+struct window *window_create(unsigned int width, unsigned int height, const char *title, vec4s color);
 
-void window_set_clear_color(struct window *window,
-                            vec4s          color);
-
+void window_set_clear_color(struct window *window, vec4s color);
 void window_process_input(struct window *window);
 void window_poll_events(struct window *window);
 void window_clear_color(struct window *window);

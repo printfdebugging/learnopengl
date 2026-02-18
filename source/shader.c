@@ -25,9 +25,7 @@ static const char *floatPrecision = "#ifdef GL_ES\n"
                                     "precision mediump float;\n"
                                     "#endif\n";
 
-static int shCompiledSuccessfully(unsigned int shader,
-                                  const char  *filepath)
-{
+static int shader_compiled_successfully(unsigned int shader, const char *filepath) {
     int success;
     glGetShaderiv(shader, GL_COMPILE_STATUS, &success);
 
@@ -43,8 +41,7 @@ static int shCompiledSuccessfully(unsigned int shader,
     return 1;
 }
 
-static int shLinkedSuccessfully(unsigned int program)
-{
+static int shader_linked_successfully(unsigned int program) {
     int success;
     glGetProgramiv(program, GL_LINK_STATUS, &success);
 
@@ -60,14 +57,12 @@ static int shLinkedSuccessfully(unsigned int program)
     return 1;
 }
 
-static void shBindVariableNames(unsigned int program)
-{
-    for (enum MeshAttribute i = MESH_ATTRIBUTE_POSITION; i < MESH_ATTRIBUTE_COUNT; ++i)
+static void shader_bind_variable_names(unsigned int program) {
+    for (enum mesh_attribute i = MESH_ATTRIBUTE_POSITION; i < MESH_ATTRIBUTE_COUNT; ++i)
         glBindAttribLocation(program, i, shVariableNames[i]);
 }
 
-struct shader *shader_create()
-{
+struct shader *shader_create() {
     struct shader *shader = malloc(sizeof(struct shader));
     if (!shader) {
         fprintf(stderr, "failed to allocate memory for shader\n");
@@ -78,10 +73,7 @@ struct shader *shader_create()
     return shader;
 }
 
-int shader_load_from_file(struct shader *shader,
-                          const char    *vpath,
-                          const char    *fpath)
-{
+int shader_load_from_file(struct shader *shader, const char *vpath, const char *fpath) {
     /* read and compile vertex shader */
 
     // TODO: instead stringify the part to append first and
@@ -89,22 +81,22 @@ int shader_load_from_file(struct shader *shader,
     // for both the stringified options and the shader file's
     // contents. then printf both the strings to the buffer.
     // https://gist.github.com/nitrix/386d3acc9a6ef6ea63dac79393ad6163
-    struct String *vsource = strCreate(NULL);
+    struct string *vsource = string_create(NULL);
     if (!vsource)
         return 1;
-    if (strAppend(vsource, version))
+    if (string_append(vsource, version))
         return 1;
-    if (strAppend(vsource, floatPrecision))
+    if (string_append(vsource, floatPrecision))
         return 1;
-    if (strAppendFile(vsource, vpath))
+    if (string_append_file(vsource, vpath))
         return 1;
 
     unsigned int vshader = glCreateShader(GL_VERTEX_SHADER);
     glShaderSource(vshader, 1, (const char **) &vsource->data, NULL);
     glCompileShader(vshader);
-    strDestroy(vsource);
+    string_destroy(vsource);
 
-    if (shCompiledSuccessfully(vshader, vpath))
+    if (shader_compiled_successfully(vshader, vpath))
         return 1;
 
     /* read and compile fragment shader */
@@ -113,22 +105,22 @@ int shader_load_from_file(struct shader *shader,
     // for both the stringified options and the shader file's
     // contents. then printf both the strings to the buffer.
     // https://gist.github.com/nitrix/386d3acc9a6ef6ea63dac79393ad6163
-    struct String *fsource = strCreate(NULL);
+    struct string *fsource = string_create(NULL);
     if (!fsource)
         return 1;
-    if (strAppend(fsource, version))
+    if (string_append(fsource, version))
         return 1;
-    if (strAppend(fsource, floatPrecision))
+    if (string_append(fsource, floatPrecision))
         return 1;
-    if (strAppendFile(fsource, fpath))
+    if (string_append_file(fsource, fpath))
         return 1;
 
     unsigned int fshader = glCreateShader(GL_FRAGMENT_SHADER);
     glShaderSource(fshader, 1, (const char **) &fsource->data, NULL);
     glCompileShader(fshader);
-    strDestroy(fsource);
+    string_destroy(fsource);
 
-    if (shCompiledSuccessfully(fshader, fpath))
+    if (shader_compiled_successfully(fshader, fpath))
         return 1;
 
     /* create shader program */
@@ -142,13 +134,13 @@ int shader_load_from_file(struct shader *shader,
     glAttachShader(sprogram, fshader);
 
     /* bind attribute locations and link */
-    shBindVariableNames(sprogram);
+    shader_bind_variable_names(sprogram);
     glLinkProgram(sprogram);
 
     glDeleteShader(vshader);
     glDeleteShader(fshader);
 
-    if (shLinkedSuccessfully(sprogram))
+    if (shader_linked_successfully(sprogram))
         return 1;
 
     glUseProgram(sprogram);
@@ -157,15 +149,12 @@ int shader_load_from_file(struct shader *shader,
     return 0;
 }
 
-void shader_destroy(struct shader *shader)
-{
+void shader_destroy(struct shader *shader) {
     glDeleteProgram(shader->program);
     free(shader);
 }
 
-int shader_get_uniform_location(const struct shader *shader,
-                                const char          *name)
-{
+int shader_get_uniform_location(const struct shader *shader, const char *name) {
     glUseProgram(shader->program);
 
     int location = glGetUniformLocation(shader->program, name);

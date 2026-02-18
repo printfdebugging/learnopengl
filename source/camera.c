@@ -1,8 +1,7 @@
 #include "camera.h"
 #include "GLFW/glfw3.h"
 
-struct camera *camera_create()
-{
+struct camera *camera_create() {
     struct camera *camera = malloc(sizeof(struct camera));
     if (!camera) {
         fprintf(stderr, "failed to allocate memory for camera\n");
@@ -23,11 +22,8 @@ struct camera *camera_create()
     return camera;
 }
 
-void camera_process_keyboard(struct camera        *camera,
-                             enum camera_direction direction,
-                             float                 deltaTime)
-{
-    const float camera_speed = camera->movement_speed * deltaTime;
+void camera_process_keyboard(struct camera *camera, enum camera_direction direction, float delta_time) {
+    const float camera_speed = camera->movement_speed * delta_time;
 
     switch (direction) {
         case CAMERA_DIRECTION_FORWARD: {
@@ -64,10 +60,7 @@ void camera_process_keyboard(struct camera        *camera,
     }
 }
 
-void camera_process_mouse_movement(struct camera *camera,
-                                   float          x,
-                                   float          y)
-{
+void camera_process_mouse_movement(struct camera *camera, float x, float y) {
     static bool first_mouse = true;
     if (first_mouse) {
         camera->x   = x;
@@ -75,15 +68,15 @@ void camera_process_mouse_movement(struct camera *camera,
         first_mouse = false;
     }
 
-    float offsetX = x - camera->x;
-    float offsetY = y - camera->y;
-    offsetX *= camera->mouse_sensitivity;
-    offsetY *= camera->mouse_sensitivity;
+    float xoffset = x - camera->x;
+    float yoffset = y - camera->y;
+    xoffset *= camera->mouse_sensitivity;
+    yoffset *= camera->mouse_sensitivity;
 
     camera->x = x;
     camera->y = y;
-    camera->yaw += offsetX;
-    camera->pitch -= offsetY;
+    camera->yaw += xoffset;
+    camera->pitch -= yoffset;
 
     if (camera->pitch > 89.0f)
         camera->pitch = 89.0f;
@@ -100,23 +93,19 @@ void camera_process_mouse_movement(struct camera *camera,
     camera->front = direction;
 }
 
-void camera_process_mouse_scroll(struct camera *camera,
-                                 float          offsetY)
-{
-    camera->fov -= (float) offsetY;
+void camera_process_mouse_scroll(struct camera *camera, float yoffset) {
+    camera->fov -= (float) yoffset;
     if (camera->fov < 1.0)
         camera->fov = 1.0f;
     if (camera->fov > 45.0f)
         camera->fov = 45.0f;
 }
 
-mat4s camera_get_view_matrix(struct camera *camera)
-{
+mat4s camera_get_view_matrix(struct camera *camera) {
     vec3s sum = glms_vec3_add(camera->position, camera->front);
     return glms_lookat(camera->position, sum, camera->up);
 }
 
-void camera_destroy(struct camera *camera)
-{
+void camera_destroy(struct camera *camera) {
     free(camera);
 }

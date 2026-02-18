@@ -6,15 +6,14 @@
 #include <stdbool.h>
 #include <math.h>
 
-struct String *strCreate(const char *data)
-{
-    struct String *string = malloc(sizeof(struct String));
+struct string *string_create(const char *data) {
+    struct string *string = malloc(sizeof(struct string));
     if (!string) {
         fprintf(stderr, "failed to allocate memory for struct String");
         return NULL;
     }
 
-    *string = (struct String) { 0 };
+    *string = (struct string) { 0 };
     if (!data)
         return string;
 
@@ -31,8 +30,7 @@ struct String *strCreate(const char *data)
     return string;
 }
 
-struct String *strCreateForFile(const char *path)
-{
+struct string *string_create_from_file(const char *path) {
     FILE *file = fopen(path, "rb");
     if (!file) {
         fprintf(stderr, "failed to read shader file: %s\n", path);
@@ -49,7 +47,7 @@ struct String *strCreateForFile(const char *path)
         return NULL;
     }
 
-    struct String *string = strCreate(NULL);
+    struct string *string = string_create(NULL);
     string->length        = length;
     string->capacity      = ceil((string->length + 1) / DEFAULT_STRING_CAPACITY) * DEFAULT_STRING_CAPACITY;
     string->data          = malloc(string->capacity);
@@ -64,23 +62,21 @@ struct String *strCreateForFile(const char *path)
     if (readCount < string->length || readCount == 0) {
         fprintf(stderr, "read returned %i which is either 0 or less than %li", readCount, length);
         fclose(file);
-        strDestroy(string);
+        string_destroy(string);
         return NULL;
     }
 
     string->data[string->length] = '\0';
     if (fclose(file)) {
         fprintf(stderr, "fclose failed\n");
-        strDestroy(string);
+        string_destroy(string);
         return NULL;
     }
 
     return string;
 }
 
-int strAppend(struct String *string,
-              const char    *part)
-{
+int string_append(struct string *string, const char *part) {
     if (!part) {
         fprintf(stderr, "cannot append NULL to string\n");
         return 1;
@@ -116,20 +112,17 @@ int strAppend(struct String *string,
     return 0;
 }
 
-int strAppendFile(struct String *string,
-                  const char    *path)
-{
-    struct String *fileContents = strCreateForFile(path);
+int string_append_file(struct string *string, const char *path) {
+    struct string *fileContents = string_create_from_file(path);
     if (!fileContents)
         return 1;
 
-    int status = strAppend(string, fileContents->data);
+    int status = string_append(string, fileContents->data);
     free(fileContents);
     return status;
 }
 
-void strDestroy(struct String *string)
-{
+void string_destroy(struct string *string) {
     if (string->data)
         free(string->data);
     free(string);

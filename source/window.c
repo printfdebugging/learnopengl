@@ -6,19 +6,12 @@
 #include <stdlib.h>
 #include <string.h>
 
-static void winFrameBufResizeCallback(GLFWwindow *window,
-                                      int         width,
-                                      int         height)
-{
+static void winFrameBufResizeCallback(GLFWwindow *window, int width, int height) {
     (void) window;
     glViewport(0, 0, width, height);
 }
 
-struct window *window_create(unsigned int width,
-                             unsigned int height,
-                             const char  *title,
-                             vec4s        color)
-{
+struct window *window_create(unsigned int width, unsigned int height, const char *title, vec4s color) {
     if (!glfwInit()) {
         fprintf(stderr, "failed to initialize glfw");
         return NULL;
@@ -73,26 +66,21 @@ struct window *window_create(unsigned int width,
     return win;
 }
 
-void window_set_clear_color(struct window *window,
-                            vec4s          color)
-{
+void window_set_clear_color(struct window *window, vec4s color) {
     window->color = color;
 }
 
-void window_process_input(struct window *window)
-{
+void window_process_input(struct window *window) {
     if (glfwGetKey(window->window, GLFW_KEY_CAPS_LOCK) == GLFW_PRESS)
         glfwSetWindowShouldClose(window->window, GLFW_TRUE);
 }
 
-void window_poll_events(struct window *window)
-{
+void window_poll_events(struct window *window) {
     (void) window;
     glfwPollEvents();
 }
 
-void window_clear_color(struct window *window)
-{
+void window_clear_color(struct window *window) {
     (void) window;
     glClearColor(
         window->color.r,
@@ -103,20 +91,17 @@ void window_clear_color(struct window *window)
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 }
 
-void window_swap_buffers(struct window *window)
-{
+void window_swap_buffers(struct window *window) {
     glfwSwapBuffers(window->window);
 }
 
-void window_destroy(struct window *window)
-{
+void window_destroy(struct window *window) {
     glfwDestroyWindow(window->window);
     glfwTerminate();
     free(window);
 }
 
-bool window_close(struct window *window)
-{
+bool window_close(struct window *window) {
     if (!window->window)
         return GL_TRUE;
     return glfwWindowShouldClose(window->window);

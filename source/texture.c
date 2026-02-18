@@ -4,9 +4,7 @@
 
 #include "stb_image.h"
 
-int texture_load_from_file(struct texture *texture,
-                           const char     *path)
-{
+int texture_load_from_file(struct texture *texture, const char *path) {
     int            imgWidth;
     int            imgHeight;
     int            imgChanCount;
@@ -36,8 +34,7 @@ int texture_load_from_file(struct texture *texture,
     return 0;
 }
 
-struct texture *texture_create()
-{
+struct texture *texture_create() {
     struct texture *texture = malloc(sizeof(struct texture));
     if (!texture) {
         fprintf(stderr, "Failed to allocate memory for texture\n");
@@ -48,15 +45,7 @@ struct texture *texture_create()
     return texture;
 }
 
-int texture_load(struct texture *texture,
-                 void           *txData,
-                 unsigned int    txWidth,
-                 unsigned int    txHeight,
-                 GLenum          txFormat,
-                 GLenum          txDataType,
-                 GLenum          txInternalFormat,
-                 GLboolean       txGenMipmaps)
-{
+int texture_load(struct texture *texture, void *txData, unsigned int txWidth, unsigned int txHeight, GLenum txFormat, GLenum txDataType, GLenum txInternalFormat, GLboolean txGenMipmaps) {
     glGenTextures(1, &texture->texture);
     glBindTexture(GL_TEXTURE_2D, texture->texture);
     glTexImage2D(GL_TEXTURE_2D, GL_ZERO, txInternalFormat, txWidth, txHeight, GL_ZERO, txFormat, txDataType, txData);
@@ -72,8 +61,7 @@ int texture_load(struct texture *texture,
     return 0;
 }
 
-void texture_destroy(struct texture *texture)
-{
+void texture_destroy(struct texture *texture) {
     glDeleteTextures(1, &texture->texture);
     free(texture);
 }

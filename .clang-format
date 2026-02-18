@@ -10,8 +10,8 @@ AlwaysBreakAfterDefinitionReturnType: None
 AlwaysBreakAfterReturnType: None
 AlwaysBreakTemplateDeclarations: Yes
 BinPackArguments: false
-BinPackParameters: AlwaysOnePerLine
-BreakBeforeBraces: Linux
+BinPackParameters: false
+BreakBeforeBraces: Attach
 ColumnLimit: 0
 ExperimentalAutoDetectBinPacking: false
 IndentCaseLabels: true

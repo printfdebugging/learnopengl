@@ -45,17 +45,9 @@ struct texture {
 
 struct texture *texture_create();
 
-int texture_load(struct texture *texture,
-                 void           *txData,
-                 unsigned int    txWidth,
-                 unsigned int    txHeight,
-                 GLenum          txFormat,
-                 GLenum          txDataType,
-                 GLenum          txInternalFormat,
-                 GLboolean       txGenMipmaps);
-
-int texture_load_from_file(struct texture *texture,
-                           const char     *path);
+int  texture_load(struct texture *texture, void *txData, unsigned int txWidth, unsigned int txHeight, GLenum txFormat, GLenum txDataType, GLenum txInternalFormat, GLboolean txGenMipmaps);
+int  texture_load_from_file(struct texture *texture, const char *path);
+void texture_destroy(struct texture *texture);
 
 /* TODO: later!
 int txLoadFromData(
@@ -65,7 +57,5 @@ int txLoadFromData(
     enum TextureIndex txIndex
 );
 */
-
-void texture_destroy(struct texture *texture);
 
 #endif

@@ -20,8 +20,7 @@
  */
 
 #define DEFINE_PRINT_MATRIX(n)                            \
-    DECLARE_PRINT_MATRIX(n)                               \
-    {                                                     \
+    DECLARE_PRINT_MATRIX(n) {                             \
         for (int row = 0; row < n; ++row) {               \
             for (int col = 0; col < n; ++col) {           \
                 fprintf(stderr, "%.1f, ", mat[col][row]); \
@@ -32,8 +31,7 @@
     }
 
 #define DEFINE_PRINT_VECTOR(n)                \
-    DECLARE_PRINT_VECTOR(n)                   \
-    {                                         \
+    DECLARE_PRINT_VECTOR(n) {                 \
         for (int i = 0; i < n; ++i) {         \
             fprintf(stderr, "%.1f ", vec[i]); \
         }                                     \

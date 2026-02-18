@@ -26,17 +26,9 @@ struct camera {
 
 struct camera *camera_create();
 
-void camera_process_keyboard(struct camera        *camera,
-                             enum camera_direction direction,
-                             float                 deltaTime);
-
-void camera_process_mouse_movement(struct camera *camera,
-                                   float          x,
-                                   float          y);
-
-void camera_process_mouse_scroll(struct camera *camera,
-                                 float          offsetY);
-
+void  camera_process_keyboard(struct camera *camera, enum camera_direction direction, float delta_time);
+void  camera_process_mouse_movement(struct camera *camera, float x, float y);
+void  camera_process_mouse_scroll(struct camera *camera, float yoffset);
 mat4s camera_get_view_matrix(struct camera *camera);
 void  camera_destroy(struct camera *camera);
 
