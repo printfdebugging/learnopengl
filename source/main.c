@@ -16,23 +16,23 @@
 
 struct window *window;
 struct camera *camera;
-struct mesh   *cube_mesh;
-struct mesh   *lines_mesh;
-struct mesh   *light_mesh;
+struct mesh *cube_mesh;
+struct mesh *lines_mesh;
+struct mesh *light_mesh;
 struct shader *cube_shader;
 struct shader *lines_shader;
 struct shader *light_shader;
 
-vec3s light_position   = { 2.0f, 0.0f, 0.0f };
-vec3s object_color     = { 1.0f, 0.5f, 0.31f };
-vec3s object_position  = { 0.0f, 0.0f, 0.0f };
-vec3s scale            = { 0.2f, 0.2f, 0.2f };
+vec3s light_position = { 2.0f, 0.0f, 0.0f };
+vec3s object_color = { 1.0f, 0.5f, 0.31f };
+vec3s object_position = { 0.0f, 0.0f, 0.0f };
+vec3s scale = { 0.2f, 0.2f, 0.2f };
 vec3s axis_of_rotation = { 0.5f, 0.3f, 0.5f };
 
-float       delta_time = 0.0f;
-float       last_frame = 0.0f;
-const float WIDTH      = 1400.0f;
-const float HEIGHT     = 800.0f;
+float delta_time = 0.0f;
+float last_frame = 0.0f;
+const float WIDTH = 1400.0f;
+const float HEIGHT = 800.0f;
 
 void process_input(struct window *window);
 void mouse_callback(GLFWwindow *window, double xpos, double ypos);
@@ -40,12 +40,10 @@ void scroll_callback(GLFWwindow *window, double xoffset, double yoffset);
 
 int main() {
     window = window_create(WIDTH, HEIGHT, "OpenGL", (vec4s) { 0.156f, 0.172f, 0.203f, 1.0f });
-    if (!window)
-        return EXIT_FAILURE;
+    if (!window) return EXIT_FAILURE;
 
     camera = camera_create();
-    if (!camera)
-        return EXIT_FAILURE;
+    if (!camera) return EXIT_FAILURE;
 
     glfwSetCursorPosCallback(window->window, mouse_callback);
     glfwSetScrollCallback(window->window, scroll_callback);
@@ -215,11 +213,11 @@ int main() {
     }
 
     {
-        const int AXES             = 2;
-        const int LINES_PER_AXIS   = 51;
-        const int POINTS_PER_LINE  = 2;
+        const int AXES = 2;
+        const int LINES_PER_AXIS = 51;
+        const int POINTS_PER_LINE = 2;
         const int FLOATS_PER_POINT = 3;
-        const int count            = AXES * LINES_PER_AXIS * POINTS_PER_LINE;
+        const int count = AXES * LINES_PER_AXIS * POINTS_PER_LINE;
 
         float vertices[AXES][LINES_PER_AXIS][POINTS_PER_LINE][FLOATS_PER_POINT];
 
@@ -290,8 +288,8 @@ int main() {
 
     while (!window_close(window)) {
         float current_frame = glfwGetTime();
-        delta_time          = current_frame - last_frame;
-        last_frame          = current_frame;
+        delta_time = current_frame - last_frame;
+        last_frame = current_frame;
 
         window_poll_events(window);
         window_process_input(window);
@@ -317,9 +315,9 @@ int main() {
             glUseProgram(light_shader->program);
 
             mat4s model = glms_mat4_identity();
-            model       = glms_translate(model, object_position);
-            model       = glms_rotate(model, (float) glfwGetTime() * glm_rad(angle), (vec3s) { 0.5f, 0.3f, 0.5f });
-            model       = glms_scale(model, (vec3s) { 2.0f, 2.0f, 2.0f });
+            model = glms_translate(model, object_position);
+            model = glms_rotate(model, (float) glfwGetTime() * glm_rad(angle), (vec3s) { 0.5f, 0.3f, 0.5f });
+            model = glms_scale(model, (vec3s) { 2.0f, 2.0f, 2.0f });
 
             shader_set_uniform(cube_shader, "light_position", 3fv, 1, &light_position.raw[0]);
             shader_set_uniform(cube_shader, "camera_position", 3fv, 1, &camera->position.raw[0]);
@@ -341,9 +339,9 @@ int main() {
             light_position.z = 2.0 * sin(glfwGetTime());
 
             mat4s model_light = glms_mat4_identity();
-            model_light       = glms_translate(model_light, light_position);
-            model_light       = glms_rotate(model_light, (float) glfwGetTime() * glm_rad(angle), axis_of_rotation);
-            model_light       = glms_scale(model_light, scale);
+            model_light = glms_translate(model_light, light_position);
+            model_light = glms_rotate(model_light, (float) glfwGetTime() * glm_rad(angle), axis_of_rotation);
+            model_light = glms_scale(model_light, scale);
             shader_set_uniform(light_shader, "model", Matrix4fv, 1, GL_FALSE, &model_light.col[0].raw[0]);
 
             glBindVertexArray(light_mesh->vao);
