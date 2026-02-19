@@ -8,15 +8,15 @@ struct camera *camera_create() {
         return NULL;
     }
 
-    camera->position          = (vec3s) { 5.0f, 5.0f, 5.0f };
-    camera->front             = (vec3s) { 0.0f, 0.0f, -5.0f };
-    camera->up                = (vec3s) { 0.0f, 1.0f, 0.0f };
-    camera->yaw               = -135.0f;
-    camera->pitch             = -45.0f;
-    camera->x                 = 400;
-    camera->y                 = 300;
-    camera->fov               = 45.0f;
-    camera->movement_speed    = 2.5f;
+    camera->position = (vec3s) { 5.0f, 5.0f, 5.0f };
+    camera->front = (vec3s) { 0.0f, 0.0f, -5.0f };
+    camera->up = (vec3s) { 0.0f, 1.0f, 0.0f };
+    camera->yaw = -135.0f;
+    camera->pitch = -45.0f;
+    camera->x = 400;
+    camera->y = 300;
+    camera->fov = 45.0f;
+    camera->movement_speed = 2.5f;
     camera->mouse_sensitivity = 0.1f;
 
     return camera;
@@ -27,29 +27,26 @@ void camera_process_keyboard(struct camera *camera, enum camera_direction direct
 
     switch (direction) {
         case CAMERA_DIRECTION_FORWARD: {
-            vec3s mul        = glms_vec3_scale(camera->front, camera_speed);
+            vec3s mul = glms_vec3_scale(camera->front, camera_speed);
             camera->position = glms_vec3_add(camera->position, mul);
             break;
         }
-
         case CAMERA_DIRECTION_BACKWARD: {
-            vec3s mul        = glms_vec3_scale(camera->front, camera_speed);
+            vec3s mul = glms_vec3_scale(camera->front, camera_speed);
             camera->position = glms_vec3_sub(camera->position, mul);
             break;
         }
         case CAMERA_DIRECTION_LEFT: {
             vec3s cross = glms_cross(camera->front, camera->up);
-            cross       = glms_normalize(cross);
-
-            vec3s mul        = glms_vec3_scale(cross, camera_speed);
+            cross = glms_normalize(cross);
+            vec3s mul = glms_vec3_scale(cross, camera_speed);
             camera->position = glms_vec3_sub(camera->position, mul);
             break;
         }
         case CAMERA_DIRECTION_RIGHT: {
             vec3s cross = glms_cross(camera->front, camera->up);
-            cross       = glms_normalize(cross);
-
-            vec3s mul        = glms_vec3_scale(cross, camera_speed);
+            cross = glms_normalize(cross);
+            vec3s mul = glms_vec3_scale(cross, camera_speed);
             camera->position = glms_vec3_add(camera->position, mul);
             break;
         }
@@ -63,8 +60,8 @@ void camera_process_keyboard(struct camera *camera, enum camera_direction direct
 void camera_process_mouse_movement(struct camera *camera, float x, float y) {
     static bool first_mouse = true;
     if (first_mouse) {
-        camera->x   = x;
-        camera->y   = y;
+        camera->x = x;
+        camera->y = y;
         first_mouse = false;
     }
 
@@ -89,7 +86,7 @@ void camera_process_mouse_movement(struct camera *camera, float x, float y) {
         .z = sin(glm_rad(camera->yaw)) * cos(glm_rad(camera->pitch)),
     };
 
-    direction     = glms_normalize(direction);
+    direction = glms_normalize(direction);
     camera->front = direction;
 }
 

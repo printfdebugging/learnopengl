@@ -46,7 +46,7 @@ void mesh_load_vertices(struct mesh *mesh, float *data, unsigned int count, unsi
     glVertexAttribPointer(MESH_ATTRIBUTE_POSITION, 3, GL_FLOAT, GL_FALSE, stride, 0);
     glEnableVertexAttribArray(MESH_ATTRIBUTE_POSITION);
 
-    mesh->vertex_count  = count;
+    mesh->vertex_count = count;
     mesh->vertex_stride = stride;
 }
 
@@ -57,7 +57,7 @@ void mesh_load_indices(struct mesh *mesh, int *data, unsigned int count, GLenum 
     glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(float) * count, data, GL_STATIC_DRAW);
 
     mesh->ebo_count = count;
-    mesh->ebo_type  = type;
+    mesh->ebo_type = type;
 }
 
 void mesh_load_colors(struct mesh *mesh, float *data, unsigned int count, unsigned int stride) {

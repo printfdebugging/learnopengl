@@ -58,10 +58,10 @@ struct window *window_create(unsigned int width, unsigned int height, const char
         return NULL;
     }
 
-    win->width  = width;
+    win->width = width;
     win->height = height;
-    win->title  = title;
-    win->color  = color;
+    win->title = title;
+    win->color = color;
     win->window = window;
     return win;
 }

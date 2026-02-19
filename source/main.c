@@ -342,10 +342,8 @@ int main() {
 
             mat4s model_light = glms_mat4_identity();
             model_light       = glms_translate(model_light, light_position);
-            model_light       = glms_rotate(
-                model_light, (float) glfwGetTime() * glm_rad(angle), axis_of_rotation
-            );
-            model_light = glms_scale(model_light, scale);
+            model_light       = glms_rotate(model_light, (float) glfwGetTime() * glm_rad(angle), axis_of_rotation);
+            model_light       = glms_scale(model_light, scale);
             shader_set_uniform(light_shader, "model", Matrix4fv, 1, GL_FALSE, &model_light.col[0].raw[0]);
 
             glBindVertexArray(light_mesh->vao);

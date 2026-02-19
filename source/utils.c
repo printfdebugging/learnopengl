@@ -17,9 +17,9 @@ struct string *string_create(const char *data) {
     if (!data)
         return string;
 
-    string->length   = strlen(data);
+    string->length = strlen(data);
     string->capacity = ceil((string->length + 1) / DEFAULT_STRING_CAPACITY) * DEFAULT_STRING_CAPACITY;
-    string->data     = malloc(string->capacity);
+    string->data = malloc(string->capacity);
 
     if (!string->data) {
         fprintf(stderr, "failed to allocate memory for string->data\n");
@@ -48,9 +48,9 @@ struct string *string_create_from_file(const char *path) {
     }
 
     struct string *string = string_create(NULL);
-    string->length        = length;
-    string->capacity      = ceil((string->length + 1) / DEFAULT_STRING_CAPACITY) * DEFAULT_STRING_CAPACITY;
-    string->data          = malloc(string->capacity);
+    string->length = length;
+    string->capacity = ceil((string->length + 1) / DEFAULT_STRING_CAPACITY) * DEFAULT_STRING_CAPACITY;
+    string->data = malloc(string->capacity);
 
     if (!string->data) {
         fprintf(stderr, "failed to allocate memory for string->data to store file %s\n", path);
@@ -82,14 +82,14 @@ int string_append(struct string *string, const char *part) {
         return 1;
     }
 
-    int  length         = strlen(part);
-    int  emptySpace     = string->capacity - (string->length + 1);
-    bool notEnoughSpace = emptySpace < length + 1;
+    int length = strlen(part);
+    int empty_space = string->capacity - (string->length + 1);
+    bool not_enough_space = empty_space < length + 1;
 
-    if (notEnoughSpace) {
+    if (not_enough_space) {
         /* expand the buffer in multiples of `DEFAULT_STRING_CAPACITY` */
-        int   newCapacity = ceil((string->length + 1 + length + 1) / DEFAULT_STRING_CAPACITY) * DEFAULT_STRING_CAPACITY;
-        char *buffer      = malloc(newCapacity);
+        int new_capacity = ceil((string->length + 1 + length + 1) / DEFAULT_STRING_CAPACITY) * DEFAULT_STRING_CAPACITY;
+        char *buffer = malloc(new_capacity);
         if (!buffer) {
             fprintf(stderr, "failed to allocate larger buffer for string to append");
             return 1;
@@ -100,8 +100,8 @@ int string_append(struct string *string, const char *part) {
 
         /* free the old memory and point to the new larger buffer */
         free(string->data);
-        string->data     = buffer;
-        string->capacity = newCapacity;
+        string->data = buffer;
+        string->capacity = new_capacity;
     }
 
     string->data[string->length] = '\n';
@@ -113,12 +113,12 @@ int string_append(struct string *string, const char *part) {
 }
 
 int string_append_file(struct string *string, const char *path) {
-    struct string *fileContents = string_create_from_file(path);
-    if (!fileContents)
+    struct string *file_contents = string_create_from_file(path);
+    if (!file_contents)
         return 1;
 
-    int status = string_append(string, fileContents->data);
-    free(fileContents);
+    int status = string_append(string, file_contents->data);
+    free(file_contents);
     return status;
 }
 

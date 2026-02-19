@@ -9,16 +9,15 @@
 struct window {
     unsigned int width;
     unsigned int height;
-    const char  *title;
-    GLFWwindow  *window;
-    vec4s        color;
+    const char *title;
+    GLFWwindow *window;
+    vec4s color;
 
     // TODO: add callbacks and ways to register callbacks
     // of the form void (*callback)(sturct Window *window, void* data);
 };
 
 struct window *window_create(unsigned int width, unsigned int height, const char *title, vec4s color);
-
 void window_set_clear_color(struct window *window, vec4s color);
 void window_process_input(struct window *window);
 void window_poll_events(struct window *window);

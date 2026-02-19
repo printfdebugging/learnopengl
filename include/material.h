@@ -39,6 +39,7 @@ enum material_types {
     MATERIAL_TYPES_LENGTH,
 };
 
+/* clang-format off */
 struct material MATERIALS[MATERIAL_TYPES_LENGTH] = {
     [EMERALD]        = { (vec3s) { 0.0215, 0.1745, 0.0215 },       (vec3s) { 0.07568, 0.61424, 0.07568 },    (vec3s) { 0.633, 0.727811, 0.633 },             0.6        },
     [JADE]           = { (vec3s) { 0.135, 0.2225, 0.1575 },        (vec3s) { 0.54, 0.89, 0.63 },             (vec3s) { 0.316228, 0.316228, 0.316228 },       0.1        },
@@ -65,5 +66,6 @@ struct material MATERIALS[MATERIAL_TYPES_LENGTH] = {
     [WHITE_RUBBER]   = { (vec3s) { 0.05, 0.05, 0.05 },             (vec3s) { 0.5, 0.5, 0.5 },                (vec3s) { 0.7, 0.7, 0.7 },                      0.078125   },
     [YELLOW_RUBBER]  = { (vec3s) { 0.05, 0.05, 0.0 },              (vec3s) { 0.5, 0.5, 0.4 },                (vec3s) { 0.7, 0.7, 0.04 },                     0.078125   },
 };
+/* clang-format on */
 
 #endif

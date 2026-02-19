@@ -8,7 +8,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-static const char *shVariableNames[] = {
+static const char *shader_variable_names[] = {
     [MESH_ATTRIBUTE_POSITION] = "in_position",
     [MESH_ATTRIBUTE_COLOR]    = "in_color",
     [MESH_ATTRIBUTE_UV]       = "in_uv",
@@ -21,16 +21,14 @@ static const char *version = "#version 300 es\n";
 static const char *version = "#version 330 core\n";
 #endif
 
-static const char *floatPrecision = "#ifdef GL_ES\n"
-                                    "precision mediump float;\n"
-                                    "#endif\n";
+static const char *shader_float_position_declaration = "#ifdef GL_ES\n"
+                                                       "    precision mediump float;\n"
+                                                       "#endif\n";
 
 static int shader_compiled_successfully(unsigned int shader, const char *filepath) {
     int success;
     glGetShaderiv(shader, GL_COMPILE_STATUS, &success);
-
-    if (success)
-        return 0;
+    if (success) return 0;
 
     int infoLogLen;
     glGetShaderiv(shader, GL_INFO_LOG_LENGTH, &infoLogLen);
@@ -44,9 +42,7 @@ static int shader_compiled_successfully(unsigned int shader, const char *filepat
 static int shader_linked_successfully(unsigned int program) {
     int success;
     glGetProgramiv(program, GL_LINK_STATUS, &success);
-
-    if (success)
-        return 0;
+    if (success) return 0;
 
     int infoLogLen;
     glGetProgramiv(program, GL_INFO_LOG_LENGTH, &infoLogLen);
@@ -59,7 +55,7 @@ static int shader_linked_successfully(unsigned int program) {
 
 static void shader_bind_variable_names(unsigned int program) {
     for (enum mesh_attribute i = MESH_ATTRIBUTE_POSITION; i < MESH_ATTRIBUTE_COUNT; ++i)
-        glBindAttribLocation(program, i, shVariableNames[i]);
+        glBindAttribLocation(program, i, shader_variable_names[i]);
 }
 
 struct shader *shader_create() {
@@ -86,7 +82,7 @@ int shader_load_from_file(struct shader *shader, const char *vpath, const char *
         return 1;
     if (string_append(vsource, version))
         return 1;
-    if (string_append(vsource, floatPrecision))
+    if (string_append(vsource, shader_float_position_declaration))
         return 1;
     if (string_append_file(vsource, vpath))
         return 1;
@@ -110,7 +106,7 @@ int shader_load_from_file(struct shader *shader, const char *vpath, const char *
         return 1;
     if (string_append(fsource, version))
         return 1;
-    if (string_append(fsource, floatPrecision))
+    if (string_append(fsource, shader_float_position_declaration))
         return 1;
     if (string_append_file(fsource, fpath))
         return 1;
