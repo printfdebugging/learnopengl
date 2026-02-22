@@ -40,7 +40,7 @@ struct window *window_create(unsigned int width, unsigned int height, const char
     }
 
     glfwSetFramebufferSizeCallback(window, winFrameBufResizeCallback);
-    glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+    glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
     glfwSwapInterval(1);
     glEnable(GL_DEPTH_TEST);
 
@@ -82,12 +82,7 @@ void window_poll_events(struct window *window) {
 
 void window_clear_color(struct window *window) {
     (void) window;
-    glClearColor(
-        window->color.r,
-        window->color.g,
-        window->color.b,
-        window->color.a
-    );
+    glClearColor(window->color.r, window->color.g, window->color.b, window->color.a);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 }
 
