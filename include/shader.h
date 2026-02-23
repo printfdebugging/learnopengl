@@ -13,7 +13,6 @@ int shader_load_from_file(struct shader *shader, const char *vpath, const char *
 
 #define shader_set_uniform(shader, name, type, ...)                                    \
     {                                                                                  \
-        glUseProgram(shader->program);                                                 \
         int var_##location = glGetUniformLocation(shader->program, name);              \
         if (var_##location == -1) {                                                    \
             fprintf(stderr, "no uniform named '%s' found in shader->program\n", name); \

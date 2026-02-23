@@ -263,6 +263,7 @@ int main() {
             return EXIT_FAILURE;
     }
 
+    glUseProgram(cube_shader->program);
     shader_set_uniform(cube_shader, "material_ambient", 3fv, 1, &MATERIALS[EMERALD].ambient.raw[0]);
     shader_set_uniform(cube_shader, "material_diffuse", 3fv, 1, &MATERIALS[EMERALD].diffuse.raw[0]);
     shader_set_uniform(cube_shader, "material_specular", 3fv, 1, &MATERIALS[EMERALD].specular.raw[0]);
@@ -282,6 +283,7 @@ int main() {
 
     // what do these properties really mean when it comes to the colors?
     // like what does ambient mean for the light, or in this entire context.
+    glUseProgram(cube_shader->program);
     shader_set_uniform(cube_shader, "light_ambient", 3fv, 1, (float *) &(vec3s) { 0.2f, 0.2f, 0.2f });
     shader_set_uniform(cube_shader, "light_diffuse", 3fv, 1, (float *) &(vec3s) { 0.5f, 0.5f, 0.5f });
     shader_set_uniform(cube_shader, "light_specular", 3fv, 1, (float *) &(vec3s) { 1.0f, 1.0f, 1.0f });
@@ -300,10 +302,13 @@ int main() {
         mat4s projection =
             glms_perspective(glm_rad(camera->fov), WIDTH / HEIGHT, 0.1f, 100.0f);
 
+        glUseProgram(lines_shader->program);
         shader_set_uniform(lines_shader, "view", Matrix4fv, 1, GL_FALSE, &view.col[0].raw[0]);
         shader_set_uniform(lines_shader, "projection", Matrix4fv, 1, GL_FALSE, &projection.col[0].raw[0]);
+        glUseProgram(cube_shader->program);
         shader_set_uniform(cube_shader, "view", Matrix4fv, 1, GL_FALSE, &view.col[0].raw[0]);
         shader_set_uniform(cube_shader, "projection", Matrix4fv, 1, GL_FALSE, &projection.col[0].raw[0]);
+        glUseProgram(light_shader->program);
         shader_set_uniform(light_shader, "view", Matrix4fv, 1, GL_FALSE, &view.col[0].raw[0]);
         shader_set_uniform(light_shader, "projection", Matrix4fv, 1, GL_FALSE, &projection.col[0].raw[0]);
 
@@ -319,6 +324,7 @@ int main() {
             model = glms_rotate(model, (float) glfwGetTime() * glm_rad(angle), (vec3s) { 0.5f, 0.3f, 0.5f });
             model = glms_scale(model, (vec3s) { 2.0f, 2.0f, 2.0f });
 
+            glUseProgram(cube_shader->program);
             shader_set_uniform(cube_shader, "light_position", 3fv, 1, &light_position.raw[0]);
             shader_set_uniform(cube_shader, "camera_position", 3fv, 1, &camera->position.raw[0]);
             shader_set_uniform(cube_shader, "model", Matrix4fv, 1, GL_FALSE, &model.col[0].raw[0]);
@@ -342,10 +348,10 @@ int main() {
             model_light = glms_translate(model_light, light_position);
             model_light = glms_rotate(model_light, (float) glfwGetTime() * glm_rad(angle), axis_of_rotation);
             model_light = glms_scale(model_light, scale);
+            glUseProgram(light_shader->program);
             shader_set_uniform(light_shader, "model", Matrix4fv, 1, GL_FALSE, &model_light.col[0].raw[0]);
 
             glBindVertexArray(light_mesh->vao);
-            glUseProgram(light_shader->program);
             glDrawArrays(GL_TRIANGLES, 0, 36);
         }
 
