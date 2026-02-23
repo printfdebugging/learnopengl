@@ -8,12 +8,14 @@
 #include <stdio.h>
 #include <stdlib.h>
 
+/* clang-format off */
 static const char *shader_variable_names[] = {
     [MESH_ATTRIBUTE_POSITION] = "in_position",
     [MESH_ATTRIBUTE_COLOR]    = "in_color",
     [MESH_ATTRIBUTE_UV]       = "in_uv",
     [MESH_ATTRIBUTE_NORMAL]   = "in_normal",
 };
+/* clang-format on */
 
 #if defined(EMSCRIPTEN)
 static const char *version = "#version 300 es\n";
@@ -148,14 +150,4 @@ int shader_load_from_file(struct shader *shader, const char *vpath, const char *
 void shader_destroy(struct shader *shader) {
     glDeleteProgram(shader->program);
     free(shader);
-}
-
-int shader_get_uniform_location(const struct shader *shader, const char *name) {
-    glUseProgram(shader->program);
-
-    int location = glGetUniformLocation(shader->program, name);
-    if (location == -1)
-        fprintf(stderr, "no uniform named '%s' found in shader->program\n", name);
-
-    return location;
 }
