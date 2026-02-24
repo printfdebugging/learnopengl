@@ -375,19 +375,16 @@ int main() {
 void process_input(struct window *window) {
     if (glfwGetKey(window->window, GLFW_KEY_W) == GLFW_PRESS)
         camera_process_keyboard(camera, CAMERA_DIRECTION_FORWARD, delta_time);
-
     if (glfwGetKey(window->window, GLFW_KEY_S) == GLFW_PRESS)
         camera_process_keyboard(camera, CAMERA_DIRECTION_BACKWARD, delta_time);
-
     if (glfwGetKey(window->window, GLFW_KEY_A) == GLFW_PRESS)
         camera_process_keyboard(camera, CAMERA_DIRECTION_LEFT, delta_time);
-
     if (glfwGetKey(window->window, GLFW_KEY_D) == GLFW_PRESS)
         camera_process_keyboard(camera, CAMERA_DIRECTION_RIGHT, delta_time);
 }
 
 void mouse_callback(GLFWwindow *window, double xpos, double ypos) {
-    camera_process_mouse_movement(camera, (float) xpos, (float) ypos);
+    camera_process_mouse_movement(camera, (float) xpos, (float) ypos, glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_LEFT) == GLFW_PRESS);
 }
 
 void scroll_callback(GLFWwindow *window, double xoffset, double yoffset) {

@@ -57,16 +57,34 @@ void camera_process_keyboard(struct camera *camera, enum camera_direction direct
     }
 }
 
-void camera_process_mouse_movement(struct camera *camera, float x, float y) {
-    static bool first_mouse = true;
-    if (first_mouse) {
-        camera->x = x;
-        camera->y = y;
-        first_mouse = false;
+static bool left_button_was_pressed = false;
+static bool first_mouse_enter = true;
+
+void camera_process_mouse_movement(struct camera *camera, float x, float y, bool left_button_pressed) {
+    if (!left_button_pressed) {
+        left_button_was_pressed = false;
+        return;
     }
 
-    float xoffset = x - camera->x;
-    float yoffset = y - camera->y;
+    // camera's x,y should become the same as this point's x,y
+    // so that when we drag after click, the camera moves by the
+    // difference.
+    if (!left_button_was_pressed && left_button_pressed) {
+        camera->x = x;
+        camera->y = y;
+        first_mouse_enter = false;
+        left_button_was_pressed = true;
+        return;
+    }
+
+    if (first_mouse_enter) {
+        camera->x = x;
+        camera->y = y;
+        first_mouse_enter = false;
+    }
+
+    float xoffset = camera->x - x;
+    float yoffset = camera->y - y;
     xoffset *= camera->mouse_sensitivity;
     yoffset *= camera->mouse_sensitivity;
 
